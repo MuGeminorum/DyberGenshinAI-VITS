@@ -1,28 +1,23 @@
+import os
 import sys
 from sys import platform
-import ctypes
 from tendo import singleton
-import os
-from DyberPet.utils import read_json
 from DyberPet.DyberPet import PetWidget
 from DyberPet.Notification import DPNote
 from DyberPet.Accessory import DPAccessory
-
 from PySide6.QtWidgets import QApplication
-from PySide6 import QtCore
 from PySide6.QtCore import Qt, QLocale
-
-from qfluentwidgets import  FluentTranslator, setThemeColor
-from DyberPet.DyberSettings.DyberControlPanel import ControlMainWindow
+from qfluentwidgets import FluentTranslator
 from DyberPet.Dashboard.DashboardUI import DashboardMainWindow
+from DyberPet.DyberSettings.DyberControlPanel import ControlMainWindow
+
 
 try:
-    size_factor = 1 #ctypes.windll.shcore.GetScaleFactorForDevice(0) / 100
+    size_factor = 1  # ctypes.windll.shcore.GetScaleFactorForDevice(0) / 100
 except:
     size_factor = 1
 
 import DyberPet.settings as settings
-
 
 
 StyleSheet = f"""
@@ -53,11 +48,12 @@ StyleSheet = f"""
 # Now we use pyinstaller 6.5.0
 # pyinstaller --noconsole --hidden-import="pynput.mouse._win32" --hidden-import="pynput.keyboard._win32" run_DyberPet.py
 
+
 class DyberPetApp(QApplication):
 
     def __init__(self, *args, **kwargs):
         super(DyberPetApp, self).__init__(*args, **kwargs)
-        
+
         # Connect the signal to a slot
         self.setStyleSheet(StyleSheet)
 
@@ -68,8 +64,7 @@ class DyberPetApp(QApplication):
         fluentTranslator = FluentTranslator(QLocale(settings.language_code))
         self.installTranslator(fluentTranslator)
         self.installTranslator(settings.translator)
-        #setThemeColor(settings.THEME_COLOR)
-        
+        # setThemeColor(settings.THEME_COLOR)
 
         # Pet Object
         self.p = PetWidget(screens=screens)
@@ -105,7 +100,7 @@ class DyberPetApp(QApplication):
         self.conp.settingInterface.scale_changed.connect(self.acc.reset_size_sig)
 
         self.conp.settingInterface.ontop_changed.connect(self.p.ontop_update)
-        #self.conp.settingInterface.scale_changed.connect(self.p.set_img)
+        # self.conp.settingInterface.scale_changed.connect(self.p.set_img)
         self.conp.settingInterface.scale_changed.connect(self.p.reset_size)
         self.conp.settingInterface.lang_changed.connect(self.p.lang_changed)
 
@@ -130,30 +125,35 @@ class DyberPetApp(QApplication):
         self.p.fvlvl_changed_main_inve.connect(self.board.backpackInterface.fvchange)
         self.p.fvlvl_changed_main_inve.connect(self.board.shopInterface.fvchange)
         self.p.addItem_toInven.connect(self.board.backpackInterface.add_items)
-        self.p.compensate_rewards.connect(self.board.backpackInterface.compensate_rewards)
+        self.p.compensate_rewards.connect(
+            self.board.backpackInterface.compensate_rewards
+        )
         self.p.refresh_bag.connect(self.board.backpackInterface.refresh_bag)
         self.p.refresh_bag.connect(self.board.shopInterface.refresh_shop)
         self.p.addCoins.connect(self.board.backpackInterface.addCoins)
 
         # Tasks and Timer
         self.board.taskInterface.focusPanel.start_pomodoro.connect(self.p.run_tomato)
-        self.board.taskInterface.focusPanel.cancel_pomodoro.connect(self.p.cancel_tomato)
+        self.board.taskInterface.focusPanel.cancel_pomodoro.connect(
+            self.p.cancel_tomato
+        )
         self.board.taskInterface.focusPanel.start_focus.connect(self.p.run_focus)
         self.board.taskInterface.focusPanel.cancel_focus.connect(self.p.cancel_focus)
-        self.p.taskUI_Timer_update.connect(self.board.taskInterface.focusPanel.update_Timer)
+        self.p.taskUI_Timer_update.connect(
+            self.board.taskInterface.focusPanel.update_Timer
+        )
         self.p.taskUI_task_end.connect(self.board.taskInterface.focusPanel.taskFinished)
-        self.p.single_pomo_done.connect(self.board.taskInterface.focusPanel.single_pomo_done)
+        self.p.single_pomo_done.connect(
+            self.board.taskInterface.focusPanel.single_pomo_done
+        )
 
 
-        
-
-
-if platform == 'win32':
-    basedir = ''
+if platform == "win32":
+    basedir = ""
 else:
     basedir = os.path.dirname(__file__)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     # Avoid multiple process
     try:
@@ -161,16 +161,14 @@ if __name__ == '__main__':
     except:
         sys.exit()
 
-
     # Create App
     QApplication.setHighDpiScaleFactorRoundingPolicy(
-        Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
-    #QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
-    #QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
+        Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
+    )
+    # QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
+    # QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
 
     app = DyberPetApp(sys.argv)
     app.setAttribute(Qt.AA_DontCreateNativeWidgetSiblings)
 
     sys.exit(app.exec())
-
-
