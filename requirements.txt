@@ -1,0 +1,5 @@
+tendo
+PySide6
+PyQt-Fluent-Widgets==1.5.4
+pynput
+apscheduler
