@@ -1,57 +1,42 @@
 <h1 align="center">
   呆啵宠物  |  DyberPet
 </h1>
-
 <p align="center">
   呆啵宠物 (DyberPet) 是一个基于 PySide6 的桌面宠物开发框架，致力于为开发者提供创造桌面宠物的底层软件
 </p>
-
 <p align="center">
   <a>
     <img src="https://img.shields.io/github/license/ChaozhongLiu/DyberPet.svg">
   </a>
-
   <a style="text-decoration:none">
     <img src="https://img.shields.io/github/downloads/ChaozhongLiu/DyberPet/total.svg"/>
   </a>
-
   <a style="text-decoration:none">
     <img src="https://img.shields.io/badge/python-3.9+-blue.svg" />
   </a>
-
   <a style="text-decoration:none">
     <img src="https://img.shields.io/badge/DyberPet-v0.3.7-green.svg"/>
   </a>
 </p>
-
 <p align="center">
 简体中文 | <a href="README_EN.md">English</a>
 </p>
 
-![Interface](https://raw.githubusercontent.com/ChaozhongLiu/DyberPet/main/docs/DyberPet.png)
+![Interface](./docs/DyberPet.png)
 
-  
 :octocat: 目前项目处于早期阶段，有很多功能尚待添加。如果你有意向加入，请[私信我](https://space.bilibili.com/39307302)，欢迎一起构建框架 🥰 
-  
-:new: **04-07-2024: v0.3.7** 程序已打包上传 [Release](https://github.com/ChaozhongLiu/DyberPet/releases/tag/v0.3.7)，有任何问题欢迎向我反馈！  
-  
-:new: **04-06-2024: v0.3.7** 已适配至 PySide6-Fluent-Widgets v1.5.4。 如果你在使用 Terminal 运行本程序，请用 pip 更新 PySide6-Fluent-Widgets。  
-  
-:new: UI重构的 PySide 测试版本已经放在了 [Release](https://github.com/ChaozhongLiu/DyberPet/releases/tag/v0.3.1b)，我坚信有很多 Bug，还请各位多多测试，在 Issue 提出问题和建议，感谢！
- 
 
+:new: **04-07-2024: v0.3.7** 程序已打包上传 [Release](https://github.com/ChaozhongLiu/DyberPet/releases/tag/v0.3.7)，有任何问题欢迎向我反馈！  
+
+:new: **04-06-2024: v0.3.7** 已适配至 PySide6-Fluent-Widgets v1.5.4。 如果你在使用 Terminal 运行本程序，请用 pip 更新 PySide6-Fluent-Widgets。  
+
+:new: UI重构的 PySide 测试版本已经放在了 [Release](https://github.com/ChaozhongLiu/DyberPet/releases/tag/v0.3.1b)，我坚信有很多 Bug，还请各位多多测试，在 Issue 提出问题和建议，感谢！
 
 ## 衍生成品导航 
-
 - **呆啵宠物 · 原神**：[项目主页](https://github.com/ChaozhongLiu/DyberPet_GenshinImpact) ｜ [B站视频](https://www.bilibili.com/video/BV1fd4y1W7ht)
 - **呆啵宠物 · 乃琳**：[微博介绍](https://m.weibo.cn/2765930401/4869193126380684) ｜ [B站视频](https://www.bilibili.com/video/BV1qe4y1F7or)
 
-
-## 快速体验 Demo
-### Windows 用户
-  将 Release 下载至本地，双击 **``run_DyberPet.exe``** 即可
-
-
+## 使用
 ### Windows Terminal
 建议首先在本地创建新的 **conda** 环境  
 ```bash
@@ -63,27 +48,15 @@ conda install -c conda-forge pywin32 --yes
 pip install -r requirements.txt
 ```
 将仓库下载至本地，之后运行 **``run_DyberPet.py``** 即可
-
   
-### MacOS 用户
-  建议首先在本地创建新的 **conda** 环境  
-  ```
-  conda create --name Dyber_pyside python=3.9.18
-  conda activate Dyber_pyside
-  conda install -c conda-forge apscheduler
-  pip install pynput==1.7.6
-  pip install PySide6-Fluent-Widgets==1.5.4 -i https://pypi.org/simple/
-  pip install pyside6==6.5.2
-  pip install tendo
-  ```
-  将仓库下载至本地，之后运行 **``run_DyberPet.py``** 即可
-
+### 维护
+```bash
+git clone git@gitee.com:MuGeminorum/DyberPet.git
+cd DyberPet
+```
 
 ## 用户手册
 请参考用户手册，体验现有功能 (施工中)
-
-
-
 
 ## 开发者文档
 ### 素材开发
@@ -92,12 +65,9 @@ pip install -r requirements.txt
 ### 功能开发
 若您想要在现有模块下，开发新的功能，请参考[功能开发文档](README.md) (施工中)
 
-
 ## 更新日志
-
 <details>
   <summary>版本更新列表</summary>
-  
 **v0.3.7 - 04/06/2024**
 - 通知栏剩余翻译完成
 - 采用 Fluent-Widgets 优化了通知栏 UI
@@ -468,12 +438,7 @@ pip install -r requirements.txt
 
 **v0.1.2 - 11/14/2022**
 - 最初版本上线
-
-
 </details>
 
 ## 致谢
-- UI 重构基于 [Fluent-Widgets](https://github.com/zhiyiYo/PyQt-Fluent-Widgets)，感谢作者 [zhiyiYo](https://github.com/zhiyiYo) 的指导和帮助
-- Demo 中的部分素材来自 [daywa1kr](https://github.com/daywa1kr/Desktop-Cat)
-- 框架早期的动画模块的逻辑参考了 [yanji255](https://toscode.gitee.com/yanji255/desktop_pet/)  
-- 框架拖拽掉落的计算逻辑参考了 [WolfChen1996](https://github.com/WolfChen1996/DesktopPet)
+- UI 重构基于 [DyberPet_GenshinImpact](https://github.com/ChaozhongLiu/DyberPet_GenshinImpact)
