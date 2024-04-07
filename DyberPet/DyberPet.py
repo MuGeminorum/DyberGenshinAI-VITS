@@ -1442,7 +1442,6 @@ class PetWidget(QWidget):
         self.compensate_rewards.emit()
 
     def register_notification(self, note_type, message):
-
         self.setup_notification.emit(note_type, message)
 
     def register_accessory(self, accs):
