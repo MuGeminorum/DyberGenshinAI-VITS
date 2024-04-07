@@ -50,7 +50,6 @@ StyleSheet = f"""
 
 
 class DyberPetApp(QApplication):
-
     def __init__(self, *args, **kwargs):
         super(DyberPetApp, self).__init__(*args, **kwargs)
         # Connect the signal to a slot
