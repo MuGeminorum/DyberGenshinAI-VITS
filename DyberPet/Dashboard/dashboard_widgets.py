@@ -1,45 +1,71 @@
 # coding:utf-8
 import os
-import sys
 import math
 import json
-import glob
 import uuid
 import datetime
 from collections import defaultdict
-from typing import Union, List
-
+from typing import List
 from PySide6 import QtGui
-from PySide6.QtCore import Qt, Signal, QPoint, QSize, QObject, QEvent, QModelIndex, QRectF, QRect, QTime
-from PySide6.QtWidgets import (QApplication, QWidget, QLabel, QPushButton, QHBoxLayout, 
-                             QVBoxLayout, QProgressBar, QFrame, QStyleOptionViewItem,
-                             QSizePolicy, QStackedWidget, QLayout, QSpacerItem)
-from PySide6.QtGui import (QPixmap, QImage, QImageReader, QPainter, QBrush, QPen, QColor, QIcon,
-                        QFont, QPainterPath, QCursor, QAction, QFontMetrics, QPalette)
-
+from PySide6.QtCore import Qt, Signal, QSize, QRect, QTime
+from PySide6.QtWidgets import (
+    QWidget,
+    QLabel,
+    QHBoxLayout,
+    QVBoxLayout,
+    QProgressBar,
+    QSizePolicy,
+    QStackedWidget,
+    QLayout,
+    QSpacerItem,
+)
+from PySide6.QtGui import (
+    QPixmap,
+    QImage,
+    QPainter,
+    QPen,
+    QColor,
+    QIcon,
+    QFont,
+    QPalette,
+)
 from qfluentwidgets import FluentIcon as FIF
-from qfluentwidgets import SettingCard, Slider, FluentIconBase, SimpleCardWidget, PushButton
-from qfluentwidgets import (SegmentedToolWidget, TransparentToolButton, PillPushButton,
-                            InfoBar, InfoBarPosition, InfoBarIcon, 
-                            RoundMenu, FluentIcon, Action, AvatarWidget, BodyLabel, ToolButton,
-                            HyperlinkButton, CaptionLabel, setFont, setTheme, Theme, isDarkTheme,
-                            FluentStyleSheet, FlowLayout, IconWidget, getFont,
-                            TransparentDropDownToolButton, DropDownPushButton,
-                            ScrollArea, PrimaryPushButton, LineEdit,
-                            FlipImageDelegate, HorizontalPipsPager, HorizontalFlipView,
-                            TextWrap, InfoBadge, PushButton, ScrollArea, ImageLabel, ToolTipFilter,
-                            MessageBoxBase, SpinBox, SubtitleLabel, CardWidget, TimePicker,
-                            StrongBodyLabel, CheckBox, InfoBarIcon, LargeTitleLabel, ProgressRing, 
-                            Flyout, FlyoutViewBase, FlyoutAnimationType)
-
-import DyberPet.settings as settings
-from DyberPet.DyberSettings.custom_utils import AvatarImage
+from qfluentwidgets import SimpleCardWidget, PushButton
+from qfluentwidgets import (
+    TransparentToolButton,
+    PillPushButton,
+    BodyLabel,
+    CaptionLabel,
+    setFont,
+    isDarkTheme,
+    FluentStyleSheet,
+    FlowLayout,
+    IconWidget,
+    ScrollArea,
+    LineEdit,
+    PushButton,
+    ScrollArea,
+    ToolTipFilter,
+    MessageBoxBase,
+    SpinBox,
+    SubtitleLabel,
+    CardWidget,
+    TimePicker,
+    StrongBodyLabel,
+    CheckBox,
+    LargeTitleLabel,
+    ProgressRing,
+    Flyout,
+    FlyoutViewBase,
+    FlyoutAnimationType,
+)
+from DyberPet.DyberSettings.custom_utils import SACECARD_H, SACECARD_W, AvatarImage
 from DyberPet.utils import MaskPhrase, TimeConverter
+import DyberPet.settings as settings
 
-from sys import platform
 basedir = settings.BASEDIR
-module_path = os.path.join(basedir, 'DyberPet/Dashboard/')
-'''
+module_path = os.path.join(basedir, "DyberPet/Dashboard/")
+"""
 if platform == 'win32':
     basedir = ''
     module_path = 'DyberPet/Dashboard/'
@@ -51,16 +77,16 @@ else:
     basedir = '/'.join(basedir.split('/')[:-2])
 
     module_path = os.path.join(basedir, 'DyberPet/Dashboard/')
-'''
+"""
 
 
-
-#===========================================================
+# ===========================================================
 #    Separator with customized color choice
-#===========================================================
+# ===========================================================
+
 
 class HorizontalSeparator(QWidget):
-    """ Horizontal separator """
+    """Horizontal separator"""
 
     def __init__(self, color, height=3, parent=None):
         self.color = color
@@ -74,14 +100,14 @@ class HorizontalSeparator(QWidget):
         if isDarkTheme():
             painter.setPen(QColor(255, 255, 255, 51))
         else:
-            #painter.setPen(QColor(0, 0, 0, 22))
+            # painter.setPen(QColor(0, 0, 0, 22))
             painter.setPen(self.color)
 
         painter.drawLine(0, 1, self.width(), 1)
 
 
 class VerticalSeparator(QWidget):
-    """ Vertical separator """
+    """Vertical separator"""
 
     def __init__(self, color, height=3, parent=None):
         self.color = color
@@ -95,23 +121,21 @@ class VerticalSeparator(QWidget):
         if isDarkTheme():
             painter.setPen(QColor(255, 255, 255, 51))
         else:
-            #painter.setPen(QColor(0, 0, 0, 22))
+            # painter.setPen(QColor(0, 0, 0, 22))
             painter.setPen(self.color)
 
         painter.drawLine(1, 0, 1, self.height())
 
 
-
-
-
 ###########################################################################
-#                            Status UI Widgets                            
+#                            Status UI Widgets
 ###########################################################################
 
 NOTE_H = 40
 
+
 class NoteFlowGroup(QWidget):
-    """ Notification Stream (log system) """
+    """Notification Stream (log system)"""
 
     def __init__(self, title: str, sizeHintDyber, parent=None):
         super().__init__(parent=parent)
@@ -141,19 +165,17 @@ class NoteFlowGroup(QWidget):
         self.resize(self.width(), 60)
 
     def addNote(self, icon: QPixmap, content: str):
-        """ add new notification to stream """
+        """add new notification to stream"""
         time = datetime.datetime.now().strftime("%H:%M:%S")
         notification = NotificationWidget(icon, time, content)
-        self.noteLayout.insertWidget(0, HorizontalSeparator(QColor(20,20,20,125), 1))
+        self.noteLayout.insertWidget(0, HorizontalSeparator(QColor(20, 20, 20, 125), 1))
         self.noteLayout.insertWidget(0, notification)
         self.nrow += 1
         self.adjustSize()
-    
+
     def adjustSize(self):
-        h = self.nrow * (NOTE_H+8) + 60
+        h = self.nrow * (NOTE_H + 8) + 60
         return self.resize(self.width(), h)
-    
-    
 
 
 class NotificationWidget(QWidget):
@@ -172,7 +194,7 @@ class NotificationWidget(QWidget):
         Icon = QLabel()
         Icon.setFixedSize(int(24), int(24))
         Icon.setScaledContents(True)
-        Icon.setPixmap(icon) #QPixmap.fromImage(icon))
+        Icon.setPixmap(icon)  # QPixmap.fromImage(icon))
 
         timeLabel = CaptionLabel(time)
         setFont(timeLabel, 14, QFont.Normal)
@@ -184,18 +206,18 @@ class NotificationWidget(QWidget):
         self.noteLabel.adjustSize()
 
         self.hBoxLayout.addWidget(Icon, Qt.AlignLeft)
-        #self.hBoxLayout.addStretch(1)
+        # self.hBoxLayout.addStretch(1)
         self.hBoxLayout.addWidget(timeLabel, Qt.AlignLeft)
-        #self.hBoxLayout.addStretch(1)
+        # self.hBoxLayout.addStretch(1)
         self.hBoxLayout.addWidget(self.noteLabel, Qt.AlignLeft)
         self.hBoxLayout.addStretch(1)
 
 
-
 STATUS_W, STATUS_H = 450, 125
 
+
 class StatusCard(SimpleCardWidget):
-    """ Status card """
+    """Status card"""
 
     def __init__(self, parent=None):
         self.petname = settings.petname
@@ -212,9 +234,8 @@ class StatusCard(SimpleCardWidget):
 
         self.__init_Card()
 
-
     def _normalBackgroundColor(self):
-        
+
         return QColor(255, 255, 255, 13 if isDarkTheme() else 170)
 
     def _updateBackgroundColor(self):
@@ -228,37 +249,42 @@ class StatusCard(SimpleCardWidget):
 
         while layout.count():
             child = layout.takeAt(0)
-            
+
             if child.widget():
                 child.widget().deleteLater()
             elif child.layout():
                 self._clear_layout(child.layout())
             else:
                 pass
-            
-            
 
     def __init_Card(self):
 
         # Pfp -----------
-        info_file = os.path.join(basedir, 'res/role', self.petname, 'info', 'info.json')
+        info_file = os.path.join(basedir, "res/role", self.petname, "info", "info.json")
         pfp_file = None
         if os.path.exists(info_file):
-            info = json.load(open(info_file, 'r', encoding='UTF-8'))
-            pfp_file = info.get('pfp', None)
+            info = json.load(open(info_file, "r", encoding="UTF-8"))
+            pfp_file = info.get("pfp", None)
 
         if pfp_file is None:
             # use the first image of default action
-            actJson = json.load(open(os.path.join(basedir, 'res/role', self.petname, 'act_conf.json'),
-                                'r', encoding='UTF-8'))
+            actJson = json.load(
+                open(
+                    os.path.join(basedir, "res/role", self.petname, "act_conf.json"),
+                    "r",
+                    encoding="UTF-8",
+                )
+            )
             pfp_file = f"{actJson['default']['images']}_0.png"
-            pfp_file = os.path.join(basedir, 'res/role', self.petname, 'action', pfp_file)
+            pfp_file = os.path.join(
+                basedir, "res/role", self.petname, "action", pfp_file
+            )
         else:
-            pfp_file = os.path.join(basedir, 'res/role', self.petname, 'info', pfp_file)
+            pfp_file = os.path.join(basedir, "res/role", self.petname, "info", pfp_file)
 
         image = QImage()
         image.load(pfp_file)
-        '''
+        """
         pixmap = AvatarImage(image, edge_size=80, frameColor="#ffffff")
         self.pfpLabel = QLabel()
         self.pfpLabel.setPixmap(pixmap)
@@ -266,7 +292,7 @@ class StatusCard(SimpleCardWidget):
         pfpImg = AvatarImage(image, edge_size=80, frameColor="#ffffff")
         self.pfpLabel = QLabel(self)
         self.pfpLabel.setPixmap(QPixmap.fromImage(pfpImg))
-        '''
+        """
         self.pfpLabel = AvatarImage(image, edge_size=80, frameColor="#ffffff")
 
         # Pet Name -----------
@@ -277,8 +303,9 @@ class StatusCard(SimpleCardWidget):
         self.nameLabel.adjustSize()
         self.nameLabel.setFixedHeight(25)
 
-        daysText = self.tr(" (Fed for ") + str(settings.pet_data.days) +\
-                   self.tr(" days)")
+        daysText = (
+            self.tr(" (Fed for ") + str(settings.pet_data.days) + self.tr(" days)")
+        )
         self.daysLabel = CaptionLabel(daysText)
         setFont(self.daysLabel, 15, QFont.Normal)
         self.daysLabel.setFixedHeight(25)
@@ -287,11 +314,9 @@ class StatusCard(SimpleCardWidget):
         hbox_title.addWidget(self.daysLabel, Qt.AlignRight | Qt.AlignVCenter)
         hbox_title.addStretch(1)
 
-
         # Status Bar -----------
         self.hpStatus = HPWidget()
         self.fvStatus = FVWidget()
-
 
         # Assemble all widgets -----------
         vBoxLayout = QVBoxLayout()
@@ -299,41 +324,41 @@ class StatusCard(SimpleCardWidget):
         vBoxLayout.setSpacing(5)
 
         vBoxLayout.addStretch(1)
-        vBoxLayout.addLayout(
-            hbox_title, Qt.AlignLeft | Qt.AlignVCenter)
-        vBoxLayout.addWidget(HorizontalSeparator(QColor(20,20,20,125), 1))
-        #vBoxLayout_status.addStretch(1)
+        vBoxLayout.addLayout(hbox_title, Qt.AlignLeft | Qt.AlignVCenter)
+        vBoxLayout.addWidget(HorizontalSeparator(QColor(20, 20, 20, 125), 1))
+        # vBoxLayout_status.addStretch(1)
         vBoxLayout.addWidget(self.hpStatus, 1, Qt.AlignLeft | Qt.AlignVCenter)
         vBoxLayout.addWidget(self.fvStatus, 1, Qt.AlignLeft | Qt.AlignVCenter)
         vBoxLayout.addStretch(1)
 
         # Assemble main body
-        
+
         self.hBoxLayout.addStretch(1)
         self.hBoxLayout.addWidget(self.pfpLabel, Qt.AlignRight | Qt.AlignVCenter)
         self.hBoxLayout.addStretch(1)
         self.hBoxLayout.addLayout(vBoxLayout, Qt.AlignLeft | Qt.AlignVCenter)
         self.hBoxLayout.addStretch(1)
-    
+
     def _changePet(self):
         self._clear_layout(self.hBoxLayout)
         self.petname = settings.petname
         self.__init_Card()
-        #self._updateBackgroundColor()
-    '''
+        # self._updateBackgroundColor()
+
+    """
     def _deleteSave(self):
         self._clear_layout(self.vBoxLayout)
         self.jsonPath = None
         self.cardTitle = None
         self.__init_EmptyCard()
         self._updateBackgroundColor()
-    '''
+    """
+
     def _updateHP(self, hp: int):
         self.hpStatus._updateHP(hp)
 
     def _updateFV(self, fv: int, fv_lvl: int):
         self.fvStatus._updateFV(fv, fv_lvl)
-        
 
 
 class HPWidget(QWidget):
@@ -359,9 +384,9 @@ class HPWidget(QWidget):
         hpLable.setFixedSize(43, hpLable.height())
 
         self.hpicon = QLabel(self)
-        self.hpicon.setFixedSize(20,20)
+        self.hpicon.setFixedSize(20, 20)
         image = QPixmap()
-        image.load(os.path.join(basedir, 'res/icons/HP_icon.png'))
+        image.load(os.path.join(basedir, "res/icons/HP_icon.png"))
         self.hpicon.setScaledContents(True)
         self.hpicon.setPixmap(image)
         self.hpicon.setAlignment(Qt.AlignCenter)
@@ -370,19 +395,19 @@ class HPWidget(QWidget):
         hpText = f"{settings.TIER_NAMES[self.hp_tier]}"
         self.statusLabel = CaptionLabel(hpText, self)
         setFont(self.statusLabel, 12, QFont.DemiBold)
-        self.statusLabel.setFixedSize(55,16)
+        self.statusLabel.setFixedSize(55, 16)
 
         self.hp_tiers = settings.HP_TIERS
         self.statusBar = QProgressBar(self)
         self.statusBar.setMinimum(0)
         self.statusBar.setMaximum(100)
         self._setBarStyle()
-        hpShown = math.ceil(round(settings.pet_data.hp/settings.HP_INTERVAL))
-        self.statusBar.setFormat(f'{hpShown}/100')
+        hpShown = math.ceil(round(settings.pet_data.hp / settings.HP_INTERVAL))
+        self.statusBar.setFormat(f"{hpShown}/100")
         self.statusBar.setValue(hpShown)
         self.statusBar.setAlignment(Qt.AlignCenter)
         self.statusBar.setFixedSize(145, 15)
-        
+
         self.hBoxLayout.addWidget(hpLable)
         self.hBoxLayout.addStretch(1)
         self.hBoxLayout.addWidget(self.hpicon)
@@ -392,7 +417,7 @@ class HPWidget(QWidget):
         self.hBoxLayout.addStretch(1)
 
     def _updateHP(self, hp):
-        self.statusBar.setFormat(f'{hp}/100')
+        self.statusBar.setFormat(f"{hp}/100")
         self.statusBar.setValue(hp)
         self._setBarStyle()
 
@@ -403,16 +428,15 @@ class HPWidget(QWidget):
 
     def _setBarStyle(self):
         colors = ["#f8595f", "#f8595f", "#FAC486", "#abf1b7"]
-        stylesheet = f'''QProgressBar {{
+        stylesheet = f"""QProgressBar {{
                                         font-family: "Segoe UI";
                                         border: 1px solid #08060f;
                                         border-radius: 7px;
                                       }}
                         QProgressBar::chunk {{
                                         background-color: {colors[settings.pet_data.hp_tier]};
-                                        border-radius: 5px;}}'''
+                                        border-radius: 5px;}}"""
         self.statusBar.setStyleSheet(stylesheet)
-
 
 
 class FVWidget(QWidget):
@@ -437,9 +461,9 @@ class FVWidget(QWidget):
         fvLable.setFixedSize(43, fvLable.height())
 
         fvicon = QLabel(self)
-        fvicon.setFixedSize(20,20)
+        fvicon.setFixedSize(20, 20)
         image = QPixmap()
-        image.load(os.path.join(basedir, 'res/icons/Fv_icon.png'))
+        image.load(os.path.join(basedir, "res/icons/Fv_icon.png"))
         fvicon.setScaledContents(True)
         fvicon.setPixmap(image)
         fvicon.setAlignment(Qt.AlignCenter)
@@ -449,18 +473,18 @@ class FVWidget(QWidget):
         fvText = f"Lv{self.fv_lvl}"
         self.statusLabel = CaptionLabel(fvText, self)
         setFont(self.statusLabel, 12, QFont.DemiBold)
-        self.statusLabel.setFixedSize(55,16)
+        self.statusLabel.setFixedSize(55, 16)
 
         self.statusBar = QProgressBar(self)
         self._setBarStyle()
         self.lvl_max = settings.LVL_BAR[self.fv_lvl]
         self.statusBar.setMinimum(0)
         self.statusBar.setMaximum(self.lvl_max)
-        self.statusBar.setFormat(f'{fv}/{self.lvl_max}')
+        self.statusBar.setFormat(f"{fv}/{self.lvl_max}")
         self.statusBar.setValue(fv)
         self.statusBar.setAlignment(Qt.AlignCenter)
         self.statusBar.setFixedSize(145, 15)
-        
+
         self.hBoxLayout.addWidget(fvLable)
         self.hBoxLayout.addStretch(1)
         self.hBoxLayout.addWidget(fvicon)
@@ -475,33 +499,32 @@ class FVWidget(QWidget):
             self.lvl_max = settings.LVL_BAR[fv_lvl]
             self.statusBar.setMinimum(0)
             self.statusBar.setMaximum(self.lvl_max)
-            self.statusBar.setFormat(f'{fv}/{self.lvl_max}')
+            self.statusBar.setFormat(f"{fv}/{self.lvl_max}")
             self.statusBar.setValue(fv)
 
             self.statusLabel.setText(f"Lv{fv_lvl}")
         else:
-            self.statusBar.setFormat(f'{fv}/{self.lvl_max}')
+            self.statusBar.setFormat(f"{fv}/{self.lvl_max}")
             self.statusBar.setValue(fv)
 
-
     def _setBarStyle(self):
-        stylesheet = '''QProgressBar {
+        stylesheet = """QProgressBar {
                                         font-family: "Segoe UI";
                                         border: 1px solid #08060f;
                                         border-radius: 7px;
                                       }
                         QProgressBar::chunk {
                                         background-color: #F4665C;
-                                        border-radius: 5px;}'''
+                                        border-radius: 5px;}"""
         self.statusBar.setStyleSheet(stylesheet)
-
 
 
 BUFF_W, BUFF_H = 450, 45
 BUFF_SIZE = 25
 
+
 class BuffCard(SimpleCardWidget):
-    """  Buff status UI """
+    """Buff status UI"""
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -511,19 +534,23 @@ class BuffCard(SimpleCardWidget):
         HScroll = ScrollArea(self)
         HScroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         HScroll.setWidgetResizable(True)
-        HScroll.setStyleSheet("""QScrollArea {
+        HScroll.setStyleSheet(
+            """QScrollArea {
                                             background-color:  transparent;
                                             border: none;
-                                        }""")
+                                        }"""
+        )
 
         BuffFlow = QWidget()
-        BuffFlow.setStyleSheet("""background-color:  transparent;
-                                            border: none;""")
+        BuffFlow.setStyleSheet(
+            """background-color:  transparent;
+                                            border: none;"""
+        )
         self.hBoxLayout = QHBoxLayout(BuffFlow)
         self.hBoxLayout.setContentsMargins(10, 0, 10, 0)
         self.hBoxLayout.setAlignment(Qt.AlignVCenter | Qt.AlignLeft)
         self.hBoxLayout.setSpacing(15)
-        #self._init_buff()
+        # self._init_buff()
 
         HScroll.setWidget(BuffFlow)
 
@@ -533,7 +560,7 @@ class BuffCard(SimpleCardWidget):
         self.vBoxLayout.addWidget(HScroll)
 
         self.setFixedSize(BUFF_W, BUFF_H)
-    
+
     def addBuff(self, itemName, item_conf, idx):
 
         if idx == 0:
@@ -541,13 +568,13 @@ class BuffCard(SimpleCardWidget):
             self.buff_dict[itemName] = w
             self.hBoxLayout.addWidget(self.buff_dict[itemName])
             self.buff_dict[itemName].bf_removed.connect(self.removeBuffSlot)
-            
+
         elif idx > 0:
             self.buff_dict[itemName].addBuff()
 
     def removeBuff(self, itemName, idx=None):
         self.buff_dict[itemName].removeBuff(idx)
-    
+
     def removeBuffSlot(self, itemName):
         self.buff_dict.pop(itemName)
 
@@ -559,7 +586,7 @@ class BuffCard(SimpleCardWidget):
             if widget.buffName == itemName:
                 self.hBoxLayout.removeWidget(widget)
                 widget.deleteLater()
-    
+
     def _clearBuff(self):
         self.buff_dict = {}
         for i in reversed(range(self.hBoxLayout.count())):
@@ -571,52 +598,50 @@ class BuffCard(SimpleCardWidget):
             self.hBoxLayout.removeWidget(widget)
             widget.deleteLater()
 
-
-
-
-    '''
+    """
     def adjustSize(self):
         h = self.nrow * (NOTE_H+8) + 60
         return self.resize(self.width(), h)
-    '''
+    """
 
 
 class BuffWidget(QLabel):
     bf_removed = Signal(str, name="Ii_removed")
 
-    '''Single Buff Widget'''
+    """Single Buff Widget"""
 
     def __init__(self, item_config=None):
 
         super().__init__()
         self.item_config = item_config
-        self.buffName = item_config['name']
-        self.image = item_config['image']
+        self.buffName = item_config["name"]
+        self.image = item_config["image"]
         self.buff_num = 1
 
         self.size_wh = BUFF_SIZE
-        self.setFixedSize(self.size_wh,self.size_wh)
+        self.setFixedSize(self.size_wh, self.size_wh)
         self.setScaledContents(True)
         self.setAlignment(Qt.AlignCenter)
 
-        self.font = QFont('Consolas') #'Consolas') #'Segoe UI')
-        self.font.setPointSize(8) #self.size_wh/8)
+        self.font = QFont("Consolas")  #'Consolas') #'Segoe UI')
+        self.font.setPointSize(8)  # self.size_wh/8)
         self.font.setBold(True)
 
         ###################################################
         #  Mac and Windows scaling behavior are different
         #  Could be because of HighDPI?
         ###################################################
-        self.image = self.image #.scaled(self.size_wh,self.size_wh, mode=Qt.SmoothTransformation)
-        self.setPixmap(self.image) #QPixmap.fromImage(self.image))
+        self.image = (
+            self.image
+        )  # .scaled(self.size_wh,self.size_wh, mode=Qt.SmoothTransformation)
+        self.setPixmap(self.image)  # QPixmap.fromImage(self.image))
 
-        self.item_type = self.item_config.get('item_type', 'consumable')
+        self.item_type = self.item_config.get("item_type", "consumable")
         self._setQss(self.item_type)
 
-        #self.tooltip = 
+        # self.tooltip =
         self.installEventFilter(ToolTipFilter(self, showDelay=500))
-        self.setToolTip(item_config['hint'])
-
+        self.setToolTip(item_config["hint"])
 
     def paintEvent(self, event):
         super().paintEvent(event)
@@ -627,10 +652,12 @@ class BuffWidget(QLabel):
             text_pen = QPen(QColor("#333333"))
             text_printer.setPen(text_pen)
 
-            text_printer.drawText(QRect(0, 0, int(self.size_wh-2), int(self.size_wh-2)), 
-                                  Qt.AlignBottom | Qt.AlignRight, str(self.buff_num))
+            text_printer.drawText(
+                QRect(0, 0, int(self.size_wh - 2), int(self.size_wh - 2)),
+                Qt.AlignBottom | Qt.AlignRight,
+                str(self.buff_num),
+            )
             text_printer.end()
-            
 
     def _setQss(self, item_type):
 
@@ -648,25 +675,22 @@ class BuffWidget(QLabel):
 
     def addBuff(self):
         self.buff_num += 1
-        self.setPixmap(self.image) #QPixmap.fromImage(self.image))
+        self.setPixmap(self.image)  # QPixmap.fromImage(self.image))
 
     def removeBuff(self, idx=None):
         self.buff_num += -1
         if self.buff_num == 0:
             self.deleteBuff()
         else:
-            self.setPixmap(self.image) #QPixmap.fromImage(self.image))
+            self.setPixmap(self.image)  # QPixmap.fromImage(self.image))
 
     def deleteBuff(self):
         # Send signal to notify related widget
         self.bf_removed.emit(self.buffName)
 
 
-
-
-
 ###########################################################################
-#                          Inventory UI Widgets                            
+#                          Inventory UI Widgets
 ###########################################################################
 
 
@@ -681,9 +705,9 @@ class BPStackedWidget(QStackedWidget):
         current_widget = self.currentWidget()
         if current_widget:
             height = current_widget.height()
-            #print(height)
+            # print(height)
             self.resize(self.width(), height)
-    
+
     def subWidget_sizeChange(self, tab_idx, h):
         self.height_dict[tab_idx] = h
         h = max(self.height_dict.values())
@@ -698,13 +722,12 @@ class BPStackedWidget(QStackedWidget):
         super().showEvent(event)
 
 
-
-
 class coinWidget(QWidget):
     """
     Display number of coins
     """
-    coinUpdated = Signal(name='coinUpdated')
+
+    coinUpdated = Signal(name="coinUpdated")
 
     def __init__(self, parent=None):
 
@@ -719,18 +742,18 @@ class coinWidget(QWidget):
         self.adjustSize()
 
     def _init_widget(self):
-        #self.label = CaptionLabel(self.tr('DyberCoin'))
-        #setFont(self.label, 14, QFont.Normal)
+        # self.label = CaptionLabel(self.tr('DyberCoin'))
+        # setFont(self.label, 14, QFont.Normal)
 
         self.icon = QLabel(self)
-        self.icon.setFixedSize(25,25)
+        self.icon.setFixedSize(25, 25)
         image = QPixmap()
-        image.load(os.path.join(basedir, 'res/icons/Dashboard/coin.svg'))
+        image.load(os.path.join(basedir, "res/icons/Dashboard/coin.svg"))
         self.icon.setScaledContents(True)
         self.icon.setPixmap(image)
         self.icon.setAlignment(Qt.AlignCenter)
         self.icon.installEventFilter(ToolTipFilter(self.icon, showDelay=500))
-        self.icon.setToolTip(self.tr('Dyber Coin'))
+        self.icon.setToolTip(self.tr("Dyber Coin"))
 
         self.coinAmount = LineEdit(self)
         self.coinAmount.setClearButtonEnabled(False)
@@ -745,25 +768,24 @@ class coinWidget(QWidget):
     def _updateCoin(self, coinNumber: int):
         num_str = f"{coinNumber:,}"
         self.coinAmount.setText(num_str)
-        self.coinAmount.setFixedWidth(len(num_str)*7 + 29)
+        self.coinAmount.setFixedWidth(len(num_str) * 7 + 29)
         self.coinUpdated.emit()
-    
+
     def _update2data(self):
         coinNumber = settings.pet_data.coins
         num_str = f"{coinNumber:,}"
         self.coinAmount.setText(num_str)
-        self.coinAmount.setFixedWidth(len(num_str)*7 + 29)
-
-
+        self.coinAmount.setFixedWidth(len(num_str) * 7 + 29)
 
 
 ITEM_SIZE = 56
+
 
 class PetItemWidget(QLabel):
     Ii_selected = Signal(int, bool, name="Ii_selected")
     Ii_removed = Signal(int, name="Ii_removed")
 
-    '''Single Item Widget
+    """Single Item Widget
     
     - Fixed-size square
     - Display the item icon
@@ -775,11 +797,11 @@ class PetItemWidget(QLabel):
 
     - Able to drag and switch (not finished)
 
-    '''
-    def __init__(self, cell_index, item_config=None, item_num=0):
+    """
 
-        '''item_config
-        
+    def __init__(self, cell_index, item_config=None, item_num=0):
+        """item_config
+
         name: str
         img: Pixmap object
         number: int
@@ -791,46 +813,45 @@ class PetItemWidget(QLabel):
         item_type: str
         pet_limit: List
 
-        '''
+        """
         super().__init__()
         self.cell_index = cell_index
 
         self.item_config = item_config
-        self.item_name = 'None'
+        self.item_name = "None"
         self.image = None
         self.item_num = item_num
         self.selected = False
         self.item_inuse = False
-        self.size_wh = ITEM_SIZE #int(56) #*size_factor)
+        self.size_wh = ITEM_SIZE  # int(56) #*size_factor)
 
-        self.setFixedSize(self.size_wh,self.size_wh)
+        self.setFixedSize(self.size_wh, self.size_wh)
         self.setScaledContents(True)
         self.setAlignment(Qt.AlignCenter)
 
-        self.font = QFont('Consolas') #'Consolas') #'Segoe UI')
-        self.font.setPointSize(9) #self.size_wh/8)
+        self.font = QFont("Consolas")  #'Consolas') #'Segoe UI')
+        self.font.setPointSize(9)  # self.size_wh/8)
         self.font.setBold(True)
-        
 
         if item_config is not None:
-            self.item_name = item_config['name']
-            self.image = item_config['image']
+            self.item_name = item_config["name"]
+            self.image = item_config["image"]
             ##############################################################
             #  Mac and Windows scaling behavior are different
             #  Could be because of HighDPI?
             #  Actually they are the same, MacOS highlighted the problem.
             #  Now scaling method has been updated in all codes.
             ##############################################################
-            #self.image = self.image.scaled(self.size_wh,self.size_wh, mode=Qt.SmoothTransformation)
-            self.setPixmap(self.image) #QPixmap.fromImage(self.image))
+            # self.image = self.image.scaled(self.size_wh,self.size_wh, mode=Qt.SmoothTransformation)
+            self.setPixmap(self.image)  # QPixmap.fromImage(self.image))
             self.installEventFilter(ToolTipFilter(self, showDelay=500))
-            self.setToolTip(item_config['hint'])
+            self.setToolTip(item_config["hint"])
 
-            self.item_type = self.item_config.get('item_type', 'consumable')
-            
+            self.item_type = self.item_config.get("item_type", "consumable")
+
         else:
-            self.item_type = 'Empty'
-        
+            self.item_type = "Empty"
+
         self._setQss(self.item_type)
 
     def mousePressEvent(self, event):
@@ -842,7 +863,6 @@ class PetItemWidget(QLabel):
             self.Ii_selected.emit(self.cell_index, self.item_inuse)
             self._setQss(self.item_type)
 
-
     def paintEvent(self, event):
         super().paintEvent(event)
         if self.item_num > 1:
@@ -852,10 +872,12 @@ class PetItemWidget(QLabel):
             text_pen = QPen(QColor("#333333"))
             text_printer.setPen(text_pen)
 
-            text_printer.drawText(QRect(0, 0, int(self.size_wh-3), int(self.size_wh-3)), 
-                                  Qt.AlignBottom | Qt.AlignRight, str(self.item_num))
+            text_printer.drawText(
+                QRect(0, 0, int(self.size_wh - 3), int(self.size_wh - 3)),
+                Qt.AlignBottom | Qt.AlignRight,
+                str(self.item_num),
+            )
             text_printer.end()
-            
 
     def _setQss(self, item_type):
 
@@ -871,7 +893,6 @@ class PetItemWidget(QLabel):
         """
         self.setStyleSheet(ItemStyle)
 
-
     def unselected(self):
         self.selected = False
         self._setQss(self.item_type)
@@ -879,56 +900,55 @@ class PetItemWidget(QLabel):
     def registItem(self, item_config, n_items):
         self.item_config = item_config
         self.item_num = n_items
-        self.item_name = item_config['name']
-        self.image = item_config['image']
-        #self.image = self.image.scaled(self.size_wh,self.size_wh, mode=Qt.SmoothTransformation)
-        self.setPixmap(self.image) #QPixmap.fromImage(self.image))
+        self.item_name = item_config["name"]
+        self.image = item_config["image"]
+        # self.image = self.image.scaled(self.size_wh,self.size_wh, mode=Qt.SmoothTransformation)
+        self.setPixmap(self.image)  # QPixmap.fromImage(self.image))
         self.installEventFilter(ToolTipFilter(self, showDelay=500))
-        self.setToolTip(item_config['hint'])
-        self.item_type = self.item_config.get('item_type', 'consumable')
+        self.setToolTip(item_config["hint"])
+        self.item_type = self.item_config.get("item_type", "consumable")
         self._setQss(self.item_type)
 
     def addItem(self, add_n):
         self.item_num += add_n
-        self.setPixmap(self.image) #QPixmap.fromImage(self.image))
+        self.setPixmap(self.image)  # QPixmap.fromImage(self.image))
 
     def consumeItem(self):
-        if self.item_type in ['collection', 'dialogue', 'subpet']:
+        if self.item_type in ["collection", "dialogue", "subpet"]:
             self.item_inuse = not self.item_inuse
         else:
             self.item_num += -1
             if self.item_num == 0:
                 self.removeItem()
             else:
-                self.setPixmap(self.image) #QPixmap.fromImage(self.image))
+                self.setPixmap(self.image)  # QPixmap.fromImage(self.image))
 
     def removeItem(self):
         # Send signal to notify related widget
         self.Ii_removed.emit(self.cell_index)
 
         self.item_config = None
-        self.item_name = 'None'
+        self.item_name = "None"
         self.image = None
         self.item_num = 0
         self.selected = False
-        self.item_type = 'Empty'
+        self.item_type = "Empty"
 
         self.clear()
-        self.setToolTip('')
+        self.setToolTip("")
         self._setQss(self.item_type)
-
 
 
 class itemTabWidget(QWidget):
 
-    set_confirm = Signal(int, int, name='set_confirm')
-    use_item_inven = Signal(str, name='use_item_inven')
-    item_num_changed = Signal(str, name='item_num_changed')
-    item_note = Signal(str, str, name='item_note')
-    item_drop = Signal(str, name='item_drop')
-    size_changed = Signal(int, int, name='size_changed')
-    addBuff = Signal(str, name='addBuff')
-    rmBuff = Signal(str, name='rmBuff')
+    set_confirm = Signal(int, int, name="set_confirm")
+    use_item_inven = Signal(str, name="use_item_inven")
+    item_num_changed = Signal(str, name="item_num_changed")
+    item_note = Signal(str, str, name="item_note")
+    item_drop = Signal(str, name="item_drop")
+    size_changed = Signal(int, int, name="size_changed")
+    addBuff = Signal(str, name="addBuff")
+    rmBuff = Signal(str, name="rmBuff")
 
     def __init__(self, items_data, item_types, sizeHintDyber, tab_index, parent=None):
         super().__init__(parent=parent)
@@ -949,50 +969,54 @@ class itemTabWidget(QWidget):
 
         self.resize(self.sizeHintDyber[0] - 150, self.height())
         self._init_items()
-        #FluentStyleSheet.SETTING_CARD_GROUP.apply(self)
+        # FluentStyleSheet.SETTING_CARD_GROUP.apply(self)
         self.adjustSize()
 
     def _init_items(self):
-        
+
         keys = settings.pet_data.items.keys()
         keys = [i for i in keys if i in self.items_data.item_dict.keys()]
-        keys = [i for i in keys if self.items_data.item_dict[i]['item_type'] in self.item_types]
+        keys = [
+            i
+            for i in keys
+            if self.items_data.item_dict[i]["item_type"] in self.item_types
+        ]
 
         # Sort items (after drag function complete, delete it)
-        keys_lvl = [self.items_data.item_dict[i]['fv_lock'] for i in keys]
+        keys_lvl = [self.items_data.item_dict[i]["fv_lock"] for i in keys]
         keys = [x for _, x in sorted(zip(keys_lvl, keys))]
 
         index_item = 0
 
         for item in keys:
-            if self.items_data.item_dict[item]['item_type'] not in self.item_types:
+            if self.items_data.item_dict[item]["item_type"] not in self.item_types:
                 continue
             if settings.pet_data.items[item] <= 0:
                 continue
 
-            #n_row = index_item // self.tab_shape[1]
-            #n_col = (index_item - (n_row-1)*self.tab_shape[1]) % self.tab_shape[1]
+            # n_row = index_item // self.tab_shape[1]
+            # n_col = (index_item - (n_row-1)*self.tab_shape[1]) % self.tab_shape[1]
             self._addItemCard(index_item, item, settings.pet_data.items[item])
             index_item += 1
-        
 
         if index_item < self.minItemWidget:
 
             for j in range(index_item, self.minItemWidget):
-                #n_row = j // self.inven_shape[1]
-                #n_col = (j - (n_row-1)*self.inven_shape[1]) % self.inven_shape[1]
+                # n_row = j // self.inven_shape[1]
+                # n_col = (j - (n_row-1)*self.inven_shape[1]) % self.inven_shape[1]
 
                 self._addItemCard(j)
                 self.empty_cell.append(j)
 
-
     def _addItemCard(self, index_item, item=None, item_number=0):
         if item:
-            self.cells_dict[index_item] = PetItemWidget(index_item, self.items_data.item_dict[item], int(item_number))
-            
+            self.cells_dict[index_item] = PetItemWidget(
+                index_item, self.items_data.item_dict[item], int(item_number)
+            )
+
         else:
             self.cells_dict[index_item] = PetItemWidget(index_item)
-        
+
         self.cells_dict[index_item].Ii_selected.connect(self.change_selected)
         self.cells_dict[index_item].Ii_removed.connect(self.item_removed)
         self.cardLayout.addWidget(self.cells_dict[index_item])
@@ -1002,14 +1026,14 @@ class itemTabWidget(QWidget):
 
         width = self.width()
         n = self.cardLayout.count()
-        ncol = (width-39) // (ITEM_SIZE+9) #math.ceil(SACECARD_WH*n / width)
+        ncol = (width - 39) // (ITEM_SIZE + 9)  # math.ceil(SACECARD_WH*n / width)
         nrow = math.ceil(n / ncol)
-        h = (ITEM_SIZE+10)*nrow + 49
-        #print(width, n, ncol, nrow, h)
+        h = (ITEM_SIZE + 10) * nrow + 49
+        # print(width, n, ncol, nrow, h)
         self.size_changed.emit(self.tab_index, h)
-        #h = self.cardLayout.heightForWidth(self.width()) #+ 6
+        # h = self.cardLayout.heightForWidth(self.width()) #+ 6
         return self.resize(self.width(), h)
-    
+
     def _clear_cardlayout(self, layout):
 
         while layout.count():
@@ -1018,15 +1042,15 @@ class itemTabWidget(QWidget):
                 child.deleteLater()
             except:
                 pass
-            '''
+            """
             if child.widget():
                 child.widget().deleteLater()
             elif child.layout():
                 self._clear_layout(child.layout())
             else:
                 pass
-            '''
-    
+            """
+
     def _refreshBag(self):
         self.cells_dict = {}
         self.empty_cell = []
@@ -1035,7 +1059,6 @@ class itemTabWidget(QWidget):
         self._clear_cardlayout(self.cardLayout)
         # load in new items
         self._init_items()
-
 
     def change_selected(self, selected_index, item_inuse):
         if self.selected_cell == selected_index:
@@ -1059,61 +1082,80 @@ class itemTabWidget(QWidget):
     def changeButton(self, item_inuse=False):
         if self.selected_cell is None:
             self.set_confirm.emit(0, 0)
-            #self.button_confirm.setText(self.tr('使用'))
-            #self.button_confirm.setDisabled(True)
-    
+            # self.button_confirm.setText(self.tr('使用'))
+            # self.button_confirm.setDisabled(True)
+
         else:
             if item_inuse:
                 self.set_confirm.emit(1, 1)
-                #self.button_confirm.setText(self.tr('收回'))
+                # self.button_confirm.setText(self.tr('收回'))
             else:
                 self.set_confirm.emit(0, 1)
-                #self.button_confirm.setText(self.tr('使用'))
-            #self.button_confirm.setDisabled(False)
+                # self.button_confirm.setText(self.tr('使用'))
+            # self.button_confirm.setDisabled(False)
 
     def acc_withdrawed(self, item_name):
-        cell_index = [i for i in self.cells_dict.keys() if self.cells_dict[i].item_name==item_name]
+        cell_index = [
+            i
+            for i in self.cells_dict.keys()
+            if self.cells_dict[i].item_name == item_name
+        ]
         if not cell_index:
             return
         cell_index = cell_index[0]
         self.cells_dict[cell_index].consumeItem()
         if cell_index == self.selected_cell:
             self.changeButton()
-        
-        if self.items_data.item_dict[item_name]['buff']:
-            self.rmBuff.emit(item_name)
 
+        if self.items_data.item_dict[item_name]["buff"]:
+            self.rmBuff.emit(item_name)
 
     def _confirmClicked(self, tab_index):
         if self.tab_index != tab_index:
             return
-        
-        if self.selected_cell is None: #无选择
+
+        if self.selected_cell is None:  # 无选择
             return
 
         item_name_selected = self.cells_dict[self.selected_cell].item_name
 
         # Check if the item is character-specific
-        if len(self.items_data.item_dict[item_name_selected]['pet_limit']) != 0:
-            pet_list = self.items_data.item_dict[item_name_selected]['pet_limit']
+        if len(self.items_data.item_dict[item_name_selected]["pet_limit"]) != 0:
+            pet_list = self.items_data.item_dict[item_name_selected]["pet_limit"]
             if settings.petname not in pet_list:
-                self.item_note.emit('system', f"[{item_name_selected}] {self.tr('仅能在切换至')}' [{'、'.join(pet_list)}] {self.tr('后使用哦')}")
+                self.item_note.emit(
+                    "system",
+                    f"[{item_name_selected}] {self.tr('仅能在切换至')}' [{'、'.join(pet_list)}] {self.tr('后使用哦')}",
+                )
                 return
 
         # Check item type
-        if self.items_data.item_dict[item_name_selected]['item_type'] == 'consumable':
+        if self.items_data.item_dict[item_name_selected]["item_type"] == "consumable":
             # Item adds HP, but HP is already full / 数值已满 且物品为正向效果
-            if (settings.pet_data.hp == (settings.HP_TIERS[-1]*settings.HP_INTERVAL) and self.items_data.item_dict[item_name_selected]['effect_HP'] >= 0):
+            if (
+                settings.pet_data.hp == (settings.HP_TIERS[-1] * settings.HP_INTERVAL)
+                and self.items_data.item_dict[item_name_selected]["effect_HP"] >= 0
+            ):
                 # Item doesn't have effect on FV, return without use item
-                if self.items_data.item_dict[item_name_selected]['effect_FV'] == 0:
+                if self.items_data.item_dict[item_name_selected]["effect_FV"] == 0:
                     return
                 # FV already full, return
-                elif ((settings.pet_data.fv_lvl == (len(settings.LVL_BAR)-1)) and (settings.pet_data.fv==settings.LVL_BAR[settings.pet_data.fv_lvl]) and self.items_data.item_dict[item_name_selected]['effect_FV'] > 0):
+                elif (
+                    (settings.pet_data.fv_lvl == (len(settings.LVL_BAR) - 1))
+                    and (
+                        settings.pet_data.fv
+                        == settings.LVL_BAR[settings.pet_data.fv_lvl]
+                    )
+                    and self.items_data.item_dict[item_name_selected]["effect_FV"] > 0
+                ):
                     return
 
             # Item HP cost > current HP / 使用物品所消耗的数值不足 （当有负向效果时）
-            if (settings.pet_data.hp + self.items_data.item_dict[item_name_selected]['effect_HP']) < 0: # or\
-                #(settings.pet_data.em + self.items_data.item_dict[item_name_selected]['effect_FV']) < 0:
+            if (
+                settings.pet_data.hp
+                + self.items_data.item_dict[item_name_selected]["effect_HP"]
+            ) < 0:  # or\
+                # (settings.pet_data.em + self.items_data.item_dict[item_name_selected]['effect_FV']) < 0:
                 return
 
             # Item can be used --------
@@ -1122,40 +1164,43 @@ class itemTabWidget(QWidget):
             self.item_num_changed.emit(item_name_selected)
 
             # Signal to item label
-            #self.cells_dict[self.selected_cell].unselected()
+            # self.cells_dict[self.selected_cell].unselected()
             self.cells_dict[self.selected_cell].consumeItem()
 
             # signal to act feed animation
             self.use_item_inven.emit(item_name_selected)
-            self.item_note.emit(item_name_selected, '[%s] -1'%item_name_selected)
+            self.item_note.emit(item_name_selected, "[%s] -1" % item_name_selected)
 
             # change button
-            #self.selected_cell = None
-            #self.changeButton()
+            # self.selected_cell = None
+            # self.changeButton()
 
-        elif self.items_data.item_dict[item_name_selected]['item_type'] == 'collection':
-            #print('collection used')
-            #self.cells_dict[self.selected_cell].unselected()
+        elif self.items_data.item_dict[item_name_selected]["item_type"] == "collection":
+            # print('collection used')
+            # self.cells_dict[self.selected_cell].unselected()
             self.cells_dict[self.selected_cell].consumeItem()
             self.use_item_inven.emit(item_name_selected)
-            #self.selected_cell = None
+            # self.selected_cell = None
             self.changeButton(self.cells_dict[self.selected_cell].item_inuse)
 
-        elif self.items_data.item_dict[item_name_selected]['item_type'] == 'dialogue':
-            #print('collection used')
-            #self.cells_dict[self.selected_cell].unselected()
+        elif self.items_data.item_dict[item_name_selected]["item_type"] == "dialogue":
+            # print('collection used')
+            # self.cells_dict[self.selected_cell].unselected()
             self.use_item_inven.emit(item_name_selected)
-            #self.selected_cell = None
-            #self.changeButton()
+            # self.selected_cell = None
+            # self.changeButton()
 
-        elif self.items_data.item_dict[item_name_selected]['item_type'] == 'subpet':
+        elif self.items_data.item_dict[item_name_selected]["item_type"] == "subpet":
             self.cells_dict[self.selected_cell].consumeItem()
             self.use_item_inven.emit(item_name_selected)
             self.changeButton(self.cells_dict[self.selected_cell].item_inuse)
-        
+
         # Buff-related operation
-        if self.items_data.item_dict[item_name_selected]['buff']:
-            if self.items_data.item_dict[item_name_selected]['item_type'] in ['subpet','collection']:
+        if self.items_data.item_dict[item_name_selected]["buff"]:
+            if self.items_data.item_dict[item_name_selected]["item_type"] in [
+                "subpet",
+                "collection",
+            ]:
                 if self.cells_dict[self.selected_cell].item_inuse:
                     self.addBuff.emit(item_name_selected)
                 else:
@@ -1165,9 +1210,8 @@ class itemTabWidget(QWidget):
 
         return
 
-
     def add_item(self, item_name, n_items):
-        
+
         item_exist = False
         for i in self.cells_dict.keys():
             if self.cells_dict[i].item_name == item_name:
@@ -1187,45 +1231,46 @@ class itemTabWidget(QWidget):
         elif self.empty_cell:
             item_index = self.empty_cell[0]
             self.empty_cell = self.empty_cell[1:]
-            self.cells_dict[item_index].registItem(self.items_data.item_dict[item_name], n_items)
+            self.cells_dict[item_index].registItem(
+                self.items_data.item_dict[item_name], n_items
+            )
 
         else:
             item_index = len(self.cells_dict)
             self._addItemCard(item_index, item_name, n_items)
 
         if n_items > 0:
-            self.item_note.emit(item_name, '[%s] +%s'%(item_name, n_items))
+            self.item_note.emit(item_name, "[%s] +%s" % (item_name, n_items))
             self.item_drop.emit(item_name)
         else:
-            self.item_note.emit(item_name, '[%s] %s'%(item_name, n_items))
+            self.item_note.emit(item_name, "[%s] %s" % (item_name, n_items))
         # change pet_data
         settings.pet_data.change_item(item_name, item_change=n_items)
         self.item_num_changed.emit(item_name)
 
 
-
-
-
 ###########################################################################
-#                             Shop UI Widgets                            
+#                             Shop UI Widgets
 ###########################################################################
 
 SHOPITEM_W, SHOPITEM_H = 210, 120
 SHOPITEM_WH = 50
+
 
 class ShopItemWidget(SimpleCardWidget):
 
     buyClicked = Signal(str, name="buyClicked")
     sellClicked = Signal(str, name="sellClicked")
 
-    '''Shop Item Widget
+    """Shop Item Widget
     
     - Fixed-size square
     - Display the item icon, cost, condition/numbers in backpack
     - button to buy and sell
     - item cost should not exceed 9,999
 
-    '''
+    """
+
     def __init__(self, cell_index, item_config, parent=None):
 
         super().__init__(parent)
@@ -1235,18 +1280,18 @@ class ShopItemWidget(SimpleCardWidget):
         self.cell_index = cell_index
         self.item_config = item_config
 
-        self.item_name = item_config['name']
-        self.image = item_config['image']
-        self.description = self.item_config['hint']
-        self.cost = self.item_config['cost']
-        self.item_type = self.item_config.get('item_type', 'consumable')
-        self.fv_lock = self.item_config['fv_lock']
-        self.pet_limit = self.item_config['pet_limit']
+        self.item_name = item_config["name"]
+        self.image = item_config["image"]
+        self.description = self.item_config["hint"]
+        self.cost = self.item_config["cost"]
+        self.item_type = self.item_config.get("item_type", "consumable")
+        self.fv_lock = self.item_config["fv_lock"]
+        self.pet_limit = self.item_config["pet_limit"]
         if not self.pet_limit:
             self.pet_limit = settings.pets
 
         self.unlocked = False
-        self.locked_reason = 'NONE'
+        self.locked_reason = "NONE"
         self._getLockStat()
 
         self.vBoxLayout = QVBoxLayout(self)
@@ -1272,13 +1317,16 @@ class ShopItemWidget(SimpleCardWidget):
         self._init_Card()
 
     def _getLockStat(self):
-        unlocked = settings.pet_data.fv_lvl >= self.fv_lock and settings.petname in self.pet_limit
+        unlocked = (
+            settings.pet_data.fv_lvl >= self.fv_lock
+            and settings.petname in self.pet_limit
+        )
         if settings.petname not in self.pet_limit:
-            self.locked_reason = 'PETLIMIT'
+            self.locked_reason = "PETLIMIT"
         elif settings.pet_data.fv_lvl < self.fv_lock:
-            self.locked_reason = 'FVLOCK'
+            self.locked_reason = "FVLOCK"
         else:
-            self.locked_reason = 'NONE'
+            self.locked_reason = "NONE"
 
         if self.unlocked == unlocked:
             lockChanged = False
@@ -1288,9 +1336,8 @@ class ShopItemWidget(SimpleCardWidget):
 
         return lockChanged
 
-
     def _normalBackgroundColor(self):
-        
+
         return QColor(255, 255, 255, 13 if isDarkTheme() else 170)
 
     def _updateBackgroundColor(self):
@@ -1304,14 +1351,13 @@ class ShopItemWidget(SimpleCardWidget):
 
         while layout.count():
             child = layout.takeAt(0)
-            
+
             if child.widget():
                 child.widget().deleteLater()
             elif child.layout():
                 self._clear_layout(child.layout())
             else:
                 pass
-            
 
     def _init_Card(self):
 
@@ -1320,16 +1366,17 @@ class ShopItemWidget(SimpleCardWidget):
         self.imgLabel.setFixedSize(SHOPITEM_WH, SHOPITEM_WH)
         self.imgLabel.setScaledContents(True)
         self.imgLabel.setAlignment(Qt.AlignCenter)
-        pixmap = self.image #QPixmap.fromImage(self.image)
+        pixmap = self.image  # QPixmap.fromImage(self.image)
         if not self.unlocked:
             pixmap = Silhouette(pixmap)
         self.imgLabel.setPixmap(pixmap)
         if self.unlocked:
-            self.imgLabel.installEventFilter(ToolTipFilter(self.imgLabel, showDelay=500))
+            self.imgLabel.installEventFilter(
+                ToolTipFilter(self.imgLabel, showDelay=500)
+            )
             self.imgLabel.setToolTip(self.description)
-        
-        self._setQss(self.item_type)
 
+        self._setQss(self.item_type)
 
         # Item name
         if self.unlocked:
@@ -1339,53 +1386,58 @@ class ShopItemWidget(SimpleCardWidget):
         self.nameLabel = CaptionLabel(title)
         setFont(self.nameLabel, 14, QFont.DemiBold)
         self.nameLabel.adjustSize()
-        #self.nameLabel.setFixedHeight(25)
-
+        # self.nameLabel.setFixedHeight(25)
 
         # Item info
         if self.unlocked:
-            self.info_text = f"{self.tr('Owned')}: {settings.pet_data.items.get(self.item_name, 0)}"
-            fontCol = 'black'
-        elif self.locked_reason == 'FVLOCK':
+            self.info_text = (
+                f"{self.tr('Owned')}: {settings.pet_data.items.get(self.item_name, 0)}"
+            )
+            fontCol = "black"
+        elif self.locked_reason == "FVLOCK":
             self.info_text = f"{self.tr('Favor Req')}: {self.fv_lock}"
             fontCol = QColor("#ff333d")
-        elif self.locked_reason == 'PETLIMIT':
+        elif self.locked_reason == "PETLIMIT":
             self.info_text = f"{self.tr('Other Chars Only')}"
             fontCol = QColor("#636363")
 
         self.infoLabel = CaptionLabel(self.info_text)
         setFont(self.infoLabel, 14, QFont.Normal)
 
-        #if fontCol:
+        # if fontCol:
         palette = self.infoLabel.palette()
         palette.setColor(QPalette.WindowText, fontCol)  # Example: blue color
         self.infoLabel.setPalette(palette)
         self.infoLabel.adjustSize()
-        #self.infoLabel.setFixedHeight(25)
+        # self.infoLabel.setFixedHeight(25)
 
         self.vBox_description.addStretch(1)
         self.vBox_description.addWidget(self.nameLabel, Qt.AlignVCenter | Qt.AlignLeft)
-        #self.vBox_description.addStretch(1)
+        # self.vBox_description.addStretch(1)
         self.vBox_description.addWidget(self.infoLabel, Qt.AlignVCenter | Qt.AlignLeft)
         self.vBox_description.addStretch(1)
 
         self.hBox_description.addStretch(1)
         self.hBox_description.addWidget(self.imgLabel, Qt.AlignRight | Qt.AlignVCenter)
         self.hBox_description.addStretch(1)
-        self.hBox_description.addLayout(self.vBox_description, Qt.AlignLeft | Qt.AlignVCenter)
+        self.hBox_description.addLayout(
+            self.vBox_description, Qt.AlignLeft | Qt.AlignVCenter
+        )
         self.hBox_description.addStretch(1)
 
-
         # Buy Button
-        self.buyButton = PushButton(text = f"{self.cost}",
-                                    icon = QIcon(os.path.join(basedir, 'res/icons/Dashboard/coin.svg')))
+        self.buyButton = PushButton(
+            text=f"{self.cost}",
+            icon=QIcon(os.path.join(basedir, "res/icons/Dashboard/coin.svg")),
+        )
         self.buyButton.setFixedWidth(85)
         self.buyButton.clicked.connect(self._buyClicked)
 
-
         # Sell Button
-        self.sellButton = PushButton(text = self.tr("Sell"),
-                                     icon = QIcon(os.path.join(basedir, 'res/icons/Dashboard/sell.svg')))
+        self.sellButton = PushButton(
+            text=self.tr("Sell"),
+            icon=QIcon(os.path.join(basedir, "res/icons/Dashboard/sell.svg")),
+        )
         self.sellButton.setFixedWidth(85)
         self.sellButton.clicked.connect(self._sellClicked)
 
@@ -1393,18 +1445,17 @@ class ShopItemWidget(SimpleCardWidget):
             self.buyButton.setDisabled(True)
             self.sellButton.setDisabled(True)
 
-        #self.hBox_button.addStretch(1)
+        # self.hBox_button.addStretch(1)
         self.hBox_button.addWidget(self.buyButton)
-        #self.hBox_button.addStretch(1)
+        # self.hBox_button.addStretch(1)
         self.hBox_button.addWidget(self.sellButton)
-        #self.hBox_button.addStretch(1)
+        # self.hBox_button.addStretch(1)
 
         self.vBoxLayout.addStretch(1)
         self.vBoxLayout.addLayout(self.hBox_description)
         self.vBoxLayout.addStretch(1)
         self.vBoxLayout.addLayout(self.hBox_button)
         self.vBoxLayout.addStretch(1)
-            
 
     def _setQss(self, item_type):
 
@@ -1423,7 +1474,9 @@ class ShopItemWidget(SimpleCardWidget):
     def _update_Own(self):
         if not self.unlocked:
             return
-        self.info_text = f"{self.tr('Owned')}: {settings.pet_data.items.get(self.item_name, 0)}"
+        self.info_text = (
+            f"{self.tr('Owned')}: {settings.pet_data.items.get(self.item_name, 0)}"
+        )
         self.infoLabel.setText(self.info_text)
         self.infoLabel.adjustSize()
 
@@ -1432,17 +1485,19 @@ class ShopItemWidget(SimpleCardWidget):
 
         if lockChanged:
             # Item image
-            pixmap = self.image #QPixmap.fromImage(self.image)
+            pixmap = self.image  # QPixmap.fromImage(self.image)
             if not self.unlocked:
                 pixmap = Silhouette(pixmap)
             self.imgLabel.setPixmap(pixmap)
             if self.unlocked:
-                self.imgLabel.installEventFilter(ToolTipFilter(self.imgLabel, showDelay=500))
+                self.imgLabel.installEventFilter(
+                    ToolTipFilter(self.imgLabel, showDelay=500)
+                )
                 self.imgLabel.setToolTip(self.description)
             ############################################################
-            # To-do: if locked, should uninstall the even filter 
+            # To-do: if locked, should uninstall the even filter
             ############################################################
-        
+
             # Item name
             if self.unlocked:
                 title = self.item_name
@@ -1453,18 +1508,20 @@ class ShopItemWidget(SimpleCardWidget):
 
         # Item info
         if self.unlocked:
-            self.info_text = f"{self.tr('Owned')}: {settings.pet_data.items.get(self.item_name, 0)}"
-            fontCol = 'black'
-        elif self.locked_reason == 'FVLOCK':
+            self.info_text = (
+                f"{self.tr('Owned')}: {settings.pet_data.items.get(self.item_name, 0)}"
+            )
+            fontCol = "black"
+        elif self.locked_reason == "FVLOCK":
             self.info_text = f"{self.tr('Favor Req')}: {self.fv_lock}"
             fontCol = QColor("#ff333d")
-        elif self.locked_reason == 'PETLIMIT':
+        elif self.locked_reason == "PETLIMIT":
             self.info_text = f"{self.tr('Other Chars Only')}"
             fontCol = QColor("#636363")
 
         self.infoLabel.setText(self.info_text)
 
-        #if fontCol:
+        # if fontCol:
         palette = self.infoLabel.palette()
         palette.setColor(QPalette.WindowText, fontCol)  # Example: blue color
         self.infoLabel.setPalette(palette)
@@ -1482,12 +1539,9 @@ class ShopItemWidget(SimpleCardWidget):
         self.sellClicked.emit(self.item_name)
 
 
-
-    
-
 class ShopView(QWidget):
-    buyItem = Signal(str, name='buyItem')
-    sellItem = Signal(str, name='sellItem')
+    buyItem = Signal(str, name="buyItem")
+    sellItem = Signal(str, name="sellItem")
 
     def __init__(self, items_data, sizeHintDyber, parent=None):
         super().__init__(parent=parent)
@@ -1498,13 +1552,17 @@ class ShopView(QWidget):
         self.cards = {}
         self._Items = []
         self.searchDict = defaultdict(list)
-        self.filterDict = {self.tr('Type'): defaultdict(list),
-                           self.tr('MOD'): defaultdict(list)}
-        #self.modDict = defaultdict(list)
-        self.conf2uiMap = {'consumable':self.tr('Food'),
-                           'collection':self.tr('Collection'),
-                           'dialogue':self.tr('Collection'),
-                           'subpet':self.tr('Pet')}
+        self.filterDict = {
+            self.tr("Type"): defaultdict(list),
+            self.tr("MOD"): defaultdict(list),
+        }
+        # self.modDict = defaultdict(list)
+        self.conf2uiMap = {
+            "consumable": self.tr("Food"),
+            "collection": self.tr("Collection"),
+            "dialogue": self.tr("Collection"),
+            "subpet": self.tr("Pet"),
+        }
 
         self.cardLayout = FlowLayout(self)
         self.cardLayout.setSpacing(9)
@@ -1513,16 +1571,15 @@ class ShopView(QWidget):
 
         self.resize(self.sizeHintDyber[0] - 140, self.height())
         self._init_items()
-        #FluentStyleSheet.SETTING_CARD_GROUP.apply(self)
+        # FluentStyleSheet.SETTING_CARD_GROUP.apply(self)
         self.adjustSize()
-
 
     def _init_items(self):
 
         # Sort items (after drag function complete, delete it)
         keys = self.items_data.keys()
-        keys = [i for i in keys if self.items_data[i]['cost'] != -1]
-        keys_lvl = [self.items_data[i]['fv_lock'] for i in keys]
+        keys = [i for i in keys if self.items_data[i]["cost"] != -1]
+        keys_lvl = [self.items_data[i]["fv_lock"] for i in keys]
         keys = [x for _, x in sorted(zip(keys_lvl, keys))]
 
         item_idx = 0
@@ -1530,13 +1587,12 @@ class ShopView(QWidget):
             self._addItemCard(item_idx, item)
             item_idx += 1
 
-
     def _addItemCard(self, item_idx, item):
         item_config = self.items_data[item]
         card = ShopItemWidget(item_idx, item_config)
         self.cards[item_idx] = card
         self._Items.append(item)
-        
+
         # Signal Connection
         self.cards[item_idx].buyClicked.connect(self.buyItem)
         self.cards[item_idx].sellClicked.connect(self.sellItem)
@@ -1550,25 +1606,25 @@ class ShopView(QWidget):
     def _addToDict(self, item_idx, itemName):
         # Search Dict
         for i in range(len(itemName)):
-            self.searchDict[itemName[0:i+1]].append(item_idx)
+            self.searchDict[itemName[0 : i + 1]].append(item_idx)
         # Type Dict
-        confType = self.items_data[itemName]['item_type']
+        confType = self.items_data[itemName]["item_type"]
         uiType = self.conf2uiMap[confType]
-        self.filterDict[self.tr('Type')][uiType].append(item_idx)
+        self.filterDict[self.tr("Type")][uiType].append(item_idx)
         # MOD Dict
-        modName = self.items_data[itemName]['modName']
-        self.filterDict[self.tr('MOD')][modName].append(item_idx)
+        modName = self.items_data[itemName]["modName"]
+        self.filterDict[self.tr("MOD")][modName].append(item_idx)
 
     def adjustSize(self):
         width = self.width()
         n = self.cardLayout.count()
-        ncol = (width-9) // (SHOPITEM_W+9) #math.ceil(SACECARD_WH*n / width)
+        ncol = (width - 9) // (SHOPITEM_W + 9)  # math.ceil(SACECARD_WH*n / width)
         nrow = math.ceil(n / ncol)
-        #print(width,ncol,nrow)
-        h = (SHOPITEM_H+9)*nrow + 49
+        # print(width,ncol,nrow)
+        h = (SHOPITEM_H + 9) * nrow + 49
 
         return self.resize(self.width(), h)
-    
+
     def _clear_cardlayout(self, layout):
 
         while layout.count():
@@ -1579,8 +1635,8 @@ class ShopView(QWidget):
                 pass
 
     def _updateList(self, tagDict, searchText):
-        #print(tagDict, searchText)
-        if searchText != '':
+        # print(tagDict, searchText)
+        if searchText != "":
             idxToShow = self.searchDict[searchText]
         else:
             idxToShow = list(self.cards.keys())
@@ -1595,7 +1651,7 @@ class ShopView(QWidget):
             idxInTags = set(idxInTags)
             idxToShow = [i for i in idxToShow if i in idxInTags]
 
-        #print([self._Items[i] for i in idxToShow])
+        # print([self._Items[i] for i in idxToShow])
         self.cardLayout.removeAllWidgets()
 
         for i, card in self.cards.items():
@@ -1619,17 +1675,21 @@ class ShopView(QWidget):
 
     def _fvchange(self, fv_lvl):
         for idx, card in self.cards.items():
-            if fv_lvl >= card.fv_lock and not card.unlocked and card.locked_reason == 'FVLOCK':
+            if (
+                fv_lvl >= card.fv_lock
+                and not card.unlocked
+                and card.locked_reason == "FVLOCK"
+            ):
                 card._update_UI()
 
 
-
-
-
 FILTER_W = 450
+
+
 class filterView(SimpleCardWidget):
-    """ Filter Options Widget """
-    filterChanged = Signal(name='filterChanged')
+    """Filter Options Widget"""
+
+    filterChanged = Signal(name="filterChanged")
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -1638,15 +1698,14 @@ class filterView(SimpleCardWidget):
         self.filter_dict = {}
 
         self.vBoxLayout = QVBoxLayout(self)
-        #self.vBoxLayout.setAlignment(Qt.AlignVCenter | Qt.AlignLeft)
+        # self.vBoxLayout.setAlignment(Qt.AlignVCenter | Qt.AlignLeft)
         self.vBoxLayout.setContentsMargins(25, 15, 15, 15)
         self.vBoxLayout.setSpacing(5)
 
         self.setFixedWidth(FILTER_W)
 
-
     def _normalBackgroundColor(self):
-        
+
         return QColor(255, 255, 255, 13 if isDarkTheme() else 170)
 
     def _updateBackgroundColor(self):
@@ -1660,38 +1719,38 @@ class filterView(SimpleCardWidget):
 
         while layout.count():
             child = layout.takeAt(0)
-            
+
             if child.widget():
                 child.widget().deleteLater()
             elif child.layout():
                 self._clear_layout(child.layout())
             else:
-                pass 
+                pass
 
     def addFilter(self, title: str, options: List):
 
         titleW = CaptionLabel(title)
         setFont(titleW, 15, QFont.DemiBold)
-        #titleW.adjustSize()
-        #titleW.setFixedHeight(25)
+        # titleW.adjustSize()
+        # titleW.setFixedHeight(25)
 
         filterW = filterWidget(title, options)
         self.filter_dict[title] = filterW
         self.filter_dict[title].tagClicked.connect(self.filterChanged)
 
-        #Signal Connection
+        # Signal Connection
         # TO-DO
-        #if len(self.filter_dict) > 1:
+        # if len(self.filter_dict) > 1:
         #    self.vBoxLayout.addWidget(HorizontalSeparator(QColor(20,20,20,125), 1))
         self.vBoxLayout.addWidget(titleW)
         self.vBoxLayout.addWidget(filterW)
-        
+
         self.adjustSize()
-    
+
     def adjustSize(self):
-        w = [w.height() for _,w in self.filter_dict.items()]
-        #print(w)
-        h = sum(w) + (2*len(w)-1)*5 + 30 + len(w)*20
+        w = [w.height() for _, w in self.filter_dict.items()]
+        # print(w)
+        h = sum(w) + (2 * len(w) - 1) * 5 + 30 + len(w) * 20
         return self.resize(self.width(), h)
 
     def _getSelectedTags(self):
@@ -1705,13 +1764,10 @@ class filterView(SimpleCardWidget):
 
         return selectedTags
 
-    
-
-
 
 class filterWidget(QWidget):
 
-    tagClicked = Signal(name='tagClicked')
+    tagClicked = Signal(name="tagClicked")
 
     def __init__(self, title, options, parent=None):
         super().__init__(parent=parent)
@@ -1725,10 +1781,9 @@ class filterWidget(QWidget):
         self.cardLayout.setContentsMargins(0, 0, 0, 0)
         self.cardLayout.setAlignment(Qt.AlignVCenter)
 
-        self.resize(FILTER_W-40, self.height())
+        self.resize(FILTER_W - 40, self.height())
         self._init_opts()
         self.adjustSize()
-
 
     def _init_opts(self):
         for opt in self.options:
@@ -1741,33 +1796,30 @@ class filterWidget(QWidget):
 
             btn.clicked.connect(self.tagClicked)
 
-
     def adjustSize(self):
         width = self.width()
         nrow = self._calculate_nrow()
         btnH = self.opt_btn[0].height()
-        h = (btnH+10)*nrow + 5*(nrow-1)
-        #print(nrow)
+        h = (btnH + 10) * nrow + 5 * (nrow - 1)
+        # print(nrow)
         return self.resize(self.width(), h)
-
 
     def _calculate_nrow(self):
         nrow = 1
-        lenRecord = FILTER_W-40+5
+        lenRecord = FILTER_W - 40 + 5
         for btn in self.opt_btn:
-            lenRecord -= (btn.width() + 5)
+            lenRecord -= btn.width() + 5
             if lenRecord < 0:
-                lenRecord = FILTER_W-40 - btn.width()
+                lenRecord = FILTER_W - 40 - btn.width()
                 nrow += 1
 
         return nrow
 
 
-
-
 class ShopMessageBox(MessageBoxBase):
-    """ Custom message box """
-    bill = Signal(int, name='bill')
+    """Custom message box"""
+
+    bill = Signal(int, name="bill")
 
     def __init__(self, option, item_name, maxNum, cost, parent=None):
         super().__init__(parent)
@@ -1776,10 +1828,10 @@ class ShopMessageBox(MessageBoxBase):
         self.cost = cost
         self.option = option
         self.itemNum = 0
-        if self.option == 'buy':
-            self.titleLabel = SubtitleLabel(self.tr('Buy') + f' [{item_name}]', self)
-        elif self.option == 'sell':
-            self.titleLabel = SubtitleLabel(self.tr('Sell') + f' [{item_name}]', self)
+        if self.option == "buy":
+            self.titleLabel = SubtitleLabel(self.tr("Buy") + f" [{item_name}]", self)
+        elif self.option == "sell":
+            self.titleLabel = SubtitleLabel(self.tr("Sell") + f" [{item_name}]", self)
         self.numSpinBox = SpinBox(self)
         self.numSpinBox.setMinimum(0)
         self.numSpinBox.setMaximum(maxNum)
@@ -1789,9 +1841,9 @@ class ShopMessageBox(MessageBoxBase):
         self.viewLayout.addWidget(self.numSpinBox)
 
         # change the text of button
-        self.yesButton.setIcon(os.path.join(basedir, 'res/icons/Dashboard/coin.svg'))
-        self.yesButton.setText('0')
-        self.cancelButton.setText(self.tr('Cancel'))
+        self.yesButton.setIcon(os.path.join(basedir, "res/icons/Dashboard/coin.svg"))
+        self.yesButton.setText("0")
+        self.cancelButton.setText(self.tr("Cancel"))
 
         self.widget.setMinimumWidth(350)
         self.numSpinBox.textChanged.connect(self._updateCost)
@@ -1799,16 +1851,14 @@ class ShopMessageBox(MessageBoxBase):
     def _updateCost(self, num):
         self.itemNum = int(num)
         self.bill.emit(self.itemNum)
-        if self.option == 'buy':
-            self.yesButton.setText(f'-{self.cost * self.itemNum}')
-        elif self.option == 'sell':
-            self.yesButton.setText(f'+{self.cost * self.itemNum}')
+        if self.option == "buy":
+            self.yesButton.setText(f"-{self.cost * self.itemNum}")
+        elif self.option == "sell":
+            self.yesButton.setText(f"+{self.cost * self.itemNum}")
 
     def __onYesButtonClicked(self):
         self.accept()
         self.accepted.emit()
-
-
 
 
 def Silhouette(pixmap):
@@ -1823,27 +1873,23 @@ def Silhouette(pixmap):
 
     # Set the composition mode to colorize with black
     painter.setCompositionMode(QPainter.CompositionMode_SourceIn)
-    painter.fillRect(silhouette.rect(), QColor('#787878'))
+    painter.fillRect(silhouette.rect(), QColor("#787878"))
     # Finalize the painting and save the silhouette
     painter.end()
 
     return silhouette
 
 
-
-
-
-
-
 ###########################################################################
-#                          Animation UI Widgets                            
+#                          Animation UI Widgets
 ###########################################################################
 
 
 ANIM_W, ANIM_H = 120, 210
 
+
 class AnimationGroup(QWidget):
-    """ Animation card group """
+    """Animation card group"""
 
     def __init__(self, title: str, sizeHintDyber, parent=None):
         super().__init__(parent=parent)
@@ -1879,31 +1925,28 @@ class AnimationGroup(QWidget):
         card.setParent(self)
         self.cardLayout.addWidget(card)
         self.adjustSize()
-        #print(self.width(), self.height())
+        # print(self.width(), self.height())
 
     def addAnimations(self, cards: List[QWidget]):
         for card in cards:
             self.addSaveCard(card)
-    
+
     def adjustSize(self):
         width = self.sizeHintDyber[0] - 50
         n = self.cardLayout.count()
-        ncol = width // (SACECARD_W+12) #math.ceil(SACECARD_WH*n / width)
+        ncol = width // (SACECARD_W + 12)  # math.ceil(SACECARD_WH*n / width)
         nrow = math.ceil(n / ncol)
-        h = (SACECARD_H+12)*nrow + 46
-        #h = self.cardLayout.heightForWidth(self.width()) #+ 6
+        h = (SACECARD_H + 12) * nrow + 46
+        # h = self.cardLayout.heightForWidth(self.width()) #+ 6
         return self.resize(self.width(), h)
 
 
-
-
-
-
 ###########################################################################
-#                             Task UI Widgets                            
+#                             Task UI Widgets
 ###########################################################################
 
 PANEL_W, PANEL_H = 420, 300
+
 
 class FocusPanel(CardWidget):
 
@@ -1915,17 +1958,17 @@ class FocusPanel(CardWidget):
     addProgress = Signal(name="addProgress")
 
     """Focus Panel UI"""
+
     def __init__(self, sizeHintDyber, parent=None):
         super().__init__(parent=parent)
         self.sizeHintDyber = sizeHintDyber
         self.setObjectName("FocusPanel")
-        #settings.current_tm_option = 'pomodoro'
+        # settings.current_tm_option = 'pomodoro'
         self.n_pomo = 0
         self.min_focus = 0
 
         self.__init_UI()
         self.__connectSignalToSlot()
-
 
     def __init_UI(self):
 
@@ -1936,7 +1979,7 @@ class FocusPanel(CardWidget):
         self.setSizePolicy(sizePolicy)
         self.setMinimumSize(QSize(PANEL_W, PANEL_H))
         self.setMaximumSize(QSize(PANEL_W, PANEL_H))
-        
+
         self.verticalLayout_3 = QVBoxLayout(self)
         self.verticalLayout_3.setSizeConstraint(QLayout.SetDefaultConstraint)
 
@@ -1954,7 +1997,11 @@ class FocusPanel(CardWidget):
         self.focusCardIcon.setMinimumSize(QSize(20, 20))
         self.focusCardIcon.setMaximumSize(QSize(20, 20))
         icon1 = QIcon()
-        icon1.addPixmap(QPixmap(os.path.join(basedir,'res/icons/Dashboard/timer.svg')), QIcon.Normal, QIcon.Off)
+        icon1.addPixmap(
+            QPixmap(os.path.join(basedir, "res/icons/Dashboard/timer.svg")),
+            QIcon.Normal,
+            QIcon.Off,
+        )
         self.focusCardIcon.setIcon(icon1)
 
         # Panel TopBar Title
@@ -1962,9 +2009,11 @@ class FocusPanel(CardWidget):
         self.focusPeriodLabel.setText(self.tr("Focus Period"))
 
         self.manualButton = TransparentToolButton(self)
-        self.manualButton.setIcon(os.path.join(basedir,'res/icons/Dashboard/manual.svg'))
-        self.manualButton.setFixedSize(20,20)
-        self.manualButton.setIconSize(QSize(20,20))
+        self.manualButton.setIcon(
+            os.path.join(basedir, "res/icons/Dashboard/manual.svg")
+        )
+        self.manualButton.setFixedSize(20, 20)
+        self.manualButton.setIconSize(QSize(20, 20))
 
         self.horizontalLayout_2.addWidget(self.focusCardIcon)
         spacerItem = QSpacerItem(2, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
@@ -1973,7 +2022,7 @@ class FocusPanel(CardWidget):
         spacerItem2 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem2)
         self.horizontalLayout_2.addWidget(self.manualButton, 0, Qt.AlignRight)
-        
+
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         spacerItem3 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem3)
@@ -1985,7 +2034,6 @@ class FocusPanel(CardWidget):
         spacerItem4 = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Fixed)
         self.verticalLayout.addItem(spacerItem4)
 
-
         # Timer Picker ------------------------------------------------------------------------------------------------
         self.timePicker = TimePicker(self)
         self.timePicker.setSecondVisible(False)
@@ -1993,7 +2041,6 @@ class FocusPanel(CardWidget):
         self.verticalLayout.addWidget(self.timePicker, 0, Qt.AlignHCenter)
         spacerItem5 = QSpacerItem(20, 10, QSizePolicy.Minimum, QSizePolicy.Fixed)
         self.verticalLayout.addItem(spacerItem5)
-
 
         # skip Relax CheckBox
         self.pomodoroCheckBox = CheckBox(self)
@@ -2026,11 +2073,12 @@ class FocusPanel(CardWidget):
         self.cancelFocusButton = PushButton(self)
         self.cancelFocusButton.setAutoDefault(False)
         self.cancelFocusButton.setText(self.tr("Cancel"))
-        self.cancelFocusButton.setIcon(os.path.join(basedir,'res/icons/Dashboard/stop.svg'))
+        self.cancelFocusButton.setIcon(
+            os.path.join(basedir, "res/icons/Dashboard/stop.svg")
+        )
         self.cancelFocusButton.setFixedWidth(110)
         self.cancelFocusButton.setDisabled(True)
 
-        
         spacerItem9 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem9)
         self.horizontalLayout_3.addWidget(self.startFocusButton)
@@ -2040,11 +2088,10 @@ class FocusPanel(CardWidget):
         spacerItem11 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem11)
 
-        self.verticalLayout.addLayout(self.horizontalLayout_3) #, 0, Qt.AlignHCenter)
+        self.verticalLayout.addLayout(self.horizontalLayout_3)  # , 0, Qt.AlignHCenter)
         spacerItem8 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem8)
         self.verticalLayout_3.addLayout(self.verticalLayout)
-
 
     def __connectSignalToSlot(self):
 
@@ -2053,34 +2100,35 @@ class FocusPanel(CardWidget):
         self.startFocusButton.clicked.connect(self._startClicked)
         self.cancelFocusButton.clicked.connect(self._cancelClicked)
 
-
     def _showTips(self):
         Flyout.create(
             target=self.manualButton,
-            icon=os.path.join(basedir,'res/icons/Dashboard/info.svg'),
-            title=self.tr('Usage Help'),
-            content=self.tr("""Please set up a period to focus on the work/study.
+            icon=os.path.join(basedir, "res/icons/Dashboard/info.svg"),
+            title=self.tr("Usage Help"),
+            content=self.tr(
+                """Please set up a period to focus on the work/study.
 
 Once this focus task is done, you will get coin rewarded.
 
 Even if you stopped the clock in the middle, you will still get rewarded accordingly.
 
 Choose 'Break by Pomodoro' will adjust the time to fit closest number of pomodoro.
-Everytime you finish a 25min Pomodoro, you get coin rewarded"""),
-            #isClosable=True,
-            #tailPosition=TeachingTipTailPosition.BOTTOM,
-            #duration=-1,
-            parent=self
+Everytime you finish a 25min Pomodoro, you get coin rewarded"""
+            ),
+            # isClosable=True,
+            # tailPosition=TeachingTipTailPosition.BOTTOM,
+            # duration=-1,
+            parent=self,
         )
-
 
     def _checkClicked(self, state):
         if self.pomodoroCheckBox.isChecked():
-            self.bottomHintLabel.setText(self.tr("You will take a 5-minute break every 25 minutes."))
+            self.bottomHintLabel.setText(
+                self.tr("You will take a 5-minute break every 25 minutes.")
+            )
             self._adjust_time_to_pomodoro()
         else:
             self.bottomHintLabel.setText(self.tr("You will not have break time."))
-
 
     def _adjust_time_to_pomodoro(self):
         time_picked = self.timePicker.getTime()
@@ -2088,17 +2136,16 @@ Everytime you finish a 25min Pomodoro, you get coin rewarded"""),
         if hour_picked == -1 or minute_picked == -1:
             return
 
-        time_total = 60*hour_picked + minute_picked
-        n_pomo = (time_total+5) // 30
-        n_pomo = min(max(1,n_pomo), 48)
+        time_total = 60 * hour_picked + minute_picked
+        n_pomo = (time_total + 5) // 30
+        n_pomo = min(max(1, n_pomo), 48)
 
-        new_total = n_pomo*30 - 5
+        new_total = n_pomo * 30 - 5
         new_hour = new_total // 60
         new_minute = new_total % 60
 
         time_adjusted = QTime(new_hour, new_minute)
         self.timePicker.setTime(time_adjusted)
-
 
     def _startClicked(self):
         if self.pomodoroCheckBox.isChecked():
@@ -2107,11 +2154,10 @@ Everytime you finish a 25min Pomodoro, you get coin rewarded"""),
         else:
             self._start_Focus()
 
-
     def _start_Pomodoro(self):
         time_picked = self.timePicker.getTime()
         hour_picked, minute_picked = time_picked.hour(), time_picked.minute()
-        n_pomo = (60*hour_picked + minute_picked + 5) // 30
+        n_pomo = (60 * hour_picked + minute_picked + 5) // 30
         if n_pomo <= 0:
             return
 
@@ -2126,12 +2172,11 @@ Everytime you finish a 25min Pomodoro, you get coin rewarded"""),
         self.start_pomodoro.emit(n_pomo)
         self.n_pomo = n_pomo
 
-
     def _start_Focus(self):
         time_picked = self.timePicker.getTime()
         hour_picked, minute_picked = time_picked.hour(), time_picked.minute()
 
-        if hour_picked==-1 or minute_picked == -1:
+        if hour_picked == -1 or minute_picked == -1:
             return
 
         if hour_picked + minute_picked <= 0:
@@ -2146,30 +2191,27 @@ Everytime you finish a 25min Pomodoro, you get coin rewarded"""),
 
         # Send Signal to start Focus
         self.start_focus.emit("range", hour_picked, minute_picked)
-        self.min_focus = hour_picked*60 + minute_picked
-
+        self.min_focus = hour_picked * 60 + minute_picked
 
     def taskFinished(self):
         # Calcualte reward
         if self.pomodoroCheckBox.isChecked():
             self.reward_coins(30)
-            
+
         else:
             self.reward_coins(self.min_focus)
-            
-        self._endTask_UIChanges()
 
+        self._endTask_UIChanges()
 
     def _cancelClicked(self):
-        
+
         if self.pomodoroCheckBox.isChecked():
             self.pomodoroCanceled()
-            
+
         else:
             self.focusCanceled()
-            
-        self._endTask_UIChanges()
 
+        self._endTask_UIChanges()
 
     def pomodoroCanceled(self):
         # Stop signal to Timer
@@ -2178,10 +2220,11 @@ Everytime you finish a 25min Pomodoro, you get coin rewarded"""),
         # Calcualte reward
         time_left = self.timePicker.getTime()
         hour_left, minute_left = time_left.hour(), time_left.minute()
-        half_done_pomo_minutes = self.n_pomo*25 + 5*(self.n_pomo-1) - hour_left*60 - minute_left
+        half_done_pomo_minutes = (
+            self.n_pomo * 25 + 5 * (self.n_pomo - 1) - hour_left * 60 - minute_left
+        )
         if half_done_pomo_minutes >= 0:
             self.reward_coins(half_done_pomo_minutes)
-
 
     def focusCanceled(self):
         # Stop signal to Timer
@@ -2190,10 +2233,9 @@ Everytime you finish a 25min Pomodoro, you get coin rewarded"""),
         # Calcualte reward
         time_left = self.timePicker.getTime()
         hour_left, minute_left = time_left.hour(), time_left.minute()
-        half_done_focus_minutes = self.min_focus - hour_left*60 - minute_left
+        half_done_focus_minutes = self.min_focus - hour_left * 60 - minute_left
         if half_done_focus_minutes >= 0:
             self.reward_coins(half_done_focus_minutes)
-
 
     def _endTask_UIChanges(self):
         # UI Changes
@@ -2206,7 +2248,6 @@ Everytime you finish a 25min Pomodoro, you get coin rewarded"""),
         # Property reset
         self.n_pomo = 0
         self.min_focus = 0
-
 
     def update_Timer(self):
 
@@ -2223,40 +2264,35 @@ Everytime you finish a 25min Pomodoro, you get coin rewarded"""),
         self.timePicker.setTime(time_updated)
         self.addProgress.emit()
 
-
     def single_pomo_done(self):
         if self.pomodoroCheckBox.isChecked():
             self.n_pomo -= 1
             self.reward_coins(30)
 
-
     def reward_coins(self, nminutes):
-        #print(f"Reward {nminutes} minutes")
+        # print(f"Reward {nminutes} minutes")
         if nminutes <= 0:
             return
-        n_coins = nminutes*25
+        n_coins = nminutes * 25
         self.addCoins.emit(n_coins, True, False, self.tr("Focus task reward:"))
-
-
-        
 
 
 class ProgressPanel(CardWidget):
     addCoins = Signal(int, bool, bool, str, name="addCoins")
 
     """Focus Panel UI"""
+
     def __init__(self, sizeHintDyber, parent=None):
         super().__init__(parent=parent)
         self.sizeHintDyber = sizeHintDyber
         self.setObjectName("ProgressPanel")
         self.daily_goal = 180
-        self.date_today = settings.task_data.taskData['history'][-1][0]
-        self.goal_met = settings.task_data.taskData['goal_completed']
+        self.date_today = settings.task_data.taskData["history"][-1][0]
+        self.goal_met = settings.task_data.taskData["goal_completed"]
 
         self.__init_ui()
         self._loadValues()
         self.__connectSignalToSlot()
-
 
     def __init_ui(self):
 
@@ -2265,8 +2301,8 @@ class ProgressPanel(CardWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.setSizePolicy(sizePolicy)
-        self.setMinimumSize(QSize(PANEL_W, PANEL_H+25))
-        self.setMaximumSize(QSize(PANEL_W, PANEL_H+25)) 
+        self.setMinimumSize(QSize(PANEL_W, PANEL_H + 25))
+        self.setMaximumSize(QSize(PANEL_W, PANEL_H + 25))
 
         self.verticalLayout = QVBoxLayout(self)
         self.verticalLayout.setSizeConstraint(QLayout.SetDefaultConstraint)
@@ -2283,7 +2319,11 @@ class ProgressPanel(CardWidget):
         self.progressIcon.setMinimumSize(QSize(20, 20))
         self.progressIcon.setMaximumSize(QSize(20, 20))
         icon1 = QIcon()
-        icon1.addPixmap(QPixmap(os.path.join(basedir,'res/icons/Dashboard/goal.svg')), QIcon.Normal, QIcon.Off)
+        icon1.addPixmap(
+            QPixmap(os.path.join(basedir, "res/icons/Dashboard/goal.svg")),
+            QIcon.Normal,
+            QIcon.Off,
+        )
         self.progressIcon.setIcon(icon1)
 
         # Panel TopBar Title
@@ -2291,9 +2331,9 @@ class ProgressPanel(CardWidget):
         self.dailyProgressLabel.setText(self.tr("Daily Goal"))
 
         self.editButton = TransparentToolButton(self)
-        self.editButton.setIcon(os.path.join(basedir,'res/icons/Dashboard/edit.svg'))
-        self.editButton.setFixedSize(20,20)
-        self.editButton.setIconSize(QSize(20,20))
+        self.editButton.setIcon(os.path.join(basedir, "res/icons/Dashboard/edit.svg"))
+        self.editButton.setFixedSize(20, 20)
+        self.editButton.setIconSize(QSize(20, 20))
 
         self.horizontalLayout_1.addWidget(self.progressIcon)
         spacerItem1 = QSpacerItem(2, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
@@ -2301,13 +2341,11 @@ class ProgressPanel(CardWidget):
         self.horizontalLayout_1.addWidget(self.dailyProgressLabel)
         spacerItem2 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.horizontalLayout_1.addItem(spacerItem2)
-        self.horizontalLayout_1.addWidget(self.editButton, 0, Qt.AlignRight)        
+        self.horizontalLayout_1.addWidget(self.editButton, 0, Qt.AlignRight)
 
         self.verticalLayout_2.addLayout(self.horizontalLayout_1)
         spacerItem3 = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.verticalLayout_2.addItem(spacerItem3)
-
-
 
         # Progress Panel -----------------------------------------------------------------------------------------------------
 
@@ -2316,7 +2354,7 @@ class ProgressPanel(CardWidget):
 
         # Yesterday
         self.verticalLayout_3 = QVBoxLayout()
-        
+
         self.yesterdayLabel = BodyLabel(self)
         self.yesterdayLabel.setText(self.tr("Yesterday"))
 
@@ -2328,13 +2366,18 @@ class ProgressPanel(CardWidget):
 
         spacerItem4 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.verticalLayout_3.addItem(spacerItem4)
-        self.verticalLayout_3.addWidget(self.yesterdayLabel, 0, Qt.AlignHCenter | Qt.AlignVCenter)
-        self.verticalLayout_3.addWidget(self.yesterdayTimeLabel, 0, Qt.AlignHCenter | Qt.AlignVCenter)
-        self.verticalLayout_3.addWidget(self.hourLabel1, 0, Qt.AlignHCenter | Qt.AlignVCenter)
+        self.verticalLayout_3.addWidget(
+            self.yesterdayLabel, 0, Qt.AlignHCenter | Qt.AlignVCenter
+        )
+        self.verticalLayout_3.addWidget(
+            self.yesterdayTimeLabel, 0, Qt.AlignHCenter | Qt.AlignVCenter
+        )
+        self.verticalLayout_3.addWidget(
+            self.hourLabel1, 0, Qt.AlignHCenter | Qt.AlignVCenter
+        )
         spacerItem5 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.verticalLayout_3.addItem(spacerItem5)
         self.horizontalLayout_2.addLayout(self.verticalLayout_3)
-
 
         # Target and Progress
         self.verticalLayout_4 = QVBoxLayout()
@@ -2354,15 +2397,15 @@ class ProgressPanel(CardWidget):
         self.progressRing.setMinimumSize(QSize(150, 150))
         self.progressRing.setMaximumSize(QSize(220, 220))
         font = QFont()
-        font.setFamilies(['Segoe UI', 'Microsoft YaHei', 'PingFang SC'])
+        font.setFamilies(["Segoe UI", "Microsoft YaHei", "PingFang SC"])
         font.setPointSize(12)
         font.setBold(False)
         font.setWeight(QFont.Weight.Medium)
         self.progressRing.setFont(font)
 
-        self.daily_goal = settings.task_data.taskData['goal']
+        self.daily_goal = settings.task_data.taskData["goal"]
         self.progressRing.setMaximum(self.daily_goal)
-        
+
         self.progressRing.setAlignment(Qt.AlignCenter)
         self.progressRing.setTextVisible(True)
         self.progressRing.setOrientation(Qt.Orientation.Horizontal)
@@ -2373,10 +2416,14 @@ class ProgressPanel(CardWidget):
         self.finishTimeLabel = BodyLabel(self)
         self.finishTimeLabel.setText(self.tr("Daily Goal: 180 Minutes"))
 
-        self.verticalLayout_4.addWidget(self.targetLabel, 0, Qt.AlignHCenter | Qt.AlignVCenter)
+        self.verticalLayout_4.addWidget(
+            self.targetLabel, 0, Qt.AlignHCenter | Qt.AlignVCenter
+        )
         spacerItem11 = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Fixed)
         self.verticalLayout_4.addItem(spacerItem11)
-        self.verticalLayout_4.addWidget(self.progressRing, 0, Qt.AlignHCenter | Qt.AlignVCenter)
+        self.verticalLayout_4.addWidget(
+            self.progressRing, 0, Qt.AlignHCenter | Qt.AlignVCenter
+        )
         spacerItem7 = QSpacerItem(20, 3, QSizePolicy.Minimum, QSizePolicy.Fixed)
         self.verticalLayout_4.addItem(spacerItem7)
         self.verticalLayout_4.addWidget(self.finishTimeLabel, 0, Qt.AlignHCenter)
@@ -2384,7 +2431,6 @@ class ProgressPanel(CardWidget):
         self.verticalLayout_4.addItem(spacerItem8)
         self.verticalLayout_4.setStretch(2, 1)
         self.horizontalLayout_2.addLayout(self.verticalLayout_4)
-
 
         # Tracking
         self.verticalLayout_5 = QVBoxLayout()
@@ -2400,7 +2446,9 @@ class ProgressPanel(CardWidget):
         self.dayLabel = BodyLabel(self)
         self.dayLabel.setText(self.tr("Days in a row"))
 
-        self.verticalLayout_5.addWidget(self.continousDaysLabel, 0, Qt.AlignHCenter | Qt.AlignVCenter)
+        self.verticalLayout_5.addWidget(
+            self.continousDaysLabel, 0, Qt.AlignHCenter | Qt.AlignVCenter
+        )
         self.verticalLayout_5.addWidget(self.compianceDayLabel, 0, Qt.AlignHCenter)
         self.verticalLayout_5.addWidget(self.dayLabel, 0, Qt.AlignHCenter)
         spacerItem10 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
@@ -2416,22 +2464,27 @@ class ProgressPanel(CardWidget):
 
         # Editor -------------------------------------------------------------------------
         title = self.tr("Set The Goal")
-        content = self.tr("""Upon reaching your set time, you'll be rewarded with coins. Earn extra rewards by completing certain streaks of consecutive days!""")
-        icon = os.path.join(basedir,'res/icons/Dashboard/edit.svg')
-        self.goalEditor = GoalFlyoutView(title, content, icon,
-                                    isClosable=True, parent=None)
-        
+        content = self.tr(
+            """Upon reaching your set time, you'll be rewarded with coins. Earn extra rewards by completing certain streaks of consecutive days!"""
+        )
+        icon = os.path.join(basedir, "res/icons/Dashboard/edit.svg")
+        self.goalEditor = GoalFlyoutView(
+            title, content, icon, isClosable=True, parent=None
+        )
 
     def __connectSignalToSlot(self):
         self.editButton.clicked.connect(self._showFlyout)
         self.goalEditor.goalChanged.connect(self.updateGoal)
 
-
     def _showFlyout(self):
-        
-        Flyout.make(self.goalEditor, self.editButton, self.window(),
-                    FlyoutAnimationType.SLIDE_RIGHT, isDeleteOnClose=False)
 
+        Flyout.make(
+            self.goalEditor,
+            self.editButton,
+            self.window(),
+            FlyoutAnimationType.SLIDE_RIGHT,
+            isDeleteOnClose=False,
+        )
 
     def _loadValues(self):
 
@@ -2443,58 +2496,67 @@ class ProgressPanel(CardWidget):
         self.compianceDayLabel.setText(f"{settings.task_data.taskData['n_days']}")
 
         # Goals
-        self.finishTimeLabel.setText(self.tr("Daily Goal:") + " " +  f"{self.daily_goal:.0f} " + self.tr("Minutes"))
+        self.finishTimeLabel.setText(
+            self.tr("Daily Goal:")
+            + " "
+            + f"{self.daily_goal:.0f} "
+            + self.tr("Minutes")
+        )
 
         # Daily Progress
-        progress_today = settings.task_data.taskData['history'][-1][1]
+        progress_today = settings.task_data.taskData["history"][-1][1]
         self.progressRing.setFormat(f"{progress_today:.0f}" + " " + self.tr("Minutes"))
         self.progressRing.setValue(min(self.daily_goal, progress_today))
-
 
     def updateProgress(self, add_value=1):
         # Check if date changed
         self.checkDate()
 
         # Calculate new value
-        newVal = settings.task_data.taskData['history'][-1][1] + add_value
+        newVal = settings.task_data.taskData["history"][-1][1] + add_value
 
         # Update UI
-        #print('check', add_value, newVal, settings.task_data.taskData['history'][-1][1])
+        # print('check', add_value, newVal, settings.task_data.taskData['history'][-1][1])
         self.progressRing.setFormat(f"{newVal}" + " " + self.tr("Minutes"))
         self.progressRing.setValue(min(self.daily_goal, newVal))
 
         # Update settings.task_data
-        settings.task_data.update_progress(newVal) #taskData['history'][-1][1] = newVal
+        settings.task_data.update_progress(
+            newVal
+        )  # taskData['history'][-1][1] = newVal
         settings.task_data.save_data()
 
         # Check if goal met
         if not self.goal_met:
             self.checkGoal()
 
-
     def updateGoal(self, new_qtime):
         # check if date changed
         self.checkDate()
 
         # update self.daily_goal
-        new_goal = TimeConverter(new_qtime, from_format='qtime', to_format='min')
+        new_goal = TimeConverter(new_qtime, from_format="qtime", to_format="min")
         self.daily_goal = new_goal
 
         # update settings.task_data
-        settings.task_data.taskData['goal'] = new_goal
+        settings.task_data.taskData["goal"] = new_goal
         settings.task_data.save_data()
 
         # update UI
         self.progressRing.setMaximum(new_goal)
-        progress_today = settings.task_data.taskData['history'][-1][1]
+        progress_today = settings.task_data.taskData["history"][-1][1]
         self.progressRing.setFormat(f"{progress_today:.0f}" + " " + self.tr("Minutes"))
         self.progressRing.setValue(min(new_goal, progress_today))
-        self.finishTimeLabel.setText(self.tr("Daily Goal:") + " " +  f"{self.daily_goal:.0f} " + self.tr("Minutes"))
+        self.finishTimeLabel.setText(
+            self.tr("Daily Goal:")
+            + " "
+            + f"{self.daily_goal:.0f} "
+            + self.tr("Minutes")
+        )
 
         # check if goal met
         if not self.goal_met:
             self.checkGoal()
-
 
     def checkDate(self):
         now = datetime.datetime.now()
@@ -2512,42 +2574,41 @@ class ProgressPanel(CardWidget):
             # Update UI
             self._loadValues()
 
-
     def checkGoal(self):
-        progress_today = settings.task_data.taskData['history'][-1][1]
+        progress_today = settings.task_data.taskData["history"][-1][1]
         if progress_today >= self.daily_goal:
             self.goal_met = True
-            settings.task_data.taskData['goal_completed'] = True
-            settings.task_data.taskData['n_days'] += 1
+            settings.task_data.taskData["goal_completed"] = True
+            settings.task_data.taskData["n_days"] += 1
             settings.task_data.save_data()
             self.compianceDayLabel.setText(f"{settings.task_data.taskData['n_days']}")
             self.getReward()
 
-
     def getReward(self):
         # Need to optimize the reward formula
         goal = self.daily_goal
-        n_days = settings.task_data.taskData['n_days']
+        n_days = settings.task_data.taskData["n_days"]
 
         # Daily Goal Reward
-        n_coins = int(25*goal)
+        n_coins = int(25 * goal)
         self.addCoins.emit(n_coins, True, False, self.tr("Daily Goal Completed:"))
 
         # Consecutive days reward
         n_coins = 1000 * n_days
-        self.addCoins.emit(n_coins, True, False, f'{n_days} '+self.tr("days in a row reward:"))
-
-
+        self.addCoins.emit(
+            n_coins, True, False, f"{n_days} " + self.tr("days in a row reward:")
+        )
 
 
 class GoalFlyoutView(FlyoutViewBase):
-    """ Daily Goal Flyout view """
+    """Daily Goal Flyout view"""
 
     closed = Signal()
     goalChanged = Signal(QTime)
 
-    def __init__(self, title: str, content: str, icon: str = None,
-                 isClosable=False, parent=None):
+    def __init__(
+        self, title: str, content: str, icon: str = None, isClosable=False, parent=None
+    ):
         super().__init__(parent=parent)
 
         self.icon = icon
@@ -2559,8 +2620,8 @@ class GoalFlyoutView(FlyoutViewBase):
         self.vBoxLayout.setSizeConstraint(QLayout.SetMinAndMaxSize)
         self.headerLayout = QHBoxLayout()
         self.headerLayout.setContentsMargins(5, -1, -1, -1)
-        #self.viewLayout = QVBoxLayout()
-        #self.widgetLayout = QVBoxLayout()
+        # self.viewLayout = QVBoxLayout()
+        # self.widgetLayout = QVBoxLayout()
 
         self.__initWidgets()
 
@@ -2582,14 +2643,14 @@ class GoalFlyoutView(FlyoutViewBase):
 
         # Instruction
         self.contentLabel = BodyLabel(self.content, self)
-        #self.contentLabel.setAlignment(Qt.AlignCenter)
+        # self.contentLabel.setAlignment(Qt.AlignCenter)
         self.contentLabel.setWordWrap(True)
         self.contentLabel.setProperty("lightColor", QtGui.QColor(96, 96, 96))
         self.contentLabel.setProperty("darkColor", QtGui.QColor(206, 206, 206))
         self.contentLabel.setVisible(True)
-        
+
         # Set style
-        #self.titleLabel.setObjectName('titleLabel')
+        # self.titleLabel.setObjectName('titleLabel')
         ##self.contentLabel.setObjectName('contentLabel')
         FluentStyleSheet.TEACHING_TIP.apply(self)
 
@@ -2602,22 +2663,19 @@ class GoalFlyoutView(FlyoutViewBase):
         self.vBoxLayout.addWidget(self.titleLabel)
         spacerItem3 = QSpacerItem(20, 15, QSizePolicy.Minimum, QSizePolicy.Fixed)
         self.vBoxLayout.addItem(spacerItem3)
-        
 
         self.vBoxLayout.addWidget(self.timePicker, 0, Qt.AlignHCenter)
         spacerItem4 = QSpacerItem(20, 15, QSizePolicy.Minimum, QSizePolicy.Fixed)
         self.vBoxLayout.addItem(spacerItem4)
-
 
         # add instruction
         self.vBoxLayout.addWidget(self.contentLabel)
         spacerItem5 = QSpacerItem(20, 10, QSizePolicy.Minimum, QSizePolicy.Fixed)
         self.vBoxLayout.addItem(spacerItem5)
 
-
     def setPicker(self):
-        daily_goal = settings.task_data.taskData['goal']
-        time_adjusted = TimeConverter(daily_goal, from_format='min', to_format='qtime')
+        daily_goal = settings.task_data.taskData["goal"]
+        time_adjusted = TimeConverter(daily_goal, from_format="min", to_format="qtime")
         self.timePicker.setTime(time_adjusted)
 
     def showEvent(self, e):
@@ -2625,14 +2683,10 @@ class GoalFlyoutView(FlyoutViewBase):
         self.adjustSize()
 
 
-
-
-
-
 class TaskPanel(CardWidget):
     """To-do Task Panel UI"""
 
-    addCoins = Signal(int, bool, bool, str, name='addCoins')
+    addCoins = Signal(int, bool, bool, str, name="addCoins")
 
     def __init__(self, sizeHintDyber, parent=None):
         super().__init__(parent=parent)
@@ -2642,7 +2696,6 @@ class TaskPanel(CardWidget):
 
         self.__init_ui()
         self.__connectSignalToSlot()
-
 
     def __init_ui(self):
 
@@ -2656,7 +2709,6 @@ class TaskPanel(CardWidget):
         self.verticalLayout = QVBoxLayout(self)
         self.verticalLayout.setSizeConstraint(QLayout.SetDefaultConstraint)
 
-
         # Top Bar -----------------------------------------------------------------------------------------------------
         self.horizontalLayout_1 = QHBoxLayout()
         self.horizontalLayout_1.setContentsMargins(5, -1, -1, -1)
@@ -2666,14 +2718,18 @@ class TaskPanel(CardWidget):
         self.taskIcon.setMinimumSize(QSize(20, 20))
         self.taskIcon.setMaximumSize(QSize(20, 20))
         icon1 = QIcon()
-        icon1.addPixmap(QPixmap(os.path.join(basedir,'res/icons/Dashboard/dailyTask.svg')), QIcon.Normal, QIcon.Off)
+        icon1.addPixmap(
+            QPixmap(os.path.join(basedir, "res/icons/Dashboard/dailyTask.svg")),
+            QIcon.Normal,
+            QIcon.Off,
+        )
         self.taskIcon.setIcon(icon1)
 
         # Panel TopBar Title
         self.taskLabel = StrongBodyLabel(self)
         self.taskLabel.setText(self.tr("Tasks"))
 
-        '''
+        """
         self.addButton = TransparentToolButton(self)
         self.addButton.setIcon(os.path.join(basedir,'res/icons/Dashboard/add.svg'))
         self.addButton.setFixedSize(20,20)
@@ -2685,12 +2741,12 @@ class TaskPanel(CardWidget):
         self.progressButton.setIcon(os.path.join(basedir,'res/icons/Dashboard/progressTask.svg'))
         self.progressButton.setFixedSize(20,20)
         self.progressButton.setIconSize(QSize(20,20))
-        '''
+        """
 
         self.progressLabel_1 = BodyLabel(self)
         self.progressLabel_1.setText(self.tr("Completed "))
         self.progressLabel_2 = StrongBodyLabel(self)
-        self.progressLabel_2.setText(str(settings.task_data.taskData['n_tasks']))
+        self.progressLabel_2.setText(str(settings.task_data.taskData["n_tasks"]))
         self.progressLabel_3 = BodyLabel(self)
         self.progressLabel_3.setText(self.tr(" tasks"))
 
@@ -2700,7 +2756,7 @@ class TaskPanel(CardWidget):
         self.horizontalLayout_1.addWidget(self.taskLabel)
         spacerItem2 = QSpacerItem(10, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.horizontalLayout_1.addItem(spacerItem2)
-        #self.horizontalLayout_1.addWidget(self.addButton, 0, Qt.AlignRight)
+        # self.horizontalLayout_1.addWidget(self.addButton, 0, Qt.AlignRight)
 
         self.horizontalLayout_1.addWidget(self.progressLabel_1)
         spacerItem3 = QSpacerItem(5, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
@@ -2720,7 +2776,6 @@ class TaskPanel(CardWidget):
         spacerItem6 = QSpacerItem(20, 10, QSizePolicy.Minimum, QSizePolicy.Fixed)
         self.verticalLayout.addItem(spacerItem6)
 
-
         # On-going tabs
         self.verticalLayout_1 = QVBoxLayout()
         self.verticalLayout_1.setContentsMargins(5, -1, -1, -1)
@@ -2731,7 +2786,7 @@ class TaskPanel(CardWidget):
         self.hintLabel_1.setProperty("darkColor", QtGui.QColor(206, 206, 206))
         self.hintLabel_1.setText(self.tr("On-Going"))
         self.verticalLayout_1.addWidget(self.hintLabel_1)
-        self.verticalLayout_1.addWidget(HorizontalSeparator(QColor(20,20,20,125), 1))
+        self.verticalLayout_1.addWidget(HorizontalSeparator(QColor(20, 20, 20, 125), 1))
 
         # Completed tabs
         self.verticalLayout_2 = QVBoxLayout()
@@ -2743,20 +2798,19 @@ class TaskPanel(CardWidget):
         self.hintLabel_2.setProperty("darkColor", QtGui.QColor(206, 206, 206))
         self.hintLabel_2.setText(self.tr("Completed"))
         self.verticalLayout_2.addWidget(self.hintLabel_2)
-        self.verticalLayout_2.addWidget(HorizontalSeparator(QColor(20,20,20,125), 1))
+        self.verticalLayout_2.addWidget(HorizontalSeparator(QColor(20, 20, 20, 125), 1))
 
         # Initialize task cards
-        for task_id, task_text in settings.task_data.taskData['tasks_todo'].items():
+        for task_id, task_text in settings.task_data.taskData["tasks_todo"].items():
             self.addTodoCard(task_text, task_id)
-             
+
         self.verticalLayout.addLayout(self.verticalLayout_1)
         spacerItem4 = QSpacerItem(20, 15, QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem4)
 
-        
-        for task_id, task_text in settings.task_data.taskData['tasks_done'].items():
+        for task_id, task_text in settings.task_data.taskData["tasks_done"].items():
             self.addDoneCard(task_text, task_id)
-    
+
         self.verticalLayout.addLayout(self.verticalLayout_2)
         spacerItem5 = QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem5)
@@ -2765,19 +2819,20 @@ class TaskPanel(CardWidget):
 
     def adjustSize(self):
         base_height = 200
-        nCards = len(settings.task_data.taskData['tasks_todo']) + len(settings.task_data.taskData['tasks_done'])
-        h = nCards*(TASKCARD_H+5) + base_height + 10
+        nCards = len(settings.task_data.taskData["tasks_todo"]) + len(
+            settings.task_data.taskData["tasks_done"]
+        )
+        h = nCards * (TASKCARD_H + 5) + base_height + 10
         self.setFixedHeight(h)
 
     def __connectSignalToSlot(self):
         self.emptyCard.new_task.connect(self.addTodoCard)
 
-
     def addTodoCard(self, task_text, task_id=None):
         if not task_id:
             task_id = str(uuid.uuid4())
             # save new task
-            settings.task_data.taskData['tasks_todo'][task_id] = task_text
+            settings.task_data.taskData["tasks_todo"][task_id] = task_text
             settings.task_data.save_data()
 
         card = TaskCard(task_id, task_text)
@@ -2790,7 +2845,7 @@ class TaskPanel(CardWidget):
 
     def addDoneCard(self, task_text, task_id=None):
         if not task_id:
-            settings.task_data.taskData['tasks_done'][task_id] = task_text
+            settings.task_data.taskData["tasks_done"][task_id] = task_text
             settings.task_data.save_data()
 
         card = TaskCard(task_id, task_text, True)
@@ -2802,10 +2857,10 @@ class TaskPanel(CardWidget):
 
     def _onTaskCompleted(self, task_id):
         # change and save task data
-        task_text = settings.task_data.taskData['tasks_todo'][task_id]
-        del settings.task_data.taskData['tasks_todo'][task_id]
-        settings.task_data.taskData['tasks_done'][task_id] = task_text
-        settings.task_data.taskData['n_tasks'] += 1
+        task_text = settings.task_data.taskData["tasks_todo"][task_id]
+        del settings.task_data.taskData["tasks_todo"][task_id]
+        settings.task_data.taskData["tasks_done"][task_id] = task_text
+        settings.task_data.taskData["n_tasks"] += 1
         settings.task_data.save_data()
 
         # move widget from todo to done
@@ -2814,20 +2869,19 @@ class TaskPanel(CardWidget):
         self.verticalLayout_2.insertWidget(2, card)
 
         # update UI
-        self.progressLabel_2.setText(str(settings.task_data.taskData['n_tasks']))
+        self.progressLabel_2.setText(str(settings.task_data.taskData["n_tasks"]))
 
         # submit reward
         self.getReward()
 
-
     def _onTaskDeleted(self, task_id, done):
         # change and save task data
         if done:
-            task_text = settings.task_data.taskData['tasks_done'][task_id]
-            del settings.task_data.taskData['tasks_done'][task_id]
+            task_text = settings.task_data.taskData["tasks_done"][task_id]
+            del settings.task_data.taskData["tasks_done"][task_id]
         else:
-            task_text = settings.task_data.taskData['tasks_todo'][task_id]
-            del settings.task_data.taskData['tasks_todo'][task_id]
+            task_text = settings.task_data.taskData["tasks_todo"][task_id]
+            del settings.task_data.taskData["tasks_todo"][task_id]
         settings.task_data.save_data()
 
         # move widget from todo to done
@@ -2840,22 +2894,25 @@ class TaskPanel(CardWidget):
         self.adjustSize()
 
     def getReward(self):
-        self.addCoins.emit(settings.SINGLETASK_REWARD, True, False, 
-                           self.tr("Task completed! "))
-        if settings.task_data.taskData['n_tasks'] % 5 == 0:
-            self.addCoins.emit(settings.FIVETASK_REWARD, True, False, 
-                           self.tr("You completed another 5 tasks! "))
-
-
-        
+        self.addCoins.emit(
+            settings.SINGLETASK_REWARD, True, False, self.tr("Task completed! ")
+        )
+        if settings.task_data.taskData["n_tasks"] % 5 == 0:
+            self.addCoins.emit(
+                settings.FIVETASK_REWARD,
+                True,
+                False,
+                self.tr("You completed another 5 tasks! "),
+            )
 
 
 TASKCARD_W, TASKCARD_H = 390, 40
 
+
 class TaskCard(SimpleCardWidget):
 
-    completed = Signal(str, name='completed')
-    deleted = Signal(str, bool, name='deleted')
+    completed = Signal(str, name="completed")
+    deleted = Signal(str, bool, name="deleted")
 
     def __init__(self, task_id, text, done=False, parent=None):
 
@@ -2867,7 +2924,7 @@ class TaskCard(SimpleCardWidget):
         self.done = done
 
         self.hBoxLayout = QHBoxLayout(self)
-        #self.hBoxLayout.setAlignment(Qt.AlignCenter)
+        # self.hBoxLayout.setAlignment(Qt.AlignCenter)
         self.hBoxLayout.setContentsMargins(10, 5, 5, 5)
         self.hBoxLayout.setSpacing(0)
 
@@ -2884,15 +2941,15 @@ class TaskCard(SimpleCardWidget):
             self._taskDone()
         self.checkBox.stateChanged.connect(self._checkClicked)
 
-        #self.editBtn = TransparentToolButton(self)
-        #self.editBtn.setIcon(os.path.join(basedir,'res/icons/Dashboard/edit.svg'))
-        #self.editBtn.setFixedSize(20,20)
-        #self.editBtn.setIconSize(QSize(20,20))
+        # self.editBtn = TransparentToolButton(self)
+        # self.editBtn.setIcon(os.path.join(basedir,'res/icons/Dashboard/edit.svg'))
+        # self.editBtn.setFixedSize(20,20)
+        # self.editBtn.setIconSize(QSize(20,20))
 
         self.deleteBtn = TransparentToolButton(self)
-        self.deleteBtn.setIcon(os.path.join(basedir,'res/icons/Dashboard/delete.svg'))
-        self.deleteBtn.setFixedSize(20,20)
-        self.deleteBtn.setIconSize(QSize(20,20))
+        self.deleteBtn.setIcon(os.path.join(basedir, "res/icons/Dashboard/delete.svg"))
+        self.deleteBtn.setFixedSize(20, 20)
+        self.deleteBtn.setIconSize(QSize(20, 20))
         self.deleteBtn.clicked.connect(self._deleteClicked)
 
         self.hBoxLayout.addWidget(self.checkBox, 0, Qt.AlignLeft | Qt.AlignVCenter)
@@ -2902,11 +2959,10 @@ class TaskCard(SimpleCardWidget):
         spacerItem1 = QSpacerItem(5, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.hBoxLayout.addItem(spacerItem1)
 
-        #self.hBoxLayout.addWidget(self.editBtn, 0, Qt.AlignRight | Qt.AlignVCenter)
-        #spacerItem3 = QSpacerItem(5, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
-        #self.hBoxLayout.addItem(spacerItem3)
+        # self.hBoxLayout.addWidget(self.editBtn, 0, Qt.AlignRight | Qt.AlignVCenter)
+        # spacerItem3 = QSpacerItem(5, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
+        # self.hBoxLayout.addItem(spacerItem3)
         self.hBoxLayout.addWidget(self.deleteBtn, 0, Qt.AlignRight | Qt.AlignVCenter)
-
 
     def _checkClicked(self, state):
         if self.checkBox.isChecked():
@@ -2925,11 +2981,8 @@ class TaskCard(SimpleCardWidget):
         self.taskLabel.setText(self.task_text)
         self.taskLabel.update()
 
-
     def _deleteClicked(self):
         self.deleted.emit(self.task_id, self.done)
-
-
 
 
 class EmptyTaskCard(QWidget):
@@ -2953,13 +3006,13 @@ class EmptyTaskCard(QWidget):
         self.taskEdit.setClearButtonEnabled(True)
         self.taskEdit.setPlaceholderText(self.tr("Add New Task"))
         self.taskEdit.setClearButtonEnabled(True)
-        self.taskEdit.setFixedWidth(TASKCARD_W-50)
-        #self.coinAmount.setEnabled(False)
+        self.taskEdit.setFixedWidth(TASKCARD_W - 50)
+        # self.coinAmount.setEnabled(False)
         # Yes button
         self.yesBtn = TransparentToolButton(self)
         self.yesBtn.setIcon(FIF.ACCEPT)
-        self.yesBtn.setFixedSize(20,20)
-        self.yesBtn.setIconSize(QSize(18,18))
+        self.yesBtn.setFixedSize(20, 20)
+        self.yesBtn.setIconSize(QSize(18, 18))
         self.yesBtn.clicked.connect(self.submit_task)
 
         self.hBoxLayout.addWidget(self.taskEdit, 0, Qt.AlignLeft | Qt.AlignVCenter)
@@ -2973,9 +3026,4 @@ class EmptyTaskCard(QWidget):
         task_text = self.taskEdit.text()
         if task_text:
             self.new_task.emit(task_text)
-            self.taskEdit.setText('')
-
-
-
-
-
+            self.taskEdit.setText("")

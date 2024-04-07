@@ -14,3 +14,4 @@ res/pet/蕈兽
 res/items/GenshinImpact
 **/.DS_Store
 .DS_Store
+*__pycache__*

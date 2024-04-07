@@ -1,20 +1,7 @@
-# import sys
-from sys import platform
 import time
-
-# import math
 import uuid
-
-# import types
 import random
-
-# import inspect
-# from typing import List
-# from datetime import datetime, timedelta
-
-# from apscheduler.schedulers.qt import QtScheduler
-# from apscheduler.triggers import interval, date, cron
-from PySide6.QtWidgets import *
+from sys import platform
 from PySide6.QtCore import (
     Qt,
     QTimer,
@@ -30,9 +17,11 @@ from PySide6.QtGui import QPixmap, QCursor
 from PySide6.QtMultimedia import QSoundEffect
 from qfluentwidgets import TransparentToolButton, BodyLabel
 from qfluentwidgets import FluentIcon as FIF
+import DyberPet.settings as settings
+from PySide6.QtWidgets import *
 from DyberPet.utils import *
 from DyberPet.conf import *
-import DyberPet.settings as settings
+
 
 basedir = settings.BASEDIR
 

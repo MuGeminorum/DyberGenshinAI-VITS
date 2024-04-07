@@ -1,27 +1,24 @@
 # coding:utf-8
-from PySide6.QtCore import Qt, Signal, QObject, QEvent, QUrl, QRectF, QSize, QPoint, Property
-from PySide6.QtGui import QDesktopServices, QIcon, QPainter, QColor
-from PySide6.QtWidgets import QLabel, QFrame, QVBoxLayout, QHBoxLayout, QPushButton
-from PySide6.QtWidgets import QRadioButton, QToolButton, QApplication, QWidget, QSizePolicy
-
-from qframelesswindow import FramelessDialog
-
-from qfluentwidgets import (TextWrap, FluentStyleSheet, PrimaryPushButton, #MaskDialogBase,
-                            LineEdit, RoundMenu, MenuAnimationType, ToolButton)
-from qfluentwidgets.components.dialog_box.mask_dialog_base import MaskDialogBase
-
 from typing import Union
-
-from qfluentwidgets.common.animation import TranslateYAnimation
-from qfluentwidgets.common.icon import FluentIconBase, drawIcon, isDarkTheme, Theme, toQIcon, Icon
-from qfluentwidgets.common.icon import FluentIcon as FIF
+from PySide6.QtCore import Qt, Signal, QUrl, Property
+from PySide6.QtGui import QDesktopServices, QIcon
+from PySide6.QtWidgets import (
+    QLabel,
+    QFrame,
+    QVBoxLayout,
+    QHBoxLayout,
+    QPushButton,
+    QWidget,
+)
+from qfluentwidgets import FluentStyleSheet, PrimaryPushButton, LineEdit, ToolButton
+from qfluentwidgets.common.icon import FluentIconBase, drawIcon, isDarkTheme, Theme
 from qfluentwidgets.common.font import setFont
-from qfluentwidgets.common.style_sheet import FluentStyleSheet, themeColor, ThemeColor
+from qfluentwidgets.common.style_sheet import FluentStyleSheet, themeColor
 from qfluentwidgets.common.overload import singledispatchmethod
 
 
 class Ui_SaveNameDialog:
-    """ Ui of message box """
+    """Ui of message box"""
 
     yesSignal = Signal()
     cancelSignal = Signal()
@@ -38,8 +35,8 @@ class Ui_SaveNameDialog:
         self.nameLineEdit.setClearButtonEnabled(True)
 
         self.buttonGroup = QFrame(parent)
-        self.yesButton = PrimaryPushButton(self.tr('OK'), self.buttonGroup)
-        self.cancelButton = QPushButton(self.tr('Cancel'), self.buttonGroup)
+        self.yesButton = PrimaryPushButton(self.tr("OK"), self.buttonGroup)
+        self.cancelButton = QPushButton(self.tr("Cancel"), self.buttonGroup)
 
         self.vBoxLayout = QVBoxLayout(parent)
         self.textLayout = QVBoxLayout()
@@ -58,12 +55,12 @@ class Ui_SaveNameDialog:
         self.yesButton.setFocus()
         self.buttonGroup.setFixedHeight(81)
 
-        #self._adjustText()
+        # self._adjustText()
 
         self.yesButton.clicked.connect(self.__onYesButtonClicked)
         self.cancelButton.clicked.connect(self.__onCancelButtonClicked)
 
-    '''
+    """
     def _adjustText(self):
         if self.isWindow():
             if self.parent():
@@ -76,7 +73,8 @@ class Ui_SaveNameDialog:
             chars = max(min(w / 9, 100), 30)
 
         self.contentLabel.setText(TextWrap.wrap(self.content, chars, False)[0])
-    '''
+    """
+
     def __initLayout(self):
         self.vBoxLayout.setSpacing(0)
         self.vBoxLayout.setContentsMargins(0, 0, 0, 0)
@@ -94,7 +92,6 @@ class Ui_SaveNameDialog:
         self.buttonLayout.addWidget(self.yesButton, 1, Qt.AlignVCenter)
         self.buttonLayout.addWidget(self.cancelButton, 1, Qt.AlignVCenter)
 
-    
     def __onCancelButtonClicked(self):
         self.reject()
         self.cancelSignal.emit()
@@ -102,13 +99,12 @@ class Ui_SaveNameDialog:
     def __onYesButtonClicked(self):
         self.accept()
         self.yesSignal.emit(self.nameLineEdit.text())
-    
 
     def __setQss(self):
         self.titleLabel.setObjectName("titleLabel")
         self.nameLineEdit.setObjectName("nameLineEdit")
-        self.buttonGroup.setObjectName('buttonGroup')
-        self.cancelButton.setObjectName('cancelButton')
+        self.buttonGroup.setObjectName("buttonGroup")
+        self.cancelButton.setObjectName("cancelButton")
 
         FluentStyleSheet.DIALOG.apply(self)
 
@@ -117,7 +113,7 @@ class Ui_SaveNameDialog:
 
 
 class HyperlinkButton(ToolButton):
-    """ Hyperlink button """
+    """Hyperlink button"""
 
     @singledispatchmethod
     def __init__(self, parent: QWidget = None):
@@ -129,9 +125,14 @@ class HyperlinkButton(ToolButton):
         self.clicked.connect(self._onClicked)
 
     @__init__.register
-    def _(self, url: str, parent: QWidget = None, icon: Union[QIcon, FluentIconBase, str] = None):
+    def _(
+        self,
+        url: str,
+        parent: QWidget = None,
+        icon: Union[QIcon, FluentIconBase, str] = None,
+    ):
         self.__init__(parent)
-        #self.setText(text)
+        # self.setText(text)
         self.url.setUrl(url)
         self.setIcon(icon)
 

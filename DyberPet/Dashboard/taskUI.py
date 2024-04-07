@@ -1,28 +1,17 @@
 # coding:utf-8
 import os
-import json
-import random
-
-from qfluentwidgets import (InfoBar,ScrollArea, ExpandLayout,
-                            InfoBarPosition)
-
-from qfluentwidgets import FluentIcon as FIF
-from PySide6.QtCore import Qt, Signal, QUrl, QStandardPaths, QLocale
-from PySide6.QtGui import QDesktopServices, QIcon, QImage
-from PySide6.QtWidgets import QWidget, QLabel, QApplication
-
+from qfluentwidgets import ScrollArea, ExpandLayout
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QWidget, QLabel
 from .dashboard_widgets import FocusPanel, ProgressPanel, TaskPanel
-
 import DyberPet.settings as settings
-import os
-from sys import platform
-basedir = settings.BASEDIR
-module_path = os.path.join(basedir, 'DyberPet/Dashboard/')
 
+basedir = settings.BASEDIR
+module_path = os.path.join(basedir, "DyberPet/Dashboard/")
 
 
 class taskInterface(ScrollArea):
-    """ Character animations management interface """
+    """Character animations management interface"""
 
     def __init__(self, sizeHintdb: tuple[int, int], parent=None):
         super().__init__(parent=parent)
@@ -39,11 +28,11 @@ class taskInterface(ScrollArea):
         self.__initWidget()
 
     def __initWidget(self):
-        #self.resize(1000, 800)
+        # self.resize(1000, 800)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setViewportMargins(0, 75, 0, 20)
         self.setWidget(self.scrollWidget)
-        #self.scrollWidget.resize(1000, 800)
+        # self.scrollWidget.resize(1000, 800)
         self.setWidgetResizable(True)
 
         # initialize style sheet
@@ -64,21 +53,25 @@ class taskInterface(ScrollArea):
         self.expandLayout.addWidget(self.progressPanel)
         self.expandLayout.addWidget(self.taskPanel)
 
-
     def __setQss(self):
-        """ set style sheet """
-        self.scrollWidget.setObjectName('scrollWidget')
-        self.panelLabel.setObjectName('panelLabel')
+        """set style sheet"""
+        self.scrollWidget.setObjectName("scrollWidget")
+        self.panelLabel.setObjectName("panelLabel")
 
-        theme = 'light' #if isDarkTheme() else 'light'
-        with open(os.path.join(basedir, 'res/icons/Dashboard/qss/', theme, 'status_interface.qss'), encoding='utf-8') as f:
+        theme = "light"  # if isDarkTheme() else 'light'
+        with open(
+            os.path.join(
+                basedir, "res/icons/Dashboard/qss/", theme, "status_interface.qss"
+            ),
+            encoding="utf-8",
+        ) as f:
             self.setStyleSheet(f.read())
 
     def __connectSignalToSlot(self):
-        """ connect signal to slot """
+        """connect signal to slot"""
         self.focusPanel.addProgress.connect(self.progressPanel.updateProgress)
         return
-    
+
     def _changePet(self):
         self.changePet.emit()
         settings.HP_stop = False
