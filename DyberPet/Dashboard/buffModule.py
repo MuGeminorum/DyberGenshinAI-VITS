@@ -29,13 +29,14 @@ Item config buff attribute
 }
 
 """
-from PySide6.QtCore import Qt, Signal, QTimer, QObject, QThread
 
+from PySide6.QtCore import Qt, Signal, QTimer, QObject, QThread
 import DyberPet.settings as settings
 
 ########################################
 #             Buff Class
 ########################################
+
 
 class BuffAdd(QObject):
     takeEffect = Signal(str, int, name="takeEffect")
@@ -45,12 +46,12 @@ class BuffAdd(QObject):
     def __init__(self, name, config):
         super().__init__()
         self.name = name
-        self.effect = config['effect']
-        self.value = config['value']
-        self.interval = config['interval']
-        self.timer = [(config['interval'], config.get('expiration', None))]
-        self.expiration = config.get('expiration', None)
-    
+        self.effect = config["effect"]
+        self.value = config["value"]
+        self.interval = config["interval"]
+        self.timer = [(config["interval"], config.get("expiration", None))]
+        self.expiration = config.get("expiration", None)
+
     def update(self):
         new_timer = []
         for i, (interval, expiration) in enumerate(self.timer):
@@ -58,39 +59,38 @@ class BuffAdd(QObject):
             if interval == 0:
                 self.trigger()
                 interval = self.interval
-            
+
             if self.expiration:
                 expiration -= 1
                 if expiration == 0:
                     self.endone(i)
                     continue
-            
+
             new_timer.append((interval, expiration))
-        
+
         if not new_timer:
             self.terminate()
         else:
             self.timer = new_timer
-                
+
     def trigger(self):
         self.takeEffect.emit(self.effect, self.value)
 
     def addnew(self):
         self.timer.append((self.interval, self.expiration))
-        return len(self.timer)-1
-        
+        return len(self.timer) - 1
+
     def endone(self, idx=None):
         # ended by external signal
         if not idx:
-            idx = len(self.timer)-1
+            idx = len(self.timer) - 1
             self.timer = self.timer[:-1]
         # else ended by timer
 
         self.removeBuff.emit(self.name, idx)
-    
+
     def terminate(self):
         self.terminateBuff.emit(self.name)
-
 
 
 class BuffAlt(QObject):
@@ -101,10 +101,10 @@ class BuffAlt(QObject):
     def __init__(self, name, config):
         super().__init__()
         self.name = name
-        self.effect = config['effect']
-        self.timer = [config.get('expiration', None)]
-        self.expiration = config.get('expiration', None)
-    
+        self.effect = config["effect"]
+        self.timer = [config.get("expiration", None)]
+        self.expiration = config.get("expiration", None)
+
     def update(self):
         new_timer = []
         for i, expiration in enumerate(self.timer):
@@ -114,7 +114,7 @@ class BuffAlt(QObject):
                     self.endone(i)
                     continue
             new_timer.append(expiration)
-        
+
         if not new_timer:
             self.terminate()
         else:
@@ -122,40 +122,39 @@ class BuffAlt(QObject):
 
     def addnew(self):
         self.timer.append(self.expiration)
-        return len(self.timer)-1
-        
+        return len(self.timer) - 1
+
     def endone(self, idx=None):
 
         # ended by external signal
         if not idx:
-            idx = len(self.timer)-1
+            idx = len(self.timer) - 1
             self.timer = self.timer[:-1]
         # else ended by timer
 
         self.removeBuff.emit(self.name, idx)
-    
+
     def terminate(self):
         self.terminateBuff.emit(self.name)
-
 
 
 ########################################
 #          Buff System Thread
 ########################################
 
+
 class BuffThread(QThread):
-    addBuffUI = Signal(str, dict, int, name='addBuffUI')
+    addBuffUI = Signal(str, dict, int, name="addBuffUI")
     takeEffect = Signal(str, int, name="takeEffect")
     removeBuffUI = Signal(str, int, name="removeBuffUI")
 
     def __init__(self):
         super().__init__()
 
-        self.buff_dict = {'add':{},
-                          'alt':{}}
-        self.effect_list = set(['hp','fv','coin','HP_stop','FV_stop'])
-        self.add_list = set(['hp','fv','coin'])
-        self.alt_list = set(['HP_stop','FV_stop'])
+        self.buff_dict = {"add": {}, "alt": {}}
+        self.effect_list = set(["hp", "fv", "coin", "HP_stop", "FV_stop"])
+        self.add_list = set(["hp", "fv", "coin"])
+        self.alt_list = set(["HP_stop", "FV_stop"])
         self.HPstop = []
         self.FVstop = []
 
@@ -165,22 +164,22 @@ class BuffThread(QThread):
         self.timer.start(1000)
 
     def update(self):
-        """ Run buff system every second """
+        """Run buff system every second"""
         # Update count-down for each buff
-        for buffName in list(self.buff_dict['add']):
-            self.buff_dict['add'][buffName].update()
-        
-        for buffName in list(self.buff_dict['alt']):
-            self.buff_dict['alt'][buffName].update()
-    
+        for buffName in list(self.buff_dict["add"]):
+            self.buff_dict["add"][buffName].update()
+
+        for buffName in list(self.buff_dict["alt"]):
+            self.buff_dict["alt"][buffName].update()
+
     def _addBuff_fromItem(self, item_conf):
-        buffInfo = item_conf.get('buff', {})
+        buffInfo = item_conf.get("buff", {})
         if not buffInfo:
             return
-        
+
         # get some basic information
-        itemName = item_conf['name']
-        buffEffect = buffInfo.get('effect', '')
+        itemName = item_conf["name"]
+        buffEffect = buffInfo.get("effect", "")
         if buffEffect not in self.effect_list:
             return
 
@@ -194,7 +193,7 @@ class BuffThread(QThread):
         buffType = self._getBuffType(buffName, buffInfo)
 
         # if no buff before
-        if not self.buff_dict['add'] and not self.buff_dict['alt']:
+        if not self.buff_dict["add"] and not self.buff_dict["alt"]:
             self.timer.start()
 
         # if buff already exists
@@ -202,32 +201,35 @@ class BuffThread(QThread):
             idx = self.buff_dict[buffType][buffName].addnew()
         else:
             idx = 0
-            self.buff_dict[buffType][buffName] = self._getBuffClass(buffType)(buffName, buffInfo)
+            self.buff_dict[buffType][buffName] = self._getBuffClass(buffType)(
+                buffName, buffInfo
+            )
             self.buff_dict[buffType][buffName].takeEffect.connect(self._takeEffect)
             self.buff_dict[buffType][buffName].removeBuff.connect(self._removeBuff)
-            self.buff_dict[buffType][buffName].terminateBuff.connect(self._terminateBuff)
-        
-            if buffType == 'alt':
-                if buffInfo['effect'] == 'HP_stop':
+            self.buff_dict[buffType][buffName].terminateBuff.connect(
+                self._terminateBuff
+            )
+
+            if buffType == "alt":
+                if buffInfo["effect"] == "HP_stop":
                     self.HPstop.append(buffName)
                     settings.HP_stop = True
-                elif buffInfo['effect'] == 'FV_stop':
+                elif buffInfo["effect"] == "FV_stop":
                     self.FVstop.append(buffName)
                     settings.FV_stop = True
-        
+
         return idx
-    
+
     def _getBuffClass(self, buffType):
-        clss = {'add': BuffAdd,
-                'alt': BuffAlt}
+        clss = {"add": BuffAdd, "alt": BuffAlt}
         return clss[buffType]
-    
+
     def _takeEffect(self, effect, value):
         self.takeEffect.emit(effect, value)
 
     def _removeBuff(self, buffName, idx):
         self.removeBuffUI.emit(buffName, idx)
-    
+
     def _rmBuff(self, buffName):
         buffType = self._getBuffType(buffName)
         if not buffType:
@@ -235,7 +237,7 @@ class BuffThread(QThread):
         self.buff_dict[buffType][buffName].endone()
         if not len(self.buff_dict[buffType][buffName].timer):
             self.buff_dict[buffType][buffName].terminate()
-    
+
     def _terminateBuff(self, buffName):
         buffType = self._getBuffType(buffName)
         self.buff_dict[buffType].pop(buffName)
@@ -245,23 +247,23 @@ class BuffThread(QThread):
         if buffName in self.FVstop:
             self.FVstop.remove(buffName)
 
-        if not self.buff_dict['add'] and not self.buff_dict['alt']:
+        if not self.buff_dict["add"] and not self.buff_dict["alt"]:
             self.timer.stop()
 
         if not self.HPstop:
             settings.HP_stop = False
         if not self.FVstop:
             settings.FV_stop = False
-    
+
     def _getBuffType(self, buffName, buffInfo=None):
         if buffInfo:
-            buffEffect = buffInfo.get('effect', '')
-            buffType = 'add' if buffEffect in self.add_list else 'alt'
+            buffEffect = buffInfo.get("effect", "")
+            buffType = "add" if buffEffect in self.add_list else "alt"
         else:
-            if buffName in self.buff_dict['add'].keys():
-                buffType = 'add'
-            elif buffName in self.buff_dict['alt'].keys():
-                buffType = 'alt'
+            if buffName in self.buff_dict["add"].keys():
+                buffType = "add"
+            elif buffName in self.buff_dict["alt"].keys():
+                buffType = "alt"
             else:
                 buffType = None
 
@@ -272,8 +274,3 @@ class BuffThread(QThread):
 
     def resume(self):
         self.timer.start()
-            
-
-
-        
-        

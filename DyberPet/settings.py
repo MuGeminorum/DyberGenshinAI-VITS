@@ -1,10 +1,6 @@
 import os
 import json
-
-# import ctypes
 from sys import platform
-
-# from PySide6.QtGui import QImage, QPixmap
 from DyberPet.conf import PetData, TaskData
 from PySide6 import QtCore
 

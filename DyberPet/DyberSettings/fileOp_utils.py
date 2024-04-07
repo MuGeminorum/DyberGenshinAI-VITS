@@ -1,16 +1,11 @@
-import hashlib
 import os
-
-from PySide6.QtCore import QStandardPaths
+import hashlib
 from zipfile import *
 from hashlib import *
-from sys import platform
-from shutil import copyfile, rmtree, copytree
-
 from DyberPet.settings import *
+from shutil import copyfile, rmtree
 
-
-SAVEFILES = ['settings.json', 'pet_data.json', 'version', 'task_data.json']
+SAVEFILES = ["settings.json", "pet_data.json", "version", "task_data.json"]
 
 
 def CopySave(source_folder, target_folder):
@@ -23,14 +18,12 @@ def CopySave(source_folder, target_folder):
     return status_code
 
 
-
 # 验证文件MD5函数，保存（无论是否需要打包导出）与读取（无论是否从外部包读取）均需要
 def checkFileMD5(targetFile):
-    with open(targetFile, 'rb') as checkFile:
+    with open(targetFile, "rb") as checkFile:
         fileContent = checkFile.read()
     targetMD5 = hashlib.md5(fileContent).hexdigest()
     return targetMD5
-
 
 
 def checkFolderMD5(source_folder, target_folder):
@@ -48,19 +41,19 @@ def checkFolderMD5(source_folder, target_folder):
         sourceMD5 = checkFileMD5(targetFile=sourceFile)
 
         targetFile = os.path.join(target_folder, filename)
-        if os.path.isfile(targetFile): # 若文件存在
-            targetMD5 = checkFileMD5(targetFile=targetFile) # 获取存档文件的MD5
-            if sourceMD5 == targetMD5: # 如果两个MD5一致，则检查通过
-                print('检查通过')
+        if os.path.isfile(targetFile):  # 若文件存在
+            targetMD5 = checkFileMD5(targetFile=targetFile)  # 获取存档文件的MD5
+            if sourceMD5 == targetMD5:  # 如果两个MD5一致，则检查通过
+                print("检查通过")
             else:
-                print('检测到MD5不一致')
+                print("检测到MD5不一致")
                 return 2
         else:
             return 1
 
     return 0
 
-    '''
+    """
     for root, ds, fs in os.walk(dataPath):
         for i in fs:
             print(i)
@@ -83,7 +76,8 @@ def checkFolderMD5(source_folder, target_folder):
                 return 1
             print()
             return 0
-    '''
+    """
+
 
 def DeleteQuickSave(directory_path, keep=True):
     if keep:
@@ -104,8 +98,3 @@ def DeleteQuickSave(directory_path, keep=True):
             return 0
 
     return 1
-
-
-
-
-

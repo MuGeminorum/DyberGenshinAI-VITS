@@ -1,29 +1,17 @@
 # coding:utf-8
 import os
-import json
-import random
-
-from qfluentwidgets import (SettingCardGroup, SwitchSettingCard, HyperlinkCard, InfoBar,
-                            ComboBoxSettingCard, ScrollArea, ExpandLayout, InfoBarPosition,
-                            PushButton)
-
-from qfluentwidgets import FluentIcon as FIF
-from PySide6.QtCore import Qt, Signal, QUrl, QStandardPaths, QLocale
-from PySide6.QtGui import QDesktopServices, QIcon, QImage
-from PySide6.QtWidgets import QWidget, QLabel, QApplication
-
-#from .dashboard_widgets import
-
+from qfluentwidgets import ScrollArea, ExpandLayout
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QWidget, QLabel
+from DyberPet.Dashboard.dashboard_widgets import AnimationGroup
 import DyberPet.settings as settings
-import os
-from sys import platform
-basedir = settings.BASEDIR
-module_path = os.path.join(basedir, 'DyberPet/Dashboard/')
 
+basedir = settings.BASEDIR
+module_path = os.path.join(basedir, "DyberPet/Dashboard/")
 
 
 class animationInterface(ScrollArea):
-    """ Character animations management interface """
+    """Character animations management interface"""
 
     def __init__(self, sizeHintdb: tuple[int, int], parent=None):
         super().__init__(parent=parent)
@@ -33,16 +21,18 @@ class animationInterface(ScrollArea):
 
         # setting label
         self.panelLabel = QLabel(self.tr("Animations"), self)
-        self.animatPanel = AnimationGroup(self.tr('All Animations'), sizeHintdb, self.scrollWidget)
+        self.animatPanel = AnimationGroup(
+            self.tr("All Animations"), sizeHintdb, self.scrollWidget
+        )
 
         self.__initWidget()
 
     def __initWidget(self):
-        #self.resize(1000, 800)
+        # self.resize(1000, 800)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setViewportMargins(0, 75, 0, 20)
         self.setWidget(self.scrollWidget)
-        #self.scrollWidget.resize(1000, 800)
+        # self.scrollWidget.resize(1000, 800)
         self.setWidgetResizable(True)
 
         # initialize style sheet
@@ -63,20 +53,24 @@ class animationInterface(ScrollArea):
 
         self.expandLayout.addWidget(self.animatPanel)
 
-
     def __setQss(self):
-        """ set style sheet """
-        self.scrollWidget.setObjectName('scrollWidget')
-        self.panelLabel.setObjectName('panelLabel')
+        """set style sheet"""
+        self.scrollWidget.setObjectName("scrollWidget")
+        self.panelLabel.setObjectName("panelLabel")
 
-        theme = 'light' #if isDarkTheme() else 'light'
-        with open(os.path.join(basedir, 'res/icons/Dashboard/qss/', theme, 'status_interface.qss'), encoding='utf-8') as f:
+        theme = "light"  # if isDarkTheme() else 'light'
+        with open(
+            os.path.join(
+                basedir, "res/icons/Dashboard/qss/", theme, "status_interface.qss"
+            ),
+            encoding="utf-8",
+        ) as f:
             self.setStyleSheet(f.read())
 
     def __connectSignalToSlot(self):
-        """ connect signal to slot """
+        """connect signal to slot"""
         return
-    
+
     def _changePet(self):
         self.changePet.emit()
         settings.HP_stop = False
