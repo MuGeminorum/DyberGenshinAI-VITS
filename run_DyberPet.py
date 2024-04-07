@@ -1,5 +1,6 @@
 import os
 import sys
+import DyberPet.settings as settings
 from sys import platform
 from tendo import singleton
 from DyberPet.DyberPet import PetWidget
@@ -10,14 +11,6 @@ from PySide6.QtCore import Qt, QLocale
 from qfluentwidgets import FluentTranslator
 from DyberPet.Dashboard.DashboardUI import DashboardMainWindow
 from DyberPet.DyberSettings.DyberControlPanel import ControlMainWindow
-
-
-try:
-    size_factor = 1  # ctypes.windll.shcore.GetScaleFactorForDevice(0) / 100
-except:
-    size_factor = 1
-
-import DyberPet.settings as settings
 
 
 StyleSheet = f"""
@@ -129,23 +122,20 @@ class DyberPetApp(QApplication):
         )
 
 
-if platform == "win32":
-    basedir = ""
-else:
-    basedir = os.path.dirname(__file__)
-
 if __name__ == "__main__":
+    if platform == "win32":
+        basedir = ""
+    else:
+        basedir = os.path.dirname(__file__)
     # Avoid multiple process
     try:
         me = singleton.SingleInstance()
     except:
         sys.exit()
-
     # Create App
     QApplication.setHighDpiScaleFactorRoundingPolicy(
         Qt.HighDpiScaleFactorRoundingPolicy.PassThrough
     )
     app = DyberPetApp(sys.argv)
     app.setAttribute(Qt.AA_DontCreateNativeWidgetSiblings)
-
     sys.exit(app.exec())
