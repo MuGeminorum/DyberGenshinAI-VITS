@@ -5,5 +5,10 @@
     "frame_refresh": 0.08,
     "direction": "up",
     "frame_move": 2
+  },
+  "pm":{
+    "images": "pm",
+    "act_num": 1,
+    "frame_refresh": 0.08
   }
 }
