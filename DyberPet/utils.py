@@ -1,11 +1,10 @@
-import json
 import os
+import json
 import time
-from datetime import datetime
-import textwrap as tr
 import locale
+import textwrap as tr
+from datetime import datetime
 from PySide6.QtCore import QTime
-
 
 
 def log(*args, **kwargs):
@@ -24,7 +23,7 @@ def read_json(conf_file):
     :param conf_file:
     :return: map
     """
-    with open(conf_file, 'r', encoding='UTF-8') as file:
+    with open(conf_file, "r", encoding="UTF-8") as file:
         return json.load(file)
 
 
@@ -35,10 +34,10 @@ def rename_pet_action(pet_name: str, start_idx: int) -> None:
     :param pet_name: 宠物名称
     :return:
     """
-    path = '../res/role/{}/action/'.format(pet_name)
+    path = "../res/role/{}/action/".format(pet_name)
     files = os.listdir(path)
     for i, f in enumerate(files):
-        os.rename(path + '/' + f, path + '/' + '{}.png'.format(start_idx + i))
+        os.rename(path + "/" + f, path + "/" + "{}.png".format(start_idx + i))
 
 
 def remove_pet_action(pet_name: str) -> None:
@@ -47,61 +46,73 @@ def remove_pet_action(pet_name: str) -> None:
     :param pet_name: 宠物名称
     :return:
     """
-    path = '../res/role/{}/action/'.format(pet_name)
+    path = "../res/role/{}/action/".format(pet_name)
     files = os.listdir(path)
     for file in files:
-        os.remove(path + '/' + file)
-
+        os.remove(path + "/" + file)
 
 
 def text_wrap(text, width):
     # Use textwrap to do the initial wrapping
     lines = tr.wrap(text, width)
-    
+
     # Define punctuation that shouldn't appear at the end or start of a line
     prohibited_start = ",.!?;:，。！？；："
 
     new_lines = []
     for i, line in enumerate(lines):
-        if i==0:
+        if i == 0:
             pass
         elif line[0] in prohibited_start:
-            lines[i-1] += line[0]
+            lines[i - 1] += line[0]
             line = line[1:]
         new_lines.append(line)
 
-    texts_wrapped = '\n'.join(new_lines)
-    
+    texts_wrapped = "\n".join(new_lines)
+
     return texts_wrapped
 
 
 def get_child_folder(parentFolder, relative=False):
     all_files_and_dirs = os.listdir(parentFolder)
     if relative:
-        all_dirs = [os.path.basename(d) for d in all_files_and_dirs if os.path.isdir(os.path.join(parentFolder, d))]
+        all_dirs = [
+            os.path.basename(d)
+            for d in all_files_and_dirs
+            if os.path.isdir(os.path.join(parentFolder, d))
+        ]
     else:
-        all_dirs = [os.path.join(parentFolder,d) for d in all_files_and_dirs if os.path.isdir(os.path.join(parentFolder, d))]
+        all_dirs = [
+            os.path.join(parentFolder, d)
+            for d in all_files_and_dirs
+            if os.path.isdir(os.path.join(parentFolder, d))
+        ]
 
     return all_dirs
 
 
-
-
 def get_file_time(filePath):
-    locale.setlocale(locale.LC_ALL, 'C')
+    locale.setlocale(locale.LC_ALL, "C")
     ct = os.path.getctime(filePath)
     ct = time.strptime(time.ctime(ct))
-    fileTime = datetime(year=int(ct[0]), month=int(ct[1]), day=int(ct[2]),
-                        hour=int(ct[3]), minute=int(ct[4]), second=int(ct[5]))
+    fileTime = datetime(
+        year=int(ct[0]),
+        month=int(ct[1]),
+        day=int(ct[2]),
+        hour=int(ct[3]),
+        minute=int(ct[4]),
+        second=int(ct[5]),
+    )
     return fileTime
-
 
 
 def get_MODs(filePath):
     modNames = []
 
     itemMods = get_child_folder(filePath, relative=False)
-    itemMods = [i for i in itemMods if not os.path.basename(i).startswith('_')] # omit folder name starts with '_'
+    itemMods = [
+        i for i in itemMods if not os.path.basename(i).startswith("_")
+    ]  # omit folder name starts with '_'
     modTimes = [get_file_time(mod) for mod in itemMods]
     paired_list = zip(modTimes, itemMods)
     # Sort the pairs
@@ -111,13 +122,13 @@ def get_MODs(filePath):
 
     for i, itemFolder in enumerate(sorted_itemMods):
 
-        if not os.path.exists(os.path.join(itemFolder, 'items_config.json')):
+        if not os.path.exists(os.path.join(itemFolder, "items_config.json")):
             continue
 
-        info_file = os.path.join(itemFolder, 'info.json')
+        info_file = os.path.join(itemFolder, "info.json")
         if os.path.exists(info_file):
-            info = dict(json.load(open(info_file, 'r', encoding='UTF-8')))
-            modName = info.get('modName', None)
+            info = dict(json.load(open(info_file, "r", encoding="UTF-8")))
+            modName = info.get("modName", None)
         else:
             modName = None
         if not modName:
@@ -126,7 +137,6 @@ def get_MODs(filePath):
         modNames.append(modName)
 
     return modNames
-
 
 
 def MaskPhrase(phrase):
@@ -152,11 +162,12 @@ def MaskPhrase(phrase):
 
     # Mask each word and join back into a phrase
     masked_words = [mask_word(word) if not word.isspace() else word for word in words]
-    return ''.join(masked_words)
+    return "".join(masked_words)
 
 
 def _qtime_to_min(input_time):
-    return input_time.hour()*60 + input_time.minute()
+    return input_time.hour() * 60 + input_time.minute()
+
 
 def _min_to_qtime(input_time):
     new_hour = input_time // 60
@@ -164,10 +175,9 @@ def _min_to_qtime(input_time):
 
     return QTime(new_hour, new_minute)
 
-convert_dict = {('min', 'qtime'):_min_to_qtime,
-                ('qtime', 'min'):_qtime_to_min}
+
+convert_dict = {("min", "qtime"): _min_to_qtime, ("qtime", "min"): _qtime_to_min}
+
 
 def TimeConverter(input_time, from_format, to_format):
     return convert_dict[(from_format, to_format)](input_time)
-
-
