@@ -549,9 +549,9 @@ class PetData:
                     "HP": -1,
                     "HP_tier": 3,
                     "FV": 0,
-                    "FV_lvl": 0,
+                    "FV_lvl": 5,
                     "items": {},
-                    "coins": 0,
+                    "coins": 99999,
                     "days": 1,
                     "last_opened": "%i-%i-%i" % (now.year, now.month, now.day),
                 }
