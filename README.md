@@ -53,17 +53,16 @@
 
 
 ### Windows Terminal
-  建议首先在本地创建新的 **conda** 环境  
-  ```
-  conda create --name Dyber_pyside python=3.9.18
-  conda activate Dyber_pyside
-  conda install -c conda-forge apscheduler
-  conda install -c conda-forge pynput
-  pip install PySide6-Fluent-Widgets==1.5.4 -i https://pypi.org/simple/
-  pip install pyside6==6.5.2
-  pip install tendo
-  ```
-  将仓库下载至本地，之后运行 **``run_DyberPet.py``** 即可
+建议首先在本地创建新的 **conda** 环境  
+```bash
+conda create -n pet python=3.9
+conda activate pet
+conda install -c conda-forge apscheduler --yes
+conda install -c conda-forge pynput --yes
+conda install -c conda-forge pywin32 --yes
+pip install -r requirements.txt
+```
+将仓库下载至本地，之后运行 **``run_DyberPet.py``** 即可
 
   
 ### MacOS 用户

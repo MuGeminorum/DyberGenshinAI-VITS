@@ -1,5 +1,3 @@
 tendo
-PySide6
-PyQt-Fluent-Widgets==1.5.4
-pynput
-apscheduler
+pyside6==6.5.2
+PySide6-Fluent-Widgets==1.5.4
