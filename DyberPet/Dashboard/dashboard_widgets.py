@@ -62,7 +62,7 @@ from qfluentwidgets import (
 )
 from DyberPet.DyberSettings.custom_utils import SACECARD_H, SACECARD_W, AvatarImage
 from DyberPet.utils import MaskPhrase, TimeConverter
-from ..ChatBot import ChatBot
+from DyberPet.ChatBot import ChatBot
 import DyberPet.settings as settings
 
 basedir = settings.BASEDIR

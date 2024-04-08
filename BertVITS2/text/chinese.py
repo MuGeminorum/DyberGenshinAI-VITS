@@ -4,9 +4,9 @@ import re
 import cn2an
 from pypinyin import lazy_pinyin, Style
 
-from text import symbols
-from text.symbols import punctuation
-from text.tone_sandhi import ToneSandhi
+from BertVITS2.text import symbols
+from BertVITS2.text.symbols import punctuation
+from BertVITS2.text.tone_sandhi import ToneSandhi
 
 current_file_path = os.path.dirname(__file__)
 pinyin_to_symbol_map = {line.split("\t")[0]: line.strip().split("\t")[1] for line in

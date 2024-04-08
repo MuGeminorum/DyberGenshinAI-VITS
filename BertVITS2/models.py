@@ -1,15 +1,15 @@
 import math
 import torch
-import commons
-import modules
-import attentions
-import monotonic_align
+import BertVITS2.commons as commons
+import BertVITS2.modules as modules
+import BertVITS2.attentions as attentions
+import BertVITS2.monotonic_align as monotonic_align
 from torch import nn
 from torch.nn import functional as F
 from torch.nn import Conv1d, ConvTranspose1d, Conv2d
 from torch.nn.utils import weight_norm, remove_weight_norm, spectral_norm
-from commons import init_weights, get_padding
-from text import symbols, num_tones, num_languages
+from BertVITS2.commons import init_weights, get_padding
+from BertVITS2.text import symbols, num_tones, num_languages
 
 
 class DurationDiscriminator(nn.Module):  # vits2

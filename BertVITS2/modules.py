@@ -1,13 +1,13 @@
 import math
 import torch
-import commons
-from attentions import Encoder
+import BertVITS2.commons as commons
+from BertVITS2.attentions import Encoder
 from torch import nn
 from torch.nn import Conv1d
 from torch.nn import functional as F
 from torch.nn.utils import weight_norm, remove_weight_norm
-from transforms import piecewise_rational_quadratic_transform
-from commons import init_weights, get_padding
+from BertVITS2.transforms import piecewise_rational_quadratic_transform
+from BertVITS2.commons import init_weights, get_padding
 
 
 LRELU_SLOPE = 0.1

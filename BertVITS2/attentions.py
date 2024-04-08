@@ -1,5 +1,5 @@
 import math
-import commons
+import BertVITS2.commons as commons
 import logging
 import torch
 from torch import nn

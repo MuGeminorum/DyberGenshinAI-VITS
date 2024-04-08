@@ -3,7 +3,7 @@ import re
 import glob
 import json
 import torch
-import commons
+import BertVITS2.commons as commons
 import logging
 import argparse
 import requests
@@ -11,8 +11,8 @@ import subprocess
 import numpy as np
 from tqdm import tqdm
 from scipy.io.wavfile import read
-from text import cleaned_text_to_sequence, get_bert
-from text.cleaner import clean_text
+from BertVITS2.text import cleaned_text_to_sequence, get_bert
+from BertVITS2.text.cleaner import clean_text
 
 MATPLOTLIB_FLAG = False
 
@@ -270,7 +270,7 @@ def get_hparams_from_dir(model_dir):
 
 
 def download_file(file_url: str):
-    filename = file_url.split("&FilePath=")[-1]
+    filename = "data/" + file_url.split("&FilePath=")[-1]
     if os.path.exists(filename):
         return filename
 
