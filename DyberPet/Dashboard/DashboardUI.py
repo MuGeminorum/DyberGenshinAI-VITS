@@ -9,7 +9,7 @@ from .statusUI import statusInterface
 from .inventoryUI import backpackInterface
 from .shopUI import shopInterface
 from .taskUI import taskInterface
-from .gptUI import gptInterface
+from .chatUI import gptInterface
 import DyberPet.settings as settings
 
 basedir = settings.BASEDIR
