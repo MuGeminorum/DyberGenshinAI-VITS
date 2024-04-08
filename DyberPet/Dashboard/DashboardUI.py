@@ -9,6 +9,7 @@ from .statusUI import statusInterface
 from .inventoryUI import backpackInterface
 from .shopUI import shopInterface
 from .taskUI import taskInterface
+from .gptUI import gptInterface
 import DyberPet.settings as settings
 
 basedir = settings.BASEDIR
@@ -47,6 +48,9 @@ class DashboardMainWindow(FluentWindow):
         self.taskInterface = taskInterface(
             sizeHintdb=(minWidth, minHeight), parent=self
         )
+        self.gptInterface = gptInterface(
+            sizeHintdb=(minWidth, minHeight), parent=self
+        )
 
         self.initNavigation()
         self.setMinimumSize(minWidth, minHeight)
@@ -74,6 +78,11 @@ class DashboardMainWindow(FluentWindow):
             self.taskInterface,
             QIcon(os.path.join(basedir, "res/icons/Dashboard/task.svg")),
             self.tr("Daily Tasks"),
+        )
+        self.addSubInterface(
+            self.gptInterface,
+            QIcon(os.path.join(basedir, "res/icons/Dashboard/gpt.svg")),
+            self.tr("AI Assistant"),
         )
 
         self.navigationInterface.setExpandWidth(150)
