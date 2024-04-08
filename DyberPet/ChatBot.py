@@ -52,14 +52,13 @@ class Test(QThread):
 
     def run(self):
         result = "这是测试用文案，当前用于绕过KIMICHAT测试VITS！"
-        print(self.tts.speech(result))
-        self.answer.emit(result)
+        audio_path = self.tts.speech(result)
+        self.answer.emit(result, audio_path)
 
 
 class ChatBot(QWidget):
-    answer = Signal(str, name="answer_sig")
+    answer = Signal(str, str, name="answer_sig")
 
-    # process = Signal(name="process_sig")
     def __init__(self, parent=None):
         super(ChatBot, self).__init__(parent)
         with open("data/task_data.json", "r", encoding="utf-8") as file:

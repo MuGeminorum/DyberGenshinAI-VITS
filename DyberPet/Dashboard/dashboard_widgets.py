@@ -7,6 +7,8 @@ import datetime
 from typing import List
 from collections import defaultdict
 from PySide6 import QtGui
+from PySide6.QtCore import Signal, QUrl
+from PySide6.QtMultimedia import QSoundEffect
 from PySide6.QtCore import Qt, Signal, QSize, QRect, QTime
 from PySide6.QtWidgets import (
     QWidget,
@@ -61,6 +63,7 @@ from qfluentwidgets import (
     isDarkTheme,
 )
 from DyberPet.DyberSettings.custom_utils import SACECARD_H, SACECARD_W, AvatarImage
+from DyberPet.Notification import _load_item_sound
 from DyberPet.utils import MaskPhrase, TimeConverter
 from DyberPet.ChatBot import ChatBot
 import DyberPet.settings as settings
@@ -3078,8 +3081,6 @@ class EmptyAskCard(QWidget):
 
 
 class ChatCard(SimpleCardWidget):
-    # ask_question = Signal(str, name="ask_sig")
-
     def __init__(self, sizeHintDyber, parent=None):
         super().__init__(parent=parent)
         self.sizeHintDyber = sizeHintDyber
@@ -3107,7 +3108,6 @@ class ChatCard(SimpleCardWidget):
 
     def __connectSignalToSlot(self):
         self.askCard.new_ask.connect(self.send_message)
-        # self.ask_question.connect(self.chatbot.chat)
         self.chatbot.answer.connect(self.answered)
 
     def send_message(self, message: str):
@@ -3116,16 +3116,14 @@ class ChatCard(SimpleCardWidget):
             self.askCard.askEdit.clear()
             self.msgList.addItem("......")
             self.chatbot.chat(message)
-            # self.ask_question.emit(message)
 
-    # def processing(self):
-    #     lastId = self.msgList.count() - 1
-    #     lastItem = self.msgList.item(lastId)
-    #     nextStr = (len(lastItem.text()) % 3 + 1) * "."
-    #     lastItem.setText(nextStr)
-
-    def answered(self, response: str):
+    def answered(self, response: str, speech_path: str):
         lastId = self.msgList.count() - 1
         lastItem = self.msgList.item(lastId)
         lastItem.setText(f"纳西妲：{response}")
+        player = QSoundEffect(self)
+        url = QUrl.fromLocalFile(speech_path)
+        player.setSource(url)
+        player.setVolume(0.5)
+        player.play()
         self.askCard.setEnabled(True)
