@@ -615,6 +615,7 @@ class DyberToaster(QFrame):
             if area > maxArea:
                 maxArea = area
                 currentScreen = screen
+
         return currentScreen.availableGeometry()
 
 
@@ -629,7 +630,6 @@ def _get_q_img(img_file) -> QPixmap:
 
 
 def _load_item_sound(file_path):
-
     player = QSoundEffect()
     url = QUrl.fromLocalFile(file_path)
     player.setSource(url)

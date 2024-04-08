@@ -125,6 +125,7 @@ def init():
         size_factor = 1.0  # ctypes.windll.shcore.GetScaleFactorForDevice(0) / 100
     except:
         size_factor = 1.0
+
     tunable_scale = 1.0
 
     # buff related arguments
@@ -200,6 +201,7 @@ def init_settings():
     try:
         json.load(open(file_path, "r", encoding="UTF-8"))
         settingGood = True
+
     except:
         if os.path.isfile(file_path):
             settingGood = False
@@ -223,6 +225,7 @@ def init_settings():
         # Fix a bug version distributed to users =============
         if defaultAct is None:
             defaultAct = {}
+
         elif type(defaultAct) == str:
             defaultAct = {}
 
@@ -308,6 +311,7 @@ def change_translator(language_code):
         HUNGER_trans = translator.translate("others", HUNGERSTR)  # .encode('utf-8'))
         if HUNGER_trans:
             HUNGERSTR = HUNGER_trans
+
         FAVOR_trans = translator.translate("others", FAVORSTR)  # .encode('utf-8'))
         if FAVOR_trans:
             FAVORSTR = FAVOR_trans
