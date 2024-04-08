@@ -4,8 +4,8 @@ import math
 import json
 import uuid
 import datetime
-from collections import defaultdict
 from typing import List
+from collections import defaultdict
 from PySide6 import QtGui
 from PySide6.QtCore import Qt, Signal, QSize, QRect, QTime
 from PySide6.QtWidgets import (
@@ -30,8 +30,9 @@ from PySide6.QtGui import (
     QPalette,
 )
 from qfluentwidgets import FluentIcon as FIF
-from qfluentwidgets import SimpleCardWidget, PushButton
 from qfluentwidgets import (
+    SimpleCardWidget,
+    PushButton,
     TransparentToolButton,
     PillPushButton,
     BodyLabel,
@@ -44,7 +45,6 @@ from qfluentwidgets import (
     ScrollArea,
     LineEdit,
     PushButton,
-    ScrollArea,
     ToolTipFilter,
     MessageBoxBase,
     SpinBox,
@@ -3027,3 +3027,20 @@ class EmptyTaskCard(QWidget):
         if task_text:
             self.new_task.emit(task_text)
             self.taskEdit.setText("")
+
+
+class ChatBot(CardWidget):
+    def __init__(self, sizeHintDyber, parent=None):
+        super().__init__(parent=parent)
+        self.sizeHintDyber = sizeHintDyber
+        self.setObjectName("gptPanel")
+        self.__init_ui()
+
+    def __init_ui(self):
+        sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
+        self.setSizePolicy(sizePolicy)
+        self.setMinimumSize(QSize(PANEL_W, PANEL_H))
+        self.setMaximumSize(QSize(PANEL_W, PANEL_H))
