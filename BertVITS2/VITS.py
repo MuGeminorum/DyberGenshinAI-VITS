@@ -26,6 +26,7 @@ from .utils import (
     download_file,
     get_hparams_from_url,
     load_checkpoint,
+    save_audio,
 )
 from PySide6.QtWidgets import QWidget
 from tqdm import tqdm
@@ -126,4 +127,5 @@ class TTS(QWidget):
                     )
                 )
 
-        return concatenate_audios(audios, self.hps.data.sampling_rate)
+        sr, audio_samples = concatenate_audios(audios, self.hps.data.sampling_rate)
+        return save_audio(audio_samples, sr)
