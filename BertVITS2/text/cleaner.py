@@ -1,4 +1,4 @@
-from text import chinese, cleaned_text_to_sequence
+from BertVITS2.text import chinese, cleaned_text_to_sequence
 
 
 language_module_map = {

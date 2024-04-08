@@ -2,12 +2,18 @@ import json
 from openai import OpenAI
 from PySide6.QtWidgets import QWidget
 from PySide6.QtCore import Signal, QThread
-from ..BertVITS2.VITS import TTS
+from BertVITS2.VITS import TTS
 
 
 class Worker(QThread):
     def __init__(
-        self, history: list, query: str, client: OpenAI, answer: Signal, parent=None
+        self,
+        history: list,
+        query: str,
+        client: OpenAI,
+        tts: TTS,
+        answer: Signal,
+        parent=None,
     ):
         super().__init__(parent)
         self.query = query
@@ -29,19 +35,24 @@ class Worker(QThread):
 
 class Test(QThread):
     def __init__(
-        self, history: list, query: str, client: OpenAI, answer: Signal, parent=None
+        self,
+        history: list,
+        query: str,
+        client: OpenAI,
+        tts: TTS,
+        answer: Signal,
+        parent=None,
     ):
         super().__init__(parent)
         self.query = query
         self.history = history
         self.client = client
         self.answer = answer
+        self.tts = tts
 
     def run(self):
         result = "这是测试用文案，当前用于绕过KIMICHAT测试VITS！"
-        tts = TTS(self)
-        audio, _ = tts.speech(tts)
-        print(audio)
+        print(self.tts.speech(result))
         self.answer.emit(result)
 
 
@@ -66,6 +77,10 @@ class ChatBot(QWidget):
             },
         ]
 
+        self.tts = TTS(self)
+
     def chat(self, query):
-        self.worker = Test(self.history, query, self.client, self.answer, parent=self)
+        self.worker = Test(
+            self.history, query, self.client, self.tts, self.answer, parent=self
+        )
         self.worker.start()
