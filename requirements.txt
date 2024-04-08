@@ -1,3 +1,13 @@
 tendo
 pyside6==6.5.2
 PySide6-Fluent-Widgets==1.5.4
+librosa==0.9.1
+matplotlib
+numpy
+numba
+scipy
+torch
+jieba
+transformers
+pypinyin
+cn2an
