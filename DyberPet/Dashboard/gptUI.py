@@ -1,9 +1,10 @@
 # coding:utf-8
 import os
-from qfluentwidgets import ScrollArea, ExpandLayout
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget, QLabel
-from .dashboard_widgets import FocusPanel, ProgressPanel, TaskPanel
+from qfluentwidgets import ScrollArea, ExpandLayout
+
+# from .dashboard_widgets import FocusPanel, ProgressPanel
 import DyberPet.settings as settings
 
 basedir = settings.BASEDIR
@@ -20,10 +21,10 @@ class gptInterface(ScrollArea):
         self.expandLayout = ExpandLayout(self.scrollWidget)
 
         # setting label
-        self.panelLabel = QLabel(self.tr("Daily Tasks"), self)
-        self.focusPanel = FocusPanel(sizeHintdb, self.scrollWidget)
-        self.progressPanel = ProgressPanel(sizeHintdb, self.scrollWidget)
-        self.taskPanel = TaskPanel(sizeHintdb, self.scrollWidget)
+        self.panelLabel = QLabel(self.tr("AI助手"), self)
+        # self.focusPanel = FocusPanel(sizeHintdb, self.scrollWidget)
+        # self.progressPanel = ProgressPanel(sizeHintdb, self.scrollWidget)
+        # self.taskPanel = TaskPanel(sizeHintdb, self.scrollWidget)
 
         self.__initWidget()
 
@@ -40,7 +41,7 @@ class gptInterface(ScrollArea):
 
         # initialize layout
         self.__initLayout()
-        self.__connectSignalToSlot()
+        # self.__connectSignalToSlot()
 
     def __initLayout(self):
         self.panelLabel.move(60, 20)
@@ -49,9 +50,9 @@ class gptInterface(ScrollArea):
         self.expandLayout.setSpacing(28)
         self.expandLayout.setContentsMargins(70, 10, 70, 0)
 
-        self.expandLayout.addWidget(self.focusPanel)
-        self.expandLayout.addWidget(self.progressPanel)
-        self.expandLayout.addWidget(self.taskPanel)
+        # self.expandLayout.addWidget(self.focusPanel)
+        # self.expandLayout.addWidget(self.progressPanel)
+        # self.expandLayout.addWidget(self.taskPanel)
 
     def __setQss(self):
         """set style sheet"""
@@ -67,13 +68,13 @@ class gptInterface(ScrollArea):
         ) as f:
             self.setStyleSheet(f.read())
 
-    def __connectSignalToSlot(self):
-        """connect signal to slot"""
-        self.focusPanel.addProgress.connect(self.progressPanel.updateProgress)
-        return
+    # def __connectSignalToSlot(self):
+    #     """connect signal to slot"""
+    #     self.focusPanel.addProgress.connect(self.progressPanel.updateProgress)
+    #     return
 
-    def _changePet(self):
-        self.changePet.emit()
-        settings.HP_stop = False
-        settings.FV_stop = False
-        self.stopBuffThread()
+    # def _changePet(self):
+    #     self.changePet.emit()
+    #     settings.HP_stop = False
+    #     settings.FV_stop = False
+    #     self.stopBuffThread()
