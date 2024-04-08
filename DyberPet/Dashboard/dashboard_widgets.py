@@ -19,8 +19,6 @@ from PySide6.QtWidgets import (
     QLayout,
     QSpacerItem,
     QListWidget,
-    QLineEdit,
-    QPushButton,
 )
 from PySide6.QtGui import (
     QPixmap,
@@ -40,8 +38,6 @@ from qfluentwidgets import (
     PillPushButton,
     BodyLabel,
     CaptionLabel,
-    setFont,
-    isDarkTheme,
     FluentStyleSheet,
     FlowLayout,
     IconWidget,
@@ -61,6 +57,8 @@ from qfluentwidgets import (
     Flyout,
     FlyoutViewBase,
     FlyoutAnimationType,
+    setFont,
+    isDarkTheme,
 )
 from DyberPet.DyberSettings.custom_utils import SACECARD_H, SACECARD_W, AvatarImage
 from DyberPet.utils import MaskPhrase, TimeConverter
@@ -3008,7 +3006,6 @@ class EmptyTaskCard(QWidget):
         self.taskEdit = LineEdit(self)
         self.taskEdit.setClearButtonEnabled(True)
         self.taskEdit.setPlaceholderText(self.tr("Add New Task"))
-        self.taskEdit.setClearButtonEnabled(True)
         self.taskEdit.setFixedWidth(TASKCARD_W - 50)
         # self.coinAmount.setEnabled(False)
         # Yes button
@@ -3038,31 +3035,39 @@ class EmptyAskCard(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.hBoxLayout = QHBoxLayout(self)
-        self.hBoxLayout.setContentsMargins(10, 5, 5, 5)
-        self.hBoxLayout.setSpacing(5)
-        self.setFixedSize(TASKCARD_W, TASKCARD_H)
+        self.hBoxLayout.setContentsMargins(4, 4, 4, 4)
+        self.hBoxLayout.setSpacing(4)
+        self.setFixedSize(410, 40)
         self._init_Empty()
 
     def _init_Empty(self):
+        # Rec Btn
+        self.recBtn = TransparentToolButton(self)
+        self.recBtn.setIcon(FIF.MICROPHONE)
+        self.recBtn.setFixedSize(20, 20)
+        self.recBtn.setIconSize(QSize(18, 18))
+        self.recBtn.clicked.connect(self.voice_record)
+
         # LineEdit
         self.askEdit = LineEdit(self)
         self.askEdit.setClearButtonEnabled(True)
         self.askEdit.setPlaceholderText(self.tr("请输入问题"))
-        self.askEdit.setClearButtonEnabled(True)
-        self.askEdit.setFixedWidth(TASKCARD_W - 50)
+        self.askEdit.setFixedWidth(350)
+
         # send button
         self.sendBtn = TransparentToolButton(self)
-        self.sendBtn.setIcon(FIF.ACCEPT)
+        self.sendBtn.setIcon(FIF.SEND)
         self.sendBtn.setFixedSize(20, 20)
         self.sendBtn.setIconSize(QSize(18, 18))
         self.sendBtn.clicked.connect(self.submit_ask)
 
+        self.hBoxLayout.addWidget(self.recBtn, 0, Qt.AlignLeft | Qt.AlignVCenter)
         self.hBoxLayout.addWidget(self.askEdit, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        spacerItem2 = QSpacerItem(5, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
-        self.hBoxLayout.addItem(spacerItem2)
         self.hBoxLayout.addWidget(self.sendBtn, 0, Qt.AlignRight | Qt.AlignVCenter)
-        spacerItem3 = QSpacerItem(5, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
-        self.hBoxLayout.addItem(spacerItem3)
+
+    def voice_record(self):
+        # 这里应该添加录制语音的逻辑
+        print("录制语音功能尚未实现")
 
     def submit_ask(self):
         ask_text = self.askEdit.text()
@@ -3071,7 +3076,7 @@ class EmptyAskCard(QWidget):
             self.askEdit.setText("")
 
 
-class ChatCard(CardWidget):
+class ChatCard(SimpleCardWidget):
     def __init__(self, sizeHintDyber, parent=None):
         super().__init__(parent=parent)
         self.sizeHintDyber = sizeHintDyber
@@ -3085,7 +3090,7 @@ class ChatCard(CardWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.setSizePolicy(sizePolicy)
-        self.setFixedSize(QSize(PANEL_W, 420))
+        self.setFixedSize(430, 420)
 
         self.verticalLayout = QVBoxLayout(self)
         self.verticalLayout.setSizeConstraint(QLayout.SetDefaultConstraint)
@@ -3099,14 +3104,10 @@ class ChatCard(CardWidget):
         self.verticalLayout.addWidget(self.msgList)
         self.verticalLayout.addWidget(self.emptyCard)
 
-    def voice_record(self):
-        # 这里应该添加录制语音的逻辑
-        print("录制语音功能尚未实现")
-
     def __connectSignalToSlot(self):
         self.emptyCard.new_ask.connect(self.send_message)
 
     def send_message(self, message):
         if message:
-            self.msgList.addItem(f"用户: {message}")
+            self.msgList.addItem(f"我: {message}")
             self.emptyCard.askEdit.clear()
