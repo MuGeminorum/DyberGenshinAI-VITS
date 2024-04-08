@@ -1,8 +1,8 @@
 # coding:utf-8
 import os
-from qfluentwidgets import ScrollArea, ExpandLayout
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget, QLabel
+from qfluentwidgets import ScrollArea, ExpandLayout
 from .dashboard_widgets import FocusPanel, ProgressPanel, TaskPanel
 import DyberPet.settings as settings
 

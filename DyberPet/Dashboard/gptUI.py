@@ -3,8 +3,7 @@ import os
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget, QLabel
 from qfluentwidgets import ScrollArea, ExpandLayout
-
-# from .dashboard_widgets import FocusPanel, ProgressPanel
+from .dashboard_widgets import ChatBot
 import DyberPet.settings as settings
 
 basedir = settings.BASEDIR
@@ -22,10 +21,7 @@ class gptInterface(ScrollArea):
 
         # setting label
         self.panelLabel = QLabel(self.tr("AI助手"), self)
-        # self.focusPanel = FocusPanel(sizeHintdb, self.scrollWidget)
-        # self.progressPanel = ProgressPanel(sizeHintdb, self.scrollWidget)
-        # self.taskPanel = TaskPanel(sizeHintdb, self.scrollWidget)
-
+        self.chatBot = ChatBot(sizeHintdb, self.scrollWidget)
         self.__initWidget()
 
     def __initWidget(self):
@@ -50,9 +46,8 @@ class gptInterface(ScrollArea):
         self.expandLayout.setSpacing(28)
         self.expandLayout.setContentsMargins(70, 10, 70, 0)
 
-        # self.expandLayout.addWidget(self.focusPanel)
-        # self.expandLayout.addWidget(self.progressPanel)
-        # self.expandLayout.addWidget(self.taskPanel)
+        # 将 QTextEdit 和 QPushButton 添加到布局中
+        self.expandLayout.addWidget(self.chatBot)
 
     def __setQss(self):
         """set style sheet"""
