@@ -1,8 +1,4 @@
 venv/
-__pycache__/
-DyberPet/__pycache__/
-DyberPet/DyberSettings/__pycache__/
-DyberPet/Dashboard/__pycache__/
 data/
 dist/
 build/
@@ -12,8 +8,8 @@ res/role/纳西妲
 res/pet/兰纳罗
 res/pet/蕈兽
 res/items/GenshinImpact
-**/.DS_Store
-.DS_Store
+*.DS_Store*
 *__pycache__*
 rename.sh
 test.py
+*.pth
