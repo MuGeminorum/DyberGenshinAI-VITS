@@ -3,7 +3,7 @@ import os
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget, QLabel
 from qfluentwidgets import ScrollArea, ExpandLayout
-from .dashboard_widgets import ChatBot
+from .dashboard_widgets import ChatCard
 import DyberPet.settings as settings
 
 basedir = settings.BASEDIR
@@ -21,7 +21,7 @@ class gptInterface(ScrollArea):
 
         # setting label
         self.panelLabel = QLabel(self.tr("AI助手"), self)
-        self.chatBot = ChatBot(sizeHintdb, self.scrollWidget)
+        self.chatBot = ChatCard(sizeHintdb, self.scrollWidget)
         self.__initWidget()
 
     def __initWidget(self):
