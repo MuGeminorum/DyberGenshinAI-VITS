@@ -16,3 +16,4 @@ res/items/GenshinImpact
 .DS_Store
 *__pycache__*
 rename.sh
+test.py

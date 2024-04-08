@@ -62,6 +62,7 @@ from qfluentwidgets import (
 )
 from DyberPet.DyberSettings.custom_utils import SACECARD_H, SACECARD_W, AvatarImage
 from DyberPet.utils import MaskPhrase, TimeConverter
+from ..ChatBot import ChatBot
 import DyberPet.settings as settings
 
 basedir = settings.BASEDIR
@@ -2974,7 +2975,6 @@ class TaskCard(SimpleCardWidget):
         self.done = True
         self.checkBox.setChecked(True)
         self.checkBox.setEnabled(False)
-
         self.taskLabel.setTextColor(QColor(140, 140, 140))
         font = self.taskLabel.font()
         font.setStrikeOut(True)
@@ -3051,7 +3051,7 @@ class EmptyAskCard(QWidget):
         # LineEdit
         self.askEdit = LineEdit(self)
         self.askEdit.setClearButtonEnabled(True)
-        self.askEdit.setPlaceholderText(self.tr("请输入问题"))
+        self.askEdit.setPlaceholderText(self.tr("请输入问题或长按麦克风提问"))
         self.askEdit.setFixedWidth(350)
 
         # send button
@@ -3074,9 +3074,12 @@ class EmptyAskCard(QWidget):
         if ask_text:
             self.new_ask.emit(ask_text)
             self.askEdit.setText("")
+            self.setEnabled(False)
 
 
 class ChatCard(SimpleCardWidget):
+    # ask_question = Signal(str, name="ask_sig")
+
     def __init__(self, sizeHintDyber, parent=None):
         super().__init__(parent=parent)
         self.sizeHintDyber = sizeHintDyber
@@ -3091,23 +3094,38 @@ class ChatCard(SimpleCardWidget):
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.setSizePolicy(sizePolicy)
         self.setFixedSize(430, 420)
-
         self.verticalLayout = QVBoxLayout(self)
         self.verticalLayout.setSizeConstraint(QLayout.SetDefaultConstraint)
-
         self.msgList = QListWidget(self)
-        self.msgList.setObjectName("msgList")
-
+        self.msgList.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.msgList.setWordWrap(True)
         # LineEdit
-        self.emptyCard = EmptyAskCard()
-
+        self.askCard = EmptyAskCard()
         self.verticalLayout.addWidget(self.msgList)
-        self.verticalLayout.addWidget(self.emptyCard)
+        self.verticalLayout.addWidget(self.askCard)
+        self.chatbot = ChatBot(self)
 
     def __connectSignalToSlot(self):
-        self.emptyCard.new_ask.connect(self.send_message)
+        self.askCard.new_ask.connect(self.send_message)
+        # self.ask_question.connect(self.chatbot.chat)
+        self.chatbot.answer.connect(self.answered)
 
-    def send_message(self, message):
+    def send_message(self, message: str):
         if message:
-            self.msgList.addItem(f"我: {message}")
-            self.emptyCard.askEdit.clear()
+            self.msgList.addItem(f"我：{message}")
+            self.askCard.askEdit.clear()
+            self.msgList.addItem("......")
+            self.chatbot.chat(message)
+            # self.ask_question.emit(message)
+
+    # def processing(self):
+    #     lastId = self.msgList.count() - 1
+    #     lastItem = self.msgList.item(lastId)
+    #     nextStr = (len(lastItem.text()) % 3 + 1) * "."
+    #     lastItem.setText(nextStr)
+
+    def answered(self, response: str):
+        lastId = self.msgList.count() - 1
+        lastItem = self.msgList.item(lastId)
+        lastItem.setText(f"纳西妲：{response}")
+        self.askCard.setEnabled(True)
