@@ -18,6 +18,9 @@ from PySide6.QtWidgets import (
     QStackedWidget,
     QLayout,
     QSpacerItem,
+    QListWidget,
+    QLineEdit,
+    QPushButton,
 )
 from PySide6.QtGui import (
     QPixmap,
@@ -3029,12 +3032,52 @@ class EmptyTaskCard(QWidget):
             self.taskEdit.setText("")
 
 
-class ChatBot(CardWidget):
+class EmptyAskCard(QWidget):
+    new_ask = Signal(str, name="new_ask")
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.hBoxLayout = QHBoxLayout(self)
+        self.hBoxLayout.setContentsMargins(10, 5, 5, 5)
+        self.hBoxLayout.setSpacing(5)
+        self.setFixedSize(TASKCARD_W, TASKCARD_H)
+        self._init_Empty()
+
+    def _init_Empty(self):
+        # LineEdit
+        self.askEdit = LineEdit(self)
+        self.askEdit.setClearButtonEnabled(True)
+        self.askEdit.setPlaceholderText(self.tr("请输入问题"))
+        self.askEdit.setClearButtonEnabled(True)
+        self.askEdit.setFixedWidth(TASKCARD_W - 50)
+        # send button
+        self.sendBtn = TransparentToolButton(self)
+        self.sendBtn.setIcon(FIF.ACCEPT)
+        self.sendBtn.setFixedSize(20, 20)
+        self.sendBtn.setIconSize(QSize(18, 18))
+        self.sendBtn.clicked.connect(self.submit_ask)
+
+        self.hBoxLayout.addWidget(self.askEdit, 0, Qt.AlignLeft | Qt.AlignVCenter)
+        spacerItem2 = QSpacerItem(5, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
+        self.hBoxLayout.addItem(spacerItem2)
+        self.hBoxLayout.addWidget(self.sendBtn, 0, Qt.AlignRight | Qt.AlignVCenter)
+        spacerItem3 = QSpacerItem(5, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
+        self.hBoxLayout.addItem(spacerItem3)
+
+    def submit_ask(self):
+        ask_text = self.askEdit.text()
+        if ask_text:
+            self.new_ask.emit(ask_text)
+            self.askEdit.setText("")
+
+
+class ChatCard(CardWidget):
     def __init__(self, sizeHintDyber, parent=None):
         super().__init__(parent=parent)
         self.sizeHintDyber = sizeHintDyber
-        self.setObjectName("gptPanel")
+        self.setObjectName("chatPanel")
         self.__init_ui()
+        self.__connectSignalToSlot()
 
     def __init_ui(self):
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
@@ -3042,5 +3085,28 @@ class ChatBot(CardWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.setSizePolicy(sizePolicy)
-        self.setMinimumSize(QSize(PANEL_W, PANEL_H))
-        self.setMaximumSize(QSize(PANEL_W, PANEL_H))
+        self.setFixedSize(QSize(PANEL_W, 420))
+
+        self.verticalLayout = QVBoxLayout(self)
+        self.verticalLayout.setSizeConstraint(QLayout.SetDefaultConstraint)
+
+        self.msgList = QListWidget(self)
+        self.msgList.setObjectName("msgList")
+
+        # LineEdit
+        self.emptyCard = EmptyAskCard()
+
+        self.verticalLayout.addWidget(self.msgList)
+        self.verticalLayout.addWidget(self.emptyCard)
+
+    def voice_record(self):
+        # 这里应该添加录制语音的逻辑
+        print("录制语音功能尚未实现")
+
+    def __connectSignalToSlot(self):
+        self.emptyCard.new_ask.connect(self.send_message)
+
+    def send_message(self, message):
+        if message:
+            self.msgList.addItem(f"用户: {message}")
+            self.emptyCard.askEdit.clear()
