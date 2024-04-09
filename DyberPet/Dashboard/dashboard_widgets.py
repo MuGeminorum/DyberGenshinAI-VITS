@@ -3110,6 +3110,7 @@ class ChatCard(SimpleCardWidget):
         self.askCard.new_ask.connect(self.send_message)
         self.chatbot.answer.connect(self.answered)
 
+    # slot
     def send_message(self, message: str):
         if message:
             self.msgList.addItem(f"我：{message}")
@@ -3117,6 +3118,7 @@ class ChatCard(SimpleCardWidget):
             self.msgList.addItem("......")
             self.chatbot.chat(message)
 
+    # slot
     def answered(self, response: str, speech_path: str):
         lastId = self.msgList.count() - 1
         lastItem = self.msgList.item(lastId)
@@ -3124,6 +3126,6 @@ class ChatCard(SimpleCardWidget):
         player = QSoundEffect(self)
         url = QUrl.fromLocalFile(speech_path)
         player.setSource(url)
-        player.setVolume(0.5)
+        player.setVolume(settings.volume)
         player.play()
         self.askCard.setEnabled(True)
