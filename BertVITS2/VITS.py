@@ -106,7 +106,7 @@ class TTS(QWidget):
     def speech(
         self,
         content,
-        speaker="纳西妲",
+        speaker,
         sdp_ratio=0.2,
         noise_scale=0.6,
         noise_scale_w=0.8,

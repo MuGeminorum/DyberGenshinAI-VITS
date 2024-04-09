@@ -1,6 +1,6 @@
 # coding:utf-8
 import os
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QWidget, QLabel
 from qfluentwidgets import ScrollArea, ExpandLayout
 from .dashboard_widgets import ChatCard
@@ -12,7 +12,9 @@ module_path = os.path.join(basedir, "DyberPet/Dashboard/")
 
 class chatInterface(ScrollArea):
     """Character animations management interface"""
-
+    
+    changePet = Signal(name="changePet")
+    
     def __init__(self, sizeHintdb: tuple[int, int], parent=None):
         super().__init__(parent=parent)
         self.setObjectName("chatInterface")
@@ -23,6 +25,7 @@ class chatInterface(ScrollArea):
         self.panelLabel = QLabel(self.tr("AI助手"), self)
         self.chatBot = ChatCard(sizeHintdb, self.scrollWidget)
         self.__initWidget()
+        self.__connectSignalToSlot()
 
     def __initWidget(self):
         # self.resize(1000, 800)
@@ -63,13 +66,9 @@ class chatInterface(ScrollArea):
         ) as f:
             self.setStyleSheet(f.read())
 
-    # def __connectSignalToSlot(self):
-    #     """connect signal to slot"""
-    #     self.focusPanel.addProgress.connect(self.progressPanel.updateProgress)
-    #     return
+    def __connectSignalToSlot(self):
+        """connect signal to slot"""
+        self.changePet.connect(self.chatBot._changePet)
 
-    # def _changePet(self):
-    #     self.changePet.emit()
-    #     settings.HP_stop = False
-    #     settings.FV_stop = False
-    #     self.stopBuffThread()
+    def _changePet(self):
+        self.changePet.emit()

@@ -93,6 +93,7 @@ class DPNote(QWidget):
             )
         except:
             pet_note_conf = {}
+
         self.icon_dict, self.sound_dict = self.init_note(sys_note_conf, pet_note_conf)
         pet_cof = dict(
             json.load(

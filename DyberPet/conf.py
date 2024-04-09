@@ -4,10 +4,10 @@ import time
 import os.path
 from datetime import datetime
 from sys import platform
-from DyberPet.utils import text_wrap, get_child_folder
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap
 from .utils import get_file_time
+from DyberPet.utils import text_wrap, get_child_folder
 
 if platform == "win32":
     basedir = ""
@@ -52,6 +52,8 @@ class PetConfig:
         self.on_floor = None
         self.patpat = None
         # self.subpet = []
+        self.speak_act = ""
+        self.prompt = ""
 
         self.random_act = []
         self.act_prob = []
@@ -70,7 +72,6 @@ class PetConfig:
 
     @classmethod
     def init_config(cls, pet_name: str, pic_dict: dict):
-
         path = os.path.join(basedir, "res/role/{}/pet_conf.json".format(pet_name))
         with open(path, "r", encoding="UTF-8") as f:
             o = PetConfig()
@@ -80,11 +81,12 @@ class PetConfig:
             o.scale = conf_params.get("scale", 1.0)
             o.width = conf_params.get("width", 128) * o.scale
             o.height = conf_params.get("height", 128) * o.scale
-
             o.refresh = conf_params.get("refresh", 5)
             o.interact_speed = conf_params.get("interact_speed", 0.02) * 1000
             o.dropspeed = conf_params.get("dropspeed", 1.0)  # not needed in v0.15+
             # o.gravity = conf_params.get('gravity', 4.0)
+            o.speak_act = conf_params.get("speak_act", "wavehand")
+            o.prompt = conf_params.get("prompt", "")
 
             #
             # 初始化所有动作
@@ -139,6 +141,7 @@ class PetConfig:
                 o.act_prob = [0] * len(act_prob)
             else:
                 o.act_prob = [i / sum(act_prob) for i in act_prob]
+
             o.act_name = act_name
             o.act_type = act_type
             o.act_sound = act_sound
@@ -173,12 +176,12 @@ class PetConfig:
             )
             if os.path.isfile(msg_file):
                 msg_data = dict(json.load(open(msg_file, "r", encoding="UTF-8")))
-
                 msg_dict = conf_params.get("msg_dict", {})
                 for msg in msg_dict.keys():
                     msg_dict[msg] = msg_data[msg_dict[msg]]
 
                 o.msg_dict = msg_dict
+
             else:
                 o.msg_dict = {}
 
@@ -195,8 +198,6 @@ class PetConfig:
             o.scale = conf_params.get("scale", 1.0)
             # o.width = conf_params.get('width', 128) * o.scale
             # o.height = conf_params.get('height', 128) * o.scale
-
-            #
             # 初始化所有动作
             act_path = os.path.join(basedir, "res/role/sys/act_conf.json")
             act_conf = dict(json.load(open(act_path, "r", encoding="UTF-8")))
@@ -281,7 +282,6 @@ class PetConfig:
 
             # Subpet Buff to chars - v0.3.4 moved to item_config
             # o.buff_dict = conf_params.get('buff', {})
-
             # 初始化随机动作
             random_act = []
             act_prob = []
@@ -301,6 +301,7 @@ class PetConfig:
                 o.act_prob = [0] * len(act_prob)
             else:
                 o.act_prob = [i / sum(act_prob) for i in act_prob]
+
             o.act_name = act_name
             o.act_type = act_type
             o.act_sound = act_sound
@@ -343,6 +344,7 @@ def CheckCharFiles(folder):
         if "images" not in actDic.keys():
             error_action.append(action)
             continue
+
         else:
             images = actDic["images"]
             img_dir = os.path.normpath(os.path.join(folder, f"action/{images}"))
@@ -492,22 +494,20 @@ class PetData:
         self.items = {}
         self.coins = 0
         self.frozen_data = False
-
         self.file_path = os.path.join(
             configdir, "data/pet_data.json"
         )  # %(self.petname)
         self.petsList = petsList
         self.current_pet = petsList[0]
-
         self.init_data()
 
     def init_data(self):
-
         if os.path.isfile(self.file_path):
             # Check file integrity
             try:
                 allData_params = json.load(open(self.file_path, "r", encoding="UTF-8"))
                 self.saveGood = True
+
             except:
                 # File broken (seen by a few users)
                 allData_params = {}
@@ -570,13 +570,13 @@ class PetData:
         allData_params[self.current_pet] = data_params.copy()
 
         self.allData_params = allData_params
-
         self.save_data()
         self.value_type = {key: type(data_params[key]) for key in data_params.keys()}
 
     def _check_coins(self, data_params):
         if "coins" not in data_params:
             data_params["coins"] = 0
+
         return data_params
 
     def _sumDays(self, data_params):
@@ -596,6 +596,7 @@ class PetData:
                 # 同一天重复打开
                 days = days
                 last_opened = "%i-%i-%i" % (now.year, now.month, now.day)
+
             else:
                 days = days + 1
                 last_opened = "%i-%i-%i" % (now.year, now.month, now.day)
@@ -605,7 +606,6 @@ class PetData:
             ct = os.path.getctime(self.file_path)
             ct = time.strptime(time.ctime(ct))
             ct = time.strftime("%Y-%m-%d", ct).split("-")
-
             now = datetime.now()
             ct = datetime(
                 year=int(ct[0]),
@@ -623,7 +623,6 @@ class PetData:
 
     def _change_pet(self, current_pet):
         self.current_pet = current_pet
-
         if current_pet not in self.allData_params.keys():
             now = datetime.now()
             self.allData_params[self.current_pet] = {
@@ -662,7 +661,6 @@ class PetData:
 
         self.allData_params[self.current_pet]["HP"] = self.hp
         self.allData_params[self.current_pet]["HP_tier"] = self.hp_tier
-
         self.save_data()
 
     def change_fv(self, fv_value, fv_lvl=None):
@@ -723,6 +721,7 @@ class PetData:
                 )
             except:
                 return 0
+
             if check_key_value:
                 return 1
             else:
@@ -740,11 +739,14 @@ class PetData:
                         )
                     except:
                         return 0
+
                     if check_key_value:
                         continue
                     else:
                         return 0
+
                 return 1
+
             else:
                 save_dict = save_allDict.get(petname, None)
                 if save_dict is None:
@@ -758,13 +760,13 @@ class PetData:
                         )
                     except:
                         return 0
+
                     if check_key_value:
                         return 1
                     else:
                         return 0
 
     def transfer_save(self, save_allDict, petname, days_info=False):
-
         try:
             if "HP" in save_allDict:
                 # Save to import is from old version
@@ -774,27 +776,29 @@ class PetData:
                         self.transfer_save_toPet(save_dict, pet)
                 else:
                     self.transfer_save_toPet(save_dict, petname)
+
             else:
                 # Save to import is from new version
                 if petname == "all":
                     for pet, save_dict in save_allDict.items():
                         self.transfer_save_toPet(save_dict, pet)
+
                 else:
                     save_dict = save_allDict.get(petname, None)  # [petname]
                     if not save_dict:
                         return 0
+
                     self.transfer_save_toPet(save_dict, petname)
         except:
             return 0
 
         with open(self.file_path, "w", encoding="utf-8") as f:
             json.dump(self.allData_params, f, ensure_ascii=False, indent=4)
+
         return 1
 
     def transfer_save_toPet(self, data_params, petname):
-
         data_params = self._check_coins(data_params)
-
         if petname not in self.allData_params.keys():
             self.allData_params[petname] = data_params.copy()
         else:
@@ -851,7 +855,6 @@ class TaskData:
         Task Data Init
         Load / Create task data file
         """
-
         self.file_path = os.path.join(configdir, "data/task_data.json")
         self.init_data()
         self.save_data()

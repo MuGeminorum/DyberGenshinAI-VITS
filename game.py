@@ -91,6 +91,7 @@ class DyberPetApp(QApplication):
         self.p.hp_updated.connect(self.board.statusInterface.StatusCard._updateHP)
         self.p.fv_updated.connect(self.board.statusInterface.StatusCard._updateFV)
         self.p.change_note.connect(self.board.statusInterface._changePet)
+        self.p.change_note.connect(self.board.chatInterface._changePet)
         self.board.statusInterface.changeStatus.connect(self.p._change_status)
         self.p.stopAllThread.connect(self.board.statusInterface.stopBuffThread)
         self.acc.acc_withdrawed.connect(self.board.backpackInterface.acc_withdrawed)
