@@ -245,7 +245,7 @@ def init_settings():
         volume = 0.5
         language_code = QtCore.QLocale().name()
         on_top_hint = True
-        default_pet = "纳西妲"
+        default_pet = "sys"
         defaultAct = {}
         for pet in pets:
             defaultAct[pet] = defaultAct.get(pet, None)
