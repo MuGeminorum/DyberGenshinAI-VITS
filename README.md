@@ -1,12 +1,12 @@
-# DyberAIGenshin-VITS
-[![Python application](https://github.com/MuGeminorum/DyberAIGenshin-VITS/actions/workflows/python-app.yml/badge.svg?branch=main)](https://github.com/MuGeminorum/DyberAIGenshin-VITS/actions/workflows/python-app.yml)
+# DyberGenshinAI-VITS
+[![Python application](https://github.com/MuGeminorum/DyberGenshinAI-VITS/actions/workflows/python-app.yml/badge.svg?branch=main)](https://github.com/MuGeminorum/DyberGenshinAI-VITS/actions/workflows/python-app.yml)
 
 DyberPet_GenshinImpact + KimiChat + BertVITS2
 
 ## Usage
 ### Environment
 ```bash
-conda create -n pet python=3.9
+conda create -n pet python=3.9 --yes
 conda activate pet
 conda install -c conda-forge apscheduler --yes
 conda install -c conda-forge pynput --yes
