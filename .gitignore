@@ -4,7 +4,7 @@ dist/
 build/
 run_DyberPet.exe
 run_DyberPet.spec
-res/item/*
+res/items/*
 res/role/*
 *.DS_Store*
 *__pycache__*
