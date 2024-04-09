@@ -1,4 +1,6 @@
 # DyberAIGenshin-VITS
+[![Python application](https://github.com/MuGeminorum/DyberAIGenshin-VITS/actions/workflows/python-app.yml/badge.svg?branch=main)](https://github.com/MuGeminorum/DyberAIGenshin-VITS/actions/workflows/python-app.yml)
+
 DyberPet_GenshinImpact + KimiChat + BertVITS2
 
 ## Usage
