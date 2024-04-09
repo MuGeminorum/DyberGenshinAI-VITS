@@ -11,3 +11,5 @@ jieba
 transformers
 pypinyin
 cn2an
+openai
+modelscope
