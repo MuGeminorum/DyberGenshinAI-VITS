@@ -7,15 +7,15 @@ from PySide6.QtWidgets import *
 from PySide6.QtCore import Qt, QTimer, QObject, QPoint
 from PySide6.QtCore import QObject, QThread, Signal
 from PySide6.QtGui import QPixmap, QIcon, QCursor, QFont
-from qfluentwidgets import CaptionLabel, setFont, Action
+from qfluentwidgets import CaptionLabel, Action, setFont
 from qfluentwidgets import FluentIcon as FIF
-from DyberPet.custom_widgets import SystemTray
 from .custom_roundmenu import RoundMenu
-from DyberPet.conf import *
-from DyberPet.utils import *
-from DyberPet.modules import *
 from DyberPet.Accessory import MouseMoveManager
+from DyberPet.custom_widgets import SystemTray
 from DyberPet.extra_windows import *
+from DyberPet.modules import *
+from DyberPet.utils import *
+from DyberPet.conf import *
 
 # initialize settings
 import DyberPet.settings as settings
@@ -213,16 +213,16 @@ class DP_FvBar(QProgressBar):
         self.fv_updated.emit(self.value(), self.fvlvl)
 
     def updateValue(self, change_value, from_mod):
-
         before_value = self.value()
-
         if from_mod == "Scheduler":
             if settings.pet_data.hp_tier > 1:
                 prev_value = self.value()
                 current_value = self.value() + change_value  # , self.maximum())
+
             elif settings.pet_data.hp_tier == 0 and not settings.FV_stop:
                 prev_value = self.value()
                 current_value = self.value() - 1
+
             else:
                 return 0
 
@@ -235,7 +235,6 @@ class DP_FvBar(QProgressBar):
 
         if current_value < self.maximum():
             self.setValue(current_value)
-
             current_value = self.value()
             if current_value == prev_value:
                 return 0
@@ -245,8 +244,8 @@ class DP_FvBar(QProgressBar):
                     % (int(self.fvlvl), int(current_value), int(self.maximum()))
                 )
                 settings.pet_data.change_fv(current_value)
-            after_value = self.value()
 
+            after_value = self.value()
             self.fv_updated.emit(self.value(), self.fvlvl)
             return int(after_value - before_value)
 
@@ -260,6 +259,7 @@ class DP_FvBar(QProgressBar):
             current_value = self.maximum()
             if current_value == oldValue:
                 return 0
+
             self.setFormat(
                 "lv%s: %s/%s"
                 % (int(self.fvlvl), int(current_value), self.points_to_lvlup)
@@ -299,28 +299,21 @@ class PetWidget(QWidget):
     fvlvl_changed_main_note = Signal(int, name="fvlvl_changed_main_note")
     fvlvl_changed_main_inve = Signal(int, name="fvlvl_changed_main_inve")
     hptier_changed_main_note = Signal(int, str, name="hptier_changed_main_note")
-
     setup_acc = Signal(dict, int, int, name="setup_acc")
     change_note = Signal(name="change_note")
     close_all_accs = Signal(name="close_all_accs")
-
     move_sig = Signal(int, int, name="move_sig")
     # acc_withdrawed = Signal(str, name='acc_withdrawed')
     send_positions = Signal(list, list, name="send_positions")
-
     lang_changed = Signal(name="lang_changed")
     show_controlPanel = Signal(name="show_controlPanel")
-
     show_dashboard = Signal(name="show_dashboard")
     hp_updated = Signal(int, name="hp_updated")
     fv_updated = Signal(int, int, name="fv_updated")
-
     compensate_rewards = Signal(name="compensate_rewards")
     refresh_bag = Signal(name="refresh_bag")
     addCoins = Signal(int, name="addCoins")
-
     stopAllThread = Signal(name="stopAllThread")
-
     taskUI_Timer_update = Signal(name="taskUI_Timer_update")
     taskUI_task_end = Signal(name="taskUI_task_end")
     single_pomo_done = Signal(name="single_pomo_done")
@@ -407,6 +400,7 @@ class PetWidget(QWidget):
             # 打开右键菜单
             self.setContextMenuPolicy(Qt.CustomContextMenu)
             self.customContextMenuRequested.connect(self._show_Staus_menu)
+
         if event.button() == Qt.LeftButton:
             # 左键绑定拖拽
             self.is_follow_mouse = True
@@ -432,20 +426,18 @@ class PetWidget(QWidget):
 
         if Qt.LeftButton and self.is_follow_mouse:
             self.move(event.globalPos() - self.mouse_drag_pos)
-
             self.mouse_moving = True
 
             if settings.mouseposx3 == 0:
-
                 settings.mouseposx1 = QCursor.pos().x()
                 settings.mouseposx2 = settings.mouseposx1
                 settings.mouseposx3 = settings.mouseposx2
                 settings.mouseposx4 = settings.mouseposx3
-
                 settings.mouseposy1 = QCursor.pos().y()
                 settings.mouseposy2 = settings.mouseposy1
                 settings.mouseposy3 = settings.mouseposy2
                 settings.mouseposy4 = settings.mouseposy3
+
             else:
                 # mouseposx5=mouseposx4
                 settings.mouseposx4 = settings.mouseposx3
@@ -461,6 +453,7 @@ class PetWidget(QWidget):
             if settings.onfloor == 1:
                 if settings.set_fall == 1:
                     settings.onfloor = 0
+
                 settings.draging = 1
                 self.workers["Animation"].pause()
                 self.workers["Interaction"].start_interact("mousedrag")
@@ -475,7 +468,6 @@ class PetWidget(QWidget):
         :return:
         """
         if event.button() == Qt.LeftButton:
-
             self.is_follow_mouse = False
             self.setCursor(QCursor(Qt.ArrowCursor))
 
@@ -484,7 +476,6 @@ class PetWidget(QWidget):
                 self.patpat()
 
             else:
-
                 anim_area = QRect(
                     self.pos()
                     + QPoint(
@@ -545,6 +536,7 @@ class PetWidget(QWidget):
                     settings.current_img = self.pet_conf.default.images[0]
                     self.set_img()
                     self.workers["Animation"].resume()
+
             self.mouse_moving = False
 
     def _init_widget(self) -> None:

@@ -263,7 +263,6 @@ class StatusCard(SimpleCardWidget):
                 pass
 
     def __init_Card(self):
-
         # Pfp -----------
         info_file = os.path.join(basedir, "res/role", self.petname, "info", "info.json")
         pfp_file = None
@@ -3105,10 +3104,13 @@ class ChatCard(SimpleCardWidget):
         self.verticalLayout.addWidget(self.msgList)
         self.verticalLayout.addWidget(self.askCard)
         self.chatbot = ChatBot(self)
+        self.player = QSoundEffect(self)
+        self.player.setVolume(settings.volume)
 
     def __connectSignalToSlot(self):
         self.askCard.new_ask.connect(self.send_message)
         self.chatbot.answer.connect(self.answered)
+        self.chatbot.interrupted.connect(self.askCard.setEnabled)
 
     # slot
     def send_message(self, message: str):
@@ -3122,10 +3124,16 @@ class ChatCard(SimpleCardWidget):
     def answered(self, response: str, speech_path: str):
         lastId = self.msgList.count() - 1
         lastItem = self.msgList.item(lastId)
-        lastItem.setText(f"纳西妲：{response}")
-        player = QSoundEffect(self)
-        url = QUrl.fromLocalFile(speech_path)
-        player.setSource(url)
-        player.setVolume(settings.volume)
-        player.play()
-        self.askCard.setEnabled(True)
+        if lastItem:
+            lastItem.setText(f"{settings.petname}：{response}")
+            url = QUrl.fromLocalFile(speech_path)
+            self.player.setSource(url)
+            self.player.play()
+            self.askCard.setEnabled(True)
+
+    # slot
+    def _changePet(self):
+        self.player.stop()
+        self.msgList.clear()
+        self.chatbot.interrupt()
+

@@ -115,8 +115,10 @@ class Animation_worker(QObject):
             for i in range(len(new_prob)):
                 total += new_prob[i]
                 act_cmlt_prob.append(total)
+                
             act_cmlt_prob[-1] = 1.0
         else:
+            
             act_cmlt_prob = [0] * len(new_prob)
 
         # print(self.pet_conf.act_name)
@@ -166,6 +168,7 @@ class Animation_worker(QObject):
                     ]  # random.choice(self.pet_conf.random_act)
             else:
                 acts = [self.pet_conf.default]
+                
         self._run_acts(acts)
 
     def _run_acts(self, acts: List[Act]) -> None:

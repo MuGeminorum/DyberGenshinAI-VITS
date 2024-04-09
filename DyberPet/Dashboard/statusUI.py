@@ -57,10 +57,8 @@ class statusInterface(ScrollArea):
         self.setWidget(self.scrollWidget)
         # self.scrollWidget.resize(1000, 800)
         self.setWidgetResizable(True)
-
         # initialize style sheet
         self.__setQss()
-
         # initialize layout
         self.__initLayout()
         self.__connectSignalToSlot()
@@ -69,22 +67,18 @@ class statusInterface(ScrollArea):
         self.panelLabel.move(60, 20)
         self.StatusCard.move(60, 75)
         self.BuffCard.move(60, 205)
-
         # add cards to group
         # self.ModeGroup.addSettingCard(self.noteStream)
         # self.ModeGroup.addSettingCard(self.AllowDropCard)
-
         # add setting card group to layout
         self.expandLayout.setSpacing(28)
         self.expandLayout.setContentsMargins(70, 10, 70, 0)
-
         self.expandLayout.addWidget(self.noteStream)
 
     def __setQss(self):
         """set style sheet"""
         self.scrollWidget.setObjectName("scrollWidget")
         self.panelLabel.setObjectName("panelLabel")
-
         theme = "light"  # if isDarkTheme() else 'light'
         with open(
             os.path.join(
@@ -124,7 +118,6 @@ class statusInterface(ScrollArea):
         self.buffThread = BuffThread()
         self.buffThread.start()
         self.buffThread.setTerminationEnabled()
-
         self.buffThread.addBuffUI.connect(self._addBuffUI)
         self.buffThread.takeEffect.connect(self._takeEffect)
         self.buffThread.removeBuffUI.connect(self._removeBuffUI)
@@ -135,6 +128,7 @@ class statusInterface(ScrollArea):
         if self.buffThread:
             self.buffThread.terminate()
             self.buffThread.wait()
+
         self.buffThread = None
 
     def _addBuffUI(self, itemName, item_conf, idx):
@@ -143,6 +137,7 @@ class statusInterface(ScrollArea):
     def _takeEffect(self, effect, value):
         if effect == "hp" or effect == "fv":
             self.changeStatus.emit(effect, value, "Buff")
+
         elif effect == "coin":
             self.addCoins.emit(value, False)
 
