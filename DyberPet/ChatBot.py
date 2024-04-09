@@ -1,3 +1,4 @@
+import os
 import json
 from openai import OpenAI
 from PySide6.QtWidgets import QWidget
@@ -5,7 +6,7 @@ from PySide6.QtCore import Signal, QThread
 from BertVITS2.VITS import TTS
 
 
-class Worker(QThread):
+class Speak(QThread):
     def __init__(
         self,
         history: list,
@@ -20,8 +21,19 @@ class Worker(QThread):
         self.history = history
         self.client = client
         self.answer = answer
+        self.tts = tts
+
+    def clean_cache(self, folder_path="data"):
+        for filename in os.listdir(folder_path):
+            file_path = os.path.join(folder_path, filename)
+            if filename.lower().endswith(".wav"):
+                try:
+                    os.remove(file_path)
+                except OSError as e:
+                    print(f"删除文件 {file_path} 时出错: {e.strerror}")
 
     def run(self):
+        self.clean_cache()
         self.history += [{"role": "user", "content": self.query}]
         completion = self.client.chat.completions.create(
             model="moonshot-v1-8k",
@@ -30,7 +42,8 @@ class Worker(QThread):
         )
         result = completion.choices[0].message.content
         self.history += [{"role": "assistant", "content": result}]
-        self.answer.emit(result)
+        audio_path = self.tts.speech(result)
+        self.answer.emit(result, audio_path)
 
 
 class Test(QThread):
@@ -79,7 +92,7 @@ class ChatBot(QWidget):
         self.tts = TTS(self)
 
     def chat(self, query):
-        self.worker = Test(
+        self.worker = Speak(
             self.history, query, self.client, self.tts, self.answer, parent=self
         )
         self.worker.start()

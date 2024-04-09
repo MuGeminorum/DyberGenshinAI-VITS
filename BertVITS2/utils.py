@@ -2,6 +2,7 @@ import os
 import re
 import glob
 import json
+import wave
 import torch
 import logging
 import argparse
@@ -10,10 +11,10 @@ import subprocess
 import numpy as np
 import BertVITS2.commons as commons
 from tqdm import tqdm
+from datetime import datetime
 from scipy.io.wavfile import read
 from BertVITS2.text import cleaned_text_to_sequence, get_bert
 from BertVITS2.text.cleaner import clean_text
-import wave
 
 MATPLOTLIB_FLAG = False
 
@@ -436,12 +437,15 @@ def concatenate_audios(audio_samples, sample_rate=44100):
     return (sample_rate, final_audio)
 
 
-def save_audio(audio_data, sample_rate, file_path="data/temp.wav"):
+def save_audio(audio_data, sample_rate):
+    file_path = f"data/{str(datetime.now().timestamp())}.wav"
     audio_data_int16 = (np.array(audio_data) * 32767).astype(np.int16)
     # 打开文件用于写入
     with wave.open(file_path, "w") as wav_file:
         # 设置WAV文件的参数
-        wav_file.setparams((1, 2, sample_rate, len(audio_data_int16), 'NONE', 'not compressed'))
+        wav_file.setparams(
+            (1, 2, sample_rate, len(audio_data_int16), "NONE", "not compressed")
+        )
         # 写入音频数据
         wav_file.writeframes(audio_data_int16.tobytes())
     # 返回文件路径
