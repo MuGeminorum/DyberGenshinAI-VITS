@@ -10,12 +10,12 @@ basedir = settings.BASEDIR
 module_path = os.path.join(basedir, "DyberPet/Dashboard/")
 
 
-class gptInterface(ScrollArea):
+class chatInterface(ScrollArea):
     """Character animations management interface"""
 
     def __init__(self, sizeHintdb: tuple[int, int], parent=None):
         super().__init__(parent=parent)
-        self.setObjectName("gptInterface")
+        self.setObjectName("chatInterface")
         self.scrollWidget = QWidget()
         self.expandLayout = ExpandLayout(self.scrollWidget)
 

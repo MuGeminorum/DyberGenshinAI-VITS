@@ -9,7 +9,7 @@ from .statusUI import statusInterface
 from .inventoryUI import backpackInterface
 from .shopUI import shopInterface
 from .taskUI import taskInterface
-from .chatUI import gptInterface
+from .chatUI import chatInterface
 import DyberPet.settings as settings
 
 basedir = settings.BASEDIR
@@ -48,7 +48,7 @@ class DashboardMainWindow(FluentWindow):
         self.taskInterface = taskInterface(
             sizeHintdb=(minWidth, minHeight), parent=self
         )
-        self.gptInterface = gptInterface(
+        self.chatInterface = chatInterface(
             sizeHintdb=(minWidth, minHeight), parent=self
         )
 
@@ -80,8 +80,8 @@ class DashboardMainWindow(FluentWindow):
             self.tr("Daily Tasks"),
         )
         self.addSubInterface(
-            self.gptInterface,
-            QIcon(os.path.join(basedir, "res/icons/Dashboard/gpt.svg")),
+            self.chatInterface,
+            QIcon(os.path.join(basedir, "res/icons/Dashboard/chat.svg")),
             self.tr("AI Assistant"),
         )
 
