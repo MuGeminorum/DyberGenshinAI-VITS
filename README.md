@@ -6,7 +6,13 @@
 
 [素材编辑器](https://github.com/Marcus-P-114514/DyberPetUtil)正在施工中，将更加便捷的帮助开发者编辑素材和配置文件。
 
-## 动画开发  
+## 维护
+```bash
+git clone -b module git@gitee.com:MuGeminorum/DyberGenshinAI-VITS.git
+cd DyberGenshinAI-VITS
+```
+
+## 动画开发
 ### 动画实现过程
 动画在两个模块中被调用
 - **动画模块**：独立于宠物的主界面运行，不会出现因加载动画而出现程序未响应的情况。用户与宠物交互时，动画模块会暂停等待，优先级处于末位。  
@@ -156,8 +162,3 @@
   - 动作运行速度是否合适？
   - 动作移动速度是否合适？
   - ......
-
-### 其他
-
-# 物品开发  
-## 动画实现过程
