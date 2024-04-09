@@ -548,8 +548,8 @@ class PetData:
                 allData_params[pet] = {
                     "HP": -1,
                     "HP_tier": 3,
-                    "FV": 0,
-                    "FV_lvl": 5,
+                    "FV": 3200,
+                    "FV_lvl": 7,
                     "items": {},
                     "coins": 99999,
                     "days": 1,
