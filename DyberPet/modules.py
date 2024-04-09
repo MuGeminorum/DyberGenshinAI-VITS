@@ -6,9 +6,8 @@ from typing import List
 from datetime import datetime, timedelta
 from apscheduler.schedulers.qt import QtScheduler
 from apscheduler.triggers import interval, date
-from PySide6.QtCore import Qt, QTimer, QObject
+from PySide6.QtCore import Qt, QTimer, QObject, QObject, Signal
 from PySide6.QtGui import QAction, QTransform
-from PySide6.QtCore import QObject, Signal
 from PySide6.QtWidgets import *
 from DyberPet.utils import *
 from DyberPet.conf import *
@@ -187,9 +186,7 @@ class Animation_worker(QObject):
         :param act: 动作
         :return:
         """
-
-        for i in range(act.act_num):
-
+        for _ in range(act.act_num):
             # while self.is_paused:
             #    time.sleep(0.2)
             if self.is_paused:
@@ -198,11 +195,11 @@ class Animation_worker(QObject):
                 break
 
             for img in act.images:
-
                 # while self.is_paused:
                 #    time.sleep(0.2)
                 if self.is_paused:
                     break
+
                 if self.is_killed:
                     break
 

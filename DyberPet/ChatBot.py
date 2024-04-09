@@ -64,7 +64,7 @@ class Test(QThread):
         self.tts = tts
 
     def run(self):
-        result = "这是测试用文案，当前用于绕过KIMICHAT测试VITS！"
+        result = "当前是测试用文案，用于绕过大语言模型直接测试语音合成模块！"
         audio_path = self.tts.speech(result)
         self.answer.emit(result, audio_path)
 
@@ -92,7 +92,7 @@ class ChatBot(QWidget):
         self.tts = TTS(self)
 
     def chat(self, query):
-        self.worker = Speak(
+        self.worker = Test(
             self.history, query, self.client, self.tts, self.answer, parent=self
         )
         self.worker.start()
