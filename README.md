@@ -16,8 +16,8 @@ pip install -r requirements.txt
 
 ### Download
 ```bash
-git clone git@gitee.com:MuGeminorum/DyberPet.git
-cd DyberPet
+git clone git@gitee.com:MuGeminorum/DyberGenshinAI-VITS.git
+cd DyberGenshinAI-VITS
 ```
 
 ### Run
