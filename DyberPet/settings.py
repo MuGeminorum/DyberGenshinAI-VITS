@@ -1,8 +1,8 @@
 import os
 import json
 from sys import platform
-from DyberPet.conf import PetData, TaskData
 from PySide6 import QtCore
+from DyberPet.conf import PetData, TaskData
 
 if platform == "win32":
     basedir = ""
@@ -195,7 +195,7 @@ def init_settings():
     global file_path, settingGood
     file_path = os.path.join(configdir, "data/settings.json")
 
-    global gravity, fixdragspeedx, fixdragspeedy, tunable_scale, volume, language_code, on_top_hint, default_pet, defaultAct
+    global gravity, fixdragspeedx, fixdragspeedy, tunable_scale, volume, language_code, on_top_hint, default_pet, defaultAct, api_key
 
     # check json file integrity
     try:
@@ -217,6 +217,7 @@ def init_settings():
         gravity = data_params["gravity"]
         tunable_scale = data_params["tunable_scale"]
         volume = data_params["volume"]
+        api_key = data_params["api_key"]
         language_code = data_params.get("language_code", QtCore.QLocale().name())
         on_top_hint = data_params.get("on_top_hint", True)
         default_pet = data_params.get("default_pet", pets[0])
@@ -237,6 +238,8 @@ def init_settings():
         if language_code == "CN":
             language_code = QtCore.QLocale().name()
         # =====================================================
+        if api_key is None:
+            api_key = ""
 
     else:
         fixdragspeedx, fixdragspeedy = 1.0, 1.0
@@ -244,8 +247,9 @@ def init_settings():
         tunable_scale = 1.0
         volume = 0.5
         language_code = QtCore.QLocale().name()
+        api_key = ""
         on_top_hint = True
-        default_pet = "sys"
+        default_pet = "纳西妲"
         defaultAct = {}
         for pet in pets:
             defaultAct[pet] = defaultAct.get(pet, None)
@@ -254,7 +258,7 @@ def init_settings():
 
 
 def save_settings():
-    global file_path, gravity, fixdragspeedx, fixdragspeedy, tunable_scale, volume, language_code, on_top_hint, default_pet, defaultAct
+    global file_path, gravity, fixdragspeedx, fixdragspeedy, tunable_scale, volume, language_code, on_top_hint, default_pet, defaultAct, api_key
 
     data_js = {
         "gravity": gravity,
@@ -266,6 +270,7 @@ def save_settings():
         "default_pet": default_pet,
         "defaultAct": defaultAct,
         "language_code": language_code,
+        "api_key": api_key,
     }
 
     with open(file_path, "w", encoding="utf-8") as f:

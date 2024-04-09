@@ -2,16 +2,16 @@ import math
 import uuid
 import random
 import pynput.mouse as mouse
-from sys import platform
-from PySide6.QtCore import Qt, QTimer, QObject, QPoint, QObject, Signal, QRect, QSize
-from PySide6.QtGui import QTransform, QAction, QPixmap, QIcon, QCursor, QPainter
-from PySide6.QtWidgets import *
-from qfluentwidgets import RoundMenu, Action
-from qfluentwidgets import FluentIcon as FIF
+import DyberPet.settings as settings
+from DyberPet.extra_windows import DPDialogue
 from DyberPet.utils import *
 from DyberPet.conf import *
-from DyberPet.extra_windows import DPDialogue
-import DyberPet.settings as settings
+from PySide6.QtWidgets import *
+from PySide6.QtGui import QTransform, QAction, QPixmap, QIcon, QCursor, QPainter
+from PySide6.QtCore import Qt, QTimer, QObject, QPoint, QObject, Signal, QRect, QSize
+from qfluentwidgets import RoundMenu, Action
+from qfluentwidgets import FluentIcon as FIF
+from sys import platform
 
 """
 try:
