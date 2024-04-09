@@ -4,7 +4,8 @@ dist/
 build/
 run_DyberPet.exe
 run_DyberPet.spec
-res/items/GenshinImpact
+res/item/*
+res/role/*
 *.DS_Store*
 *__pycache__*
 rename.sh

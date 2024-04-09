@@ -61,7 +61,7 @@ class ChatBot(QWidget):
 
     def __init__(self, parent=None):
         super(ChatBot, self).__init__(parent)
-        with open("data/task_data.json", "r", encoding="utf-8") as file:
+        with open("data/settings.json", "r", encoding="utf-8") as file:
             data = json.load(file)
 
         self.client = OpenAI(

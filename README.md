@@ -22,7 +22,7 @@ cd DyberGenshinAI-VITS
 
 ### Run
 ```bash
-python run_DyberPet.py
+python game.py
 ```
 
 ## Thanks

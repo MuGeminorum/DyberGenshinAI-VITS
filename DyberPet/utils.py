@@ -63,9 +63,11 @@ def text_wrap(text, width):
     for i, line in enumerate(lines):
         if i == 0:
             pass
+
         elif line[0] in prohibited_start:
             lines[i - 1] += line[0]
             line = line[1:]
+
         new_lines.append(line)
 
     texts_wrapped = "\n".join(new_lines)
@@ -74,6 +76,9 @@ def text_wrap(text, width):
 
 
 def get_child_folder(parentFolder, relative=False):
+    if not os.path.exists(parentFolder):
+        return []
+
     all_files_and_dirs = os.listdir(parentFolder)
     if relative:
         all_dirs = [
@@ -120,8 +125,7 @@ def get_MODs(filePath):
     # Extract the sorted elements
     sorted_itemMods = [element for _, element in sorted_pairs]
 
-    for i, itemFolder in enumerate(sorted_itemMods):
-
+    for _, itemFolder in enumerate(sorted_itemMods):
         if not os.path.exists(os.path.join(itemFolder, "items_config.json")):
             continue
 
@@ -131,6 +135,7 @@ def get_MODs(filePath):
             modName = info.get("modName", None)
         else:
             modName = None
+
         if not modName:
             modName = os.path.basename(itemFolder)
 
@@ -157,6 +162,7 @@ def MaskPhrase(phrase):
             words.append(char)  # Add the space as a separate element
         else:
             current_word += char
+
     if current_word:  # Add the last word if there is one
         words.append(current_word)
 
