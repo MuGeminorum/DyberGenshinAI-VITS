@@ -439,6 +439,7 @@ def concatenate_audios(audio_samples, sample_rate=44100):
 
 def save_audio(audio_data, sample_rate):
     file_path = f"data/{str(datetime.now().timestamp())}.wav"
+    audio_duration = int(len(audio_data) * 1000.0 / sample_rate) + 1
     audio_data_int16 = (np.array(audio_data) * 32767).astype(np.int16)
     # 打开文件用于写入
     with wave.open(file_path, "w") as wav_file:
@@ -449,4 +450,4 @@ def save_audio(audio_data, sample_rate):
         # 写入音频数据
         wav_file.writeframes(audio_data_int16.tobytes())
     # 返回文件路径
-    return file_path
+    return file_path, audio_duration

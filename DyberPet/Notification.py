@@ -350,8 +350,9 @@ class DPNote(QWidget):
 
         if not play_now:
             self.sound_playing = [note_index, sound_key]
-            self.sound_dict[sound_key]["sound"].setVolume(settings.volume)
-            self.sound_dict[sound_key]["sound"].play()
+            if not settings.speaking:
+                self.sound_dict[sound_key]["sound"].setVolume(settings.volume)
+                self.sound_dict[sound_key]["sound"].play()
 
         self.note_in_prepare = False
 

@@ -86,9 +86,11 @@ class Test(QThread):
         self._clean_cache()
         result = "当前是测试用文案，用于绕过大语言模型直接测试语音合成模块！" * 5
         self.history += [{"role": "user", "content": self.query}]
-        audio_path = self.tts.speech(content=result, speaker=settings.petname)
+        audio_path, audio_duration = self.tts.speech(
+            content=result, speaker=settings.petname
+        )
         if self.speaking:
-            self.answer.emit(result, audio_path)
+            self.answer.emit(result, audio_path, audio_duration)
 
     def speak(
         self,
@@ -106,7 +108,7 @@ class Test(QThread):
 
 
 class ChatBot(QWidget):
-    answer = Signal(str, str, name="answer_sig")
+    answer = Signal(str, str, int, name="answer_sig")
     interrupted = Signal(bool, name="interrupt_sig")
 
     def __init__(self, parent=None):
@@ -146,3 +148,4 @@ class ChatBot(QWidget):
 
         self.initPrompt()
         self.interrupted.emit(True)
+        settings.speaking = False
