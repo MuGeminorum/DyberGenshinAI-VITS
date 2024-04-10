@@ -3033,6 +3033,7 @@ class EmptyTaskCard(QWidget):
 
 class EmptyAskCard(QWidget):
     new_ask = Signal(str, name="new_ask")
+    interrupt_ask = Signal(name="interrupt_ask")
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -3041,6 +3042,7 @@ class EmptyAskCard(QWidget):
         self.hBoxLayout.setSpacing(4)
         self.setFixedSize(410, 40)
         self._init_Empty()
+        self.__connectSignalToSlot()
 
     def _init_Empty(self):
         # Rec Btn
@@ -3048,7 +3050,6 @@ class EmptyAskCard(QWidget):
         self.recBtn.setIcon(FIF.MICROPHONE)
         self.recBtn.setFixedSize(20, 20)
         self.recBtn.setIconSize(QSize(18, 18))
-        self.recBtn.clicked.connect(self.voice_record)
 
         # LineEdit
         self.askEdit = LineEdit(self)
@@ -3057,26 +3058,38 @@ class EmptyAskCard(QWidget):
         self.askEdit.setFixedWidth(350)
 
         # send button
-        self.sendBtn = TransparentToolButton(self)
-        self.sendBtn.setIcon(FIF.SEND)
-        self.sendBtn.setFixedSize(20, 20)
-        self.sendBtn.setIconSize(QSize(18, 18))
-        self.sendBtn.clicked.connect(self.submit_ask)
+        self.send_stop_btn = TransparentToolButton(self)
+        self.send_stop_btn.setIcon(FIF.SEND)
+        self.send_stop_btn.setFixedSize(20, 20)
+        self.send_stop_btn.setIconSize(QSize(18, 18))
 
         self.hBoxLayout.addWidget(self.recBtn, 0, Qt.AlignLeft | Qt.AlignVCenter)
         self.hBoxLayout.addWidget(self.askEdit, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.hBoxLayout.addWidget(self.sendBtn, 0, Qt.AlignRight | Qt.AlignVCenter)
+        self.hBoxLayout.addWidget(
+            self.send_stop_btn, 0, Qt.AlignRight | Qt.AlignVCenter
+        )
+
+    def __connectSignalToSlot(self):
+        self.recBtn.clicked.connect(self.voice_record)
+        self.send_stop_btn.clicked.connect(self.ask_stop)
 
     def voice_record(self):
         # 这里应该添加录制语音的逻辑
         print("录制语音功能尚未实现")
 
-    def submit_ask(self):
-        ask_text = self.askEdit.text()
-        if ask_text:
-            self.new_ask.emit(ask_text)
-            self.askEdit.setText("")
-            self.setEnabled(False)
+    # slot
+    def ask_stop(self):
+        if self.recBtn.isEnabled():
+            ask_text = self.askEdit.text()
+            if ask_text:
+                self.recBtn.setEnabled(False)
+                self.new_ask.emit(ask_text)
+                self.askEdit.setText("")
+                self.send_stop_btn.setIcon("res/icons/stop.png")
+
+        else:
+            self.send_stop_btn.setEnabled(False)
+            self.interrupt_ask.emit()
 
 
 class ChatCard(SimpleCardWidget):
@@ -3099,19 +3112,21 @@ class ChatCard(SimpleCardWidget):
         self.msgList = QListWidget(self)
         self.msgList.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.msgList.setWordWrap(True)
+        
+        self.chatbot = ChatBot(self)
+        self.player = QSoundEffect(self)
+        self.timer = QTimer(self)
+        
         # LineEdit
         self.askCard = EmptyAskCard()
         self.verticalLayout.addWidget(self.msgList)
         self.verticalLayout.addWidget(self.askCard)
-        self.chatbot = ChatBot(self)
-        self.player = QSoundEffect(self)
-        self.player.setVolume(settings.volume)
-        self.timer = QTimer(self)
 
     def __connectSignalToSlot(self):
         self.askCard.new_ask.connect(self.send_message)
+        self.askCard.interrupt_ask.connect(self._interrupting)
         self.chatbot.answer.connect(self.answered)
-        self.chatbot.interrupted.connect(self.askCard.setEnabled)
+        self.chatbot.interrupted.connect(self._speaked)
         self.timer.timeout.connect(self._speaked)
 
     # slot
@@ -3131,16 +3146,26 @@ class ChatCard(SimpleCardWidget):
             settings.speaking = True
             url = QUrl.fromLocalFile(speech_path)
             self.player.setSource(url)
+            self.player.setVolume(settings.volume)
             self.player.play()
             self.timer.start(duration)
             self.askCard.setEnabled(True)
 
     # slot
-    def _changePet(self):
+    def _interrupting(self):
+        self.timer.stop()
         self.player.stop()
-        self.msgList.clear()
         self.chatbot.interrupt()
+
+    # slot
+    def _changePet(self):
+        self.msgList.clear()
+        self._interrupting()
+        self.chatbot.initPrompt()
 
     # slot
     def _speaked(self):
         settings.speaking = False
+        self.askCard.send_stop_btn.setIcon(FIF.SEND)
+        self.askCard.send_stop_btn.setEnabled(True)
+        self.askCard.recBtn.setEnabled(True)

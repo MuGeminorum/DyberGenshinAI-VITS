@@ -28,13 +28,11 @@ from .utils import (
     load_checkpoint,
     save_audio,
 )
-from PySide6.QtWidgets import QWidget
 from tqdm import tqdm
 
 
-class TTS(QWidget):
-    def __init__(self, parent=None):
-        super(TTS, self).__init__(parent)
+class TTS:
+    def __init__(self):
         domain = "https://www.modelscope.cn/api/v1/models/MuGeminorum/Hoyo-Bert-VITS2-V1/repo?Revision=master&FilePath="
         model_path = download_file(domain + "G_78000.pth")
         self.hps = get_hparams_from_url(domain + "config.json")
@@ -56,8 +54,9 @@ class TTS(QWidget):
         ).to(self.device)
         self.net_g.eval()
         load_checkpoint(model_path, self.net_g, None, skip_optimizer=True)
+        self.stopping = False
 
-    def infer(self, text, sdp_ratio, noise_scale, noise_scale_w, length_scale, sid):
+    def _infer(self, text, sdp_ratio, noise_scale, noise_scale_w, length_scale, sid):
         bert, phones, tones, lang_ids = get_text(text, "ZH", self.hps)
         with torch.no_grad():
             x_tst = phones.to(self.device).unsqueeze(0)
@@ -88,11 +87,11 @@ class TTS(QWidget):
 
             return audio
 
-    def tts_fn(
+    def _tts_fn(
         self, text, speaker, sdp_ratio, noise_scale, noise_scale_w, length_scale
     ):
         with torch.no_grad():
-            audio = self.infer(
+            audio = self._infer(
                 text,
                 sdp_ratio=sdp_ratio,
                 noise_scale=noise_scale,
@@ -115,9 +114,12 @@ class TTS(QWidget):
         sentences = text_splitter(content)
         audios = []
         for sentence in tqdm(sentences, desc="TTS inferring..."):
+            if self.stopping:
+                return "", 0
+
             with torch.no_grad():
                 audios.append(
-                    self.infer(
+                    self._infer(
                         sentence,
                         sdp_ratio=sdp_ratio,
                         noise_scale=noise_scale,
@@ -127,5 +129,12 @@ class TTS(QWidget):
                     )
                 )
 
+        if self.stopping:
+            return "", 0
+
         sr, audio_samples = concatenate_audios(audios, self.hps.data.sampling_rate)
+
+        if self.stopping:
+            return "", 0
+
         return save_audio(audio_samples, sr)
