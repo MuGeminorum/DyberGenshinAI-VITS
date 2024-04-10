@@ -3158,6 +3158,7 @@ class ChatCard(SimpleCardWidget):
 
     # slot
     def _changePet(self):
+        self.askCard.send_stop_btn.setEnabled(False)
         self.msgList.clear()
         self._interrupting()
         self.chatbot.initPrompt()

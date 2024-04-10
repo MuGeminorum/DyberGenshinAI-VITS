@@ -33,20 +33,21 @@ class Speaker(QThread):
                     print(f"删除文件 {file_path} 时出错: {e.strerror}")
 
     def _get_answer(self):
-        self.history += [{"role": "user", "content": self.query}]
+        session = [{"role": "user", "content": self.query}]
         completion = self.client.chat.completions.create(
             model="moonshot-v1-8k",
             messages=self.history,
             temperature=0.3,
         )
         result = completion.choices[0].message.content
-        self.history += [{"role": "assistant", "content": result}]
-        return result
+        session += [{"role": "assistant", "content": result}]
+        return result, session
 
     def _test_answer(self):
-        result = "当前是测试用文案，用于绕过大语言模型直接测试语音合成模块！" * 5
-        self.history += [{"role": "user", "content": self.query}]
-        return result
+        session = [{"role": "user", "content": self.query}]
+        result = "当前是测试用文案，用于绕过大语言模型直接测试语音合成模块！" * 3
+        session += [{"role": "assistant", "content": result}]
+        return result, session
 
     def run(self):
         self._clean_cache()
@@ -54,16 +55,19 @@ class Speaker(QThread):
             self.finished.emit()
             return
 
-        result = self._test_answer()
+        # 获取大模型回复
+        result, session = self._test_answer()
         if not self.speaking:
             self.finished.emit()
             return
 
+        # 发声
         audio_path, audio_duration = self.tts.speech(
             content=result, speaker=settings.petname
         )
 
         if self.speaking:
+            self.history += session
             self.answer.emit(result, audio_path, audio_duration)
         else:
             self.finished.emit()
