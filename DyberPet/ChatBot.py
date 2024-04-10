@@ -7,7 +7,7 @@ from BertVITS2.VITS import TTS
 from DyberPet import settings
 
 
-class Speak(QThread):
+class Speaker(QThread):
     def __init__(
         self,
         client: OpenAI,
@@ -84,7 +84,7 @@ class Test(QThread):
 
     def run(self):
         self._clean_cache()
-        result = "当前是测试用文案，用于绕过大语言模型直接测试语音合成模块！" * 10
+        result = "当前是测试用文案，用于绕过大语言模型直接测试语音合成模块！" * 5
         self.history += [{"role": "user", "content": self.query}]
         audio_path = self.tts.speech(content=result, speaker=settings.petname)
         if self.speaking:
