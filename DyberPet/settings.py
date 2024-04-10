@@ -94,7 +94,7 @@ def init():
     current_anchor = [0, 0]
     previous_anchor = [0, 0]
 
-    global onfloor, draging, set_fall, playid
+    global onfloor, draging, set_fall, playid, speaking
     global mouseposx1, mouseposx2, mouseposx3, mouseposx4, mouseposx5
     global mouseposy1, mouseposy2, mouseposy3, mouseposy4, mouseposy5
     global dragspeedx, dragspeedy, fixdragspeedx, fixdragspeedy, fall_right, gravity, prefall
@@ -110,6 +110,7 @@ def init():
     fall_right = 0
     gravity = 0.1
     prefall = 0
+    speaking = False
 
     global act_id, current_act, previous_act
     # Select animation to show

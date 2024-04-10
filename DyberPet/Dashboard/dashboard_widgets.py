@@ -9,7 +9,7 @@ from collections import defaultdict
 from PySide6 import QtGui
 from PySide6.QtCore import Signal, QUrl
 from PySide6.QtMultimedia import QSoundEffect
-from PySide6.QtCore import Qt, Signal, QSize, QRect, QTime
+from PySide6.QtCore import Qt, Signal, QSize, QRect, QTime, QTimer
 from PySide6.QtWidgets import (
     QWidget,
     QLabel,
@@ -3106,11 +3106,13 @@ class ChatCard(SimpleCardWidget):
         self.chatbot = ChatBot(self)
         self.player = QSoundEffect(self)
         self.player.setVolume(settings.volume)
+        self.timer = QTimer(self)
 
     def __connectSignalToSlot(self):
         self.askCard.new_ask.connect(self.send_message)
         self.chatbot.answer.connect(self.answered)
         self.chatbot.interrupted.connect(self.askCard.setEnabled)
+        self.timer.timeout.connect(self._speaked)
 
     # slot
     def send_message(self, message: str):
@@ -3121,14 +3123,16 @@ class ChatCard(SimpleCardWidget):
             self.chatbot.chat(message)
 
     # slot
-    def answered(self, response: str, speech_path: str):
+    def answered(self, response: str, speech_path: str, duration: int):
         lastId = self.msgList.count() - 1
         lastItem = self.msgList.item(lastId)
         if lastItem:
             lastItem.setText(f"{settings.petname}：{response}")
+            settings.speaking = True
             url = QUrl.fromLocalFile(speech_path)
             self.player.setSource(url)
             self.player.play()
+            self.timer.start(duration)
             self.askCard.setEnabled(True)
 
     # slot
@@ -3137,3 +3141,6 @@ class ChatCard(SimpleCardWidget):
         self.msgList.clear()
         self.chatbot.interrupt()
 
+    # slot
+    def _speaked(self):
+        settings.speaking = False

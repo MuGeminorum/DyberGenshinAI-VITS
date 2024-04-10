@@ -65,9 +65,7 @@ class DP_HpBar(QProgressBar):
     hp_updated = Signal(int, name="hp_updated")
 
     def __init__(self, *args, **kwargs):
-
         super(DP_HpBar, self).__init__(*args, **kwargs)
-
         stylesheet = """QProgressBar {
                                         font-family: "Segoe UI";
                                         border: 1px solid #08060f;
@@ -77,12 +75,10 @@ class DP_HpBar(QProgressBar):
                                         background-color: #FAC486;
                                         border-radius: 5px;}"""
         self.setStyleSheet(stylesheet)
-
         self.setFormat("0/100")
         self.setValue(0)
         self.setAlignment(Qt.AlignCenter)
         self.hp_tiers = sys_hp_tiers  # [0,50,80,100]
-
         self.hp_max = 100
         self.interval = 1
         self.hp_inner = 0
@@ -96,6 +92,7 @@ class DP_HpBar(QProgressBar):
             settings.pet_data.change_hp(self.hp_inner)
         else:
             self.hp_inner = change_value
+
         self.hp_perct = math.ceil(round(self.hp_inner / self.interval, 1))
         self.setFormat("%i/100" % self.hp_perct)
         self.setValue(self.hp_perct)
@@ -103,16 +100,14 @@ class DP_HpBar(QProgressBar):
         self.hp_updated.emit(self.hp_perct)
 
     def updateValue(self, change_value, from_mod):
-
         before_value = self.value()
-
         if from_mod == "Scheduler":
             if settings.HP_stop:
                 return
+
             new_hp_inner = max(self.hp_inner + change_value, 0)
 
         else:
-
             if change_value > 0:
                 new_hp_inner = min(
                     self.hp_inner + change_value * self.interval, self.hp_max
@@ -140,7 +135,6 @@ class DP_HpBar(QProgressBar):
             self.setValue(self.hp_perct)
 
         after_value = self.value()
-
         hp_tier = sum([int(after_value > i) for i in self.hp_tiers])
 
         # 告知动画模块、通知模块
@@ -179,9 +173,7 @@ class DP_FvBar(QProgressBar):
     fv_updated = Signal(int, int, name="fv_updated")
 
     def __init__(self, *args, **kwargs):
-
         super(DP_FvBar, self).__init__(*args, **kwargs)
-
         stylesheet = """QProgressBar {
                                         font-family: "Segoe UI";
                                         border: 1px solid #08060f;
@@ -191,7 +183,6 @@ class DP_FvBar(QProgressBar):
                                         background-color: #F4665C;
                                         border-radius: 5px;}"""
         self.setStyleSheet(stylesheet)
-
         self.fvlvl = 0
         self.lvl_bar = sys_lvl_bar  # [20, 120, 300, 600, 1200]
         self.points_to_lvlup = self.lvl_bar[self.fvlvl]
@@ -332,7 +323,6 @@ class PetWidget(QWidget):
         else:
             self.curr_pet_name = curr_pet_name
         # self.pet_conf = PetConfig()
-
         self.image = None
         self.tray = None
 
@@ -349,11 +339,9 @@ class PetWidget(QWidget):
         # self.screen_geo = QDesktopWidget().availableGeometry() #screenGeometry()
         self.screen_width = self.current_screen.width()  # self.screen_geo.width()
         self.screen_height = self.current_screen.height()  # self.screen_geo.height()
-
         self._init_ui()
         self._init_widget()
         self.init_conf(self.curr_pet_name)  # if curr_pet_name else self.pets[0])
-
         # self._set_menu(pets)
         # self._set_tray()
         self.show()
@@ -365,10 +353,8 @@ class PetWidget(QWidget):
         self.runInteraction()
         self.runScheduler()
         self._setup_ui()
-
         # 初始化重复提醒任务 - feature deleted
         # self.remind_window.initial_task()
-
         # 启动完毕10s后检查好感度等级奖励补偿
         self.compensate_timer = None
         self._setup_compensate()
@@ -395,7 +381,6 @@ class PetWidget(QWidget):
         :param event: 事件
         :return:
         """
-
         if event.button() == Qt.RightButton:
             # 打开右键菜单
             self.setContextMenuPolicy(Qt.CustomContextMenu)
@@ -410,6 +395,7 @@ class PetWidget(QWidget):
                 # Left press activates Drag interaction
                 if settings.set_fall == 1:
                     settings.onfloor = 0
+
                 settings.draging = 1
                 self.workers["Animation"].pause()
                 self.workers["Interaction"].start_interact("mousedrag")
@@ -611,12 +597,10 @@ class PetWidget(QWidget):
         self.label.setAlignment(Qt.AlignBottom | Qt.AlignHCenter)
         self.label.installEventFilter(self)
         # self.label.setStyleSheet("border : 2px solid blue")
-
         # system animations
         self.sys_src = _load_all_pic("sys")
         self.sys_conf = PetConfig.init_sys(self.sys_src)
         # ------------------------------------------------------------------------------------------
-
         # Hover Timer --------------------------------------------------------
         self.status_frame = QFrame()
         vbox = QVBoxLayout()
@@ -662,27 +646,22 @@ class PetWidget(QWidget):
         self.focus_time.hide()
         self.focusicon.hide()
         h_box4.addWidget(self.focus_time)
-
         vbox.addStretch()
         vbox.addLayout(h_box3)
         vbox.addLayout(h_box4)
         # vbox.addLayout(h_box1)
         # vbox.addLayout(h_box2)
-
         self.status_frame.setLayout(vbox)
         # self.status_frame.setStyleSheet("border : 2px solid blue")
         self.status_frame.setContentsMargins(0, 0, 0, 0)
         # self.status_box.addWidget(self.status_frame)
         # self.status_frame.hide()
         # ------------------------------------------------------------
-
         # Layout_1 ----------------------------------------------------
         self.layout = QVBoxLayout()
         self.layout.setContentsMargins(0, 0, 0, 0)
-
         self.petlayout = QVBoxLayout()
         self.petlayout.addWidget(self.status_frame)
-
         image_hbox = QHBoxLayout()
         image_hbox.setContentsMargins(0, 0, 0, 0)
         image_hbox.addStretch()
@@ -696,10 +675,8 @@ class PetWidget(QWidget):
         # self.layout.addLayout(self.dialogue_box, Qt.AlignBottom | Qt.AlignHCenter)
         self.layout.addLayout(self.petlayout, Qt.AlignBottom | Qt.AlignHCenter)
         # ------------------------------------------------------------
-
         self.setLayout(self.layout)
         # ------------------------------------------------------------
-
         # 番茄钟设置
         """
         self.tomato_window = Tomato()
@@ -707,7 +684,6 @@ class PetWidget(QWidget):
         self.tomato_window.confirm_tomato.connect(self.run_tomato)
         self.tomato_window.cancelTm.connect(self.cancel_tomato)
         """
-
         # 专注时间
         """
         self.focus_window = Focus()
@@ -721,13 +697,11 @@ class PetWidget(QWidget):
         self.remind_window.close_remind.connect(self.show_remind)
         self.remind_window.confirm_remind.connect(self.run_remind)
         """
-
         # 初始化背包
         self.items_data = ItemData(
             HUNGERSTR=settings.HUNGERSTR, FAVORSTR=settings.FAVORSTR
         )
         # self._init_Inventory()
-
         self.showing_comp = 0
 
     def _init_Inventory(self):
@@ -749,7 +723,6 @@ class PetWidget(QWidget):
         """
         menu = RoundMenu(self.tr("More Options"), self)
         menu.setIcon(FIF.MENU)
-
         # Backpack
         """
         self.open_invent = Action(QIcon(os.path.join(basedir,'res/icons/backpack.svg')),
@@ -757,7 +730,6 @@ class PetWidget(QWidget):
                                   triggered = self.show_inventory)
         menu.addAction(self.open_invent)
         """
-
         # Select action
         self.act_menu = RoundMenu(self.tr("Select Action"), menu)
         self.act_menu.setIcon(QIcon(os.path.join(basedir, "res/icons/jump.svg")))
@@ -840,7 +812,6 @@ class PetWidget(QWidget):
         self.task_menu.addAction(self.remind_clock)
         menu.addMenu(self.task_menu)
         """
-
         menu.addSeparator()
 
         # Default Action
@@ -867,6 +838,7 @@ class PetWidget(QWidget):
                         action.setIcon(
                             QIcon(os.path.join(basedir, "res/icons/dotfill.png"))
                         )
+
             self.defaultAct_menu.addActions(self.default_acts)
 
         menu.addMenu(self.defaultAct_menu)
@@ -903,15 +875,12 @@ class PetWidget(QWidget):
         self.open_setting = Action(QIcon(os.path.join(basedir,'res/icons/SystemPanel.png')), self.tr('System'), triggered=self.show_controlPanel)
         menu.addAction(self.open_setting)
         """
-
         # Visit website
         web_file = os.path.join(basedir, "res/role/sys/webs.json")
         if os.path.isfile(web_file):
             web_dict = json.load(open(web_file, "r", encoding="UTF-8"))
-
             self.web_menu = RoundMenu(self.tr("Website"), menu)
             self.web_menu.setIcon(QIcon(os.path.join(basedir, "res/icons/website.svg")))
-
             web_acts = [
                 _build_act_param(name, web_dict[name], self.web_menu, self.open_web)
                 for name in web_dict
@@ -920,14 +889,12 @@ class PetWidget(QWidget):
             menu.addMenu(self.web_menu)
 
         menu.addSeparator()
-
         self.menu = menu
         self.menu.addAction(
             Action(FIF.POWER_BUTTON, self.tr("Exit"), triggered=self.quit)
         )
 
     def _update_fvlock(self):
-
         # Update selectable animations
         # select_acts = []
         for i in range(len(self.pet_conf.act_name)):
@@ -951,10 +918,8 @@ class PetWidget(QWidget):
                     self.select_acts.append(new_act)
 
             # select_acts.append(_build_act(self.pet_conf.act_name[i], self.act_menu, self._show_act))
-
         # if len(select_acts) > 0:
         #    self.act_menu.addActions(select_acts)
-
         # Update selectable animations that has accessory
         # select_accs = []
         for acc_name in self.pet_conf.acc_name:
@@ -975,11 +940,9 @@ class PetWidget(QWidget):
 
             # if self.pet_conf.accessory_act[name_i]['act_type'][1] == settings.pet_data.fv_lvl:
             #    select_accs.append(_build_act(name_i, self.act_menu, self._show_acc))
-
         # if len(select_accs) > 0:
         #    self.act_menu.addActions(select_accs)
         # menu.addMenu(self.act_menu)
-
         # Update default animation options
         # default_acts = []
         for i in range(len(self.pet_conf.act_name)):
@@ -1008,10 +971,8 @@ class PetWidget(QWidget):
                     self.default_acts.append(new_act)
 
             # default_acts.append(_build_act(self.pet_conf.act_name[i], self.defaultAct_menu, self._set_defaultAct))
-
         # if len(default_acts) > 0:
         #    self.defaultAct_menu.addActions(default_acts)
-
         # update partner list
         """ v0.3.3 - subpet now independent from main character
         old_petlist = self.companion_menu.actions()
@@ -1031,7 +992,6 @@ class PetWidget(QWidget):
         """
 
     def _set_Statusmenu(self):
-
         # Character Name
         self.statusTitle = QWidget()
         hboxTitle = QHBoxLayout(self.statusTitle)
@@ -1059,7 +1019,6 @@ class PetWidget(QWidget):
         self.statLabel = CaptionLabel(statusText, self)
         setFont(self.statLabel, 14, QFont.Normal)
         # self.daysLabel.setFixedWidth(75)
-
         # Hunger status
         hpWidget = QWidget()
         h_box1 = QHBoxLayout(hpWidget)
@@ -1108,12 +1067,10 @@ class PetWidget(QWidget):
         h_box2.addWidget(self.emicon)
         self.pet_fv = DP_FvBar(self, minimum=0, maximum=100, objectName="PetEM")
         self.pet_fv.fv_updated.connect(self._fv_updated)
-
         self.pet_hp.hptier_changed.connect(self.hpchange)
         self.pet_fv.fvlvl_changed.connect(self.fvchange)
         h_box2.addWidget(self.pet_fv)
         h_box2.addStretch(1)
-
         self.pet_hp.init_HP(settings.pet_data.hp, sys_hp_interval)  # 2)
         self.pet_fv.init_FV(settings.pet_data.fv, settings.pet_data.fv_lvl)
         self.pet_hp.setFixedSize(145, 15)
@@ -1134,7 +1091,6 @@ class PetWidget(QWidget):
         # statusWidget.setLayout(StatVbox)
         # statusWidget.setContentsMargins(0,0,0,0)
         self.statusWidget.setFixedSize(250, 70)
-
         self.StatMenu = RoundMenu(parent=self)
         self.StatMenu.addWidget(self.statusTitle, selectable=False)
         self.StatMenu.addSeparator()
@@ -1142,7 +1098,6 @@ class PetWidget(QWidget):
         self.StatMenu.addWidget(self.statusWidget, selectable=False)
         # self.StatMenu.addWidget(fvbar, selectable=False)
         self.StatMenu.addSeparator()
-
         self.StatMenu.addMenu(self.menu)
         self.StatMenu.addActions(
             [
@@ -1220,6 +1175,7 @@ class PetWidget(QWidget):
         defaul_act = settings.defaultAct[self.curr_pet_name]
         if defaul_act is not None:
             self._set_defaultAct(self, defaul_act)
+
         self._update_fvlock()
         # add default animation back
         if defaul_act in [acti.text() for acti in self.defaultAct_menu.actions()]:
@@ -1228,7 +1184,6 @@ class PetWidget(QWidget):
         # Update BackPack
         # self._init_Inventory()
         self.refresh_bag.emit()
-
         self._set_Statusmenu()
 
         # restart animation and interaction
@@ -1274,12 +1229,10 @@ class PetWidget(QWidget):
         # Update Backpack
         # self._init_Inventory()
         self.refresh_bag.emit()
-
         self.change_note.emit()
         self.repaint()
         self.runAnimation()
         self.runInteraction()
-
         self._setup_ui()
         self.workers["Scheduler"].send_greeting()
         # Compensate items if any
@@ -1297,20 +1250,18 @@ class PetWidget(QWidget):
         self.pet_conf = PetConfig.init_config(
             self.curr_pet_name, pic_dict
         )  # settings.size_factor)
-        self.margin_value = 0  # 0.1 * max(self.pet_conf.width, self.pet_conf.height) # 用于将widgets调整到合适的大小
-
+        self.margin_value = 0
+        # 0.1 * max(self.pet_conf.width, self.pet_conf.height) # 用于将widgets调整到合适的大小
         self._set_menu(self.pets)
         self._set_Statusmenu()
         self._set_tray()
 
     def _setup_ui(self):
-
         # bar_width = int(max(100*settings.size_factor, 0.5*self.pet_conf.width))
         bar_width = int(max(100, 0.5 * self.pet_conf.width))
         bar_width = int(min(200, bar_width))
         self.tomato_time.setFixedSize(bar_width, statbar_h - 5)
         self.focus_time.setFixedSize(bar_width, statbar_h - 5)
-
         self.reset_size(setImg=False)
 
         settings.previous_img = settings.current_img
@@ -1369,12 +1320,10 @@ class PetWidget(QWidget):
             ),
             int(2 * statbar_h + self.pet_conf.height * settings.tunable_scale),
         )
-
         # self.label.setFixedWidth(self.width())
-
         # 初始位置
         # screen_geo = QDesktopWidget().availableGeometry() #QDesktopWidget().screenGeometry()
-        screen_width = self.screen_width  # screen_geo.width()
+        # screen_width = self.screen_width # screen_geo.width()
         work_height = self.screen_height  # screen_geo.height()
         x = self.pos().x() + settings.current_anchor[0]
         if settings.set_fall == 1:
@@ -1416,7 +1365,6 @@ class PetWidget(QWidget):
 
         width_tmp = int(settings.current_img.width() * settings.tunable_scale)
         height_tmp = int(settings.current_img.height() * settings.tunable_scale)
-
         # HighDPI-compatible scaling solution
         # self.label.setScaledContents(True)
         self.label.setFixedSize(width_tmp, height_tmp)
@@ -1446,16 +1394,14 @@ class PetWidget(QWidget):
     ):
         if status not in ["hp", "fv"]:
             return
-        elif status == "hp":
 
+        elif status == "hp":
             diff = self.pet_hp.updateValue(change_value, from_mod)
 
         elif status == "fv":
-
             diff = self.pet_fv.updateValue(change_value, from_mod)
 
         if send_note:
-
             if diff > 0:
                 diff = "+%s" % diff
             elif diff < 0:
@@ -1501,14 +1447,17 @@ class PetWidget(QWidget):
             self.tomato_time.setValue(timeleft)
             self.tomato_time.setFormat("%s min" % (int(timeleft)))
             self.single_pomo_done.emit()
+
         elif status == "tomato":
             self.tomato_time.setValue(timeleft)
             self.tomato_time.setFormat("%s min" % (int(timeleft)))
+
         elif status == "tomato_end":
             self.tomato_time.setValue(0)
             self.tomato_time.setFormat("")
             # self.tomato_window.endTomato()
             self.taskUI_task_end.emit()
+
         elif status == "tomato_cencel":
             self.tomato_time.setValue(0)
             self.tomato_time.setFormat("")
@@ -1522,15 +1471,18 @@ class PetWidget(QWidget):
                 self.focus_time.setMaximum(timeleft)
                 self.focus_time.setValue(timeleft)
                 self.focus_time.setFormat("%s min" % (int(timeleft)))
+
         elif status == "focus":
             self.focus_time.setValue(timeleft)
             self.focus_time.setFormat("%s min" % (int(timeleft)))
+
         elif status == "focus_end":
             self.focus_time.setValue(0)
             self.focus_time.setMaximum(0)
             self.focus_time.setFormat("")
             # self.focus_window.endFocus()
             self.taskUI_task_end.emit()
+
         elif status == "focus_cancel":
             self.focus_time.setValue(0)
             self.focus_time.setMaximum(0)
@@ -1585,7 +1537,6 @@ class PetWidget(QWidget):
             y = self.pos().y()+self.height()
             self.setup_acc.emit(accs, x, y)
         """
-
         # 使用物品 改变数值
         self._change_status(
             "hp",
@@ -1639,6 +1590,7 @@ class PetWidget(QWidget):
                 accs = self.sys_conf.accessory_act["heart"]
             except:
                 return
+
             x = (
                 self.pos().x()
                 + self.width() // 2
@@ -1699,6 +1651,7 @@ class PetWidget(QWidget):
         sender = self.sender()
         if settings.onfloor == 0:
             return
+
         if sender.text() == self.tr("Follow Cursor"):
             sender.setText(self.tr("Stop Follow"))
             self.MouseTracker = MouseMoveManager()
@@ -1712,7 +1665,6 @@ class PetWidget(QWidget):
             self.workers["Interaction"].stop_interact()
 
     def get_positions(self, object_name):
-
         main_pos = [
             int(self.pos().x() + self.width() // 2),
             int(self.pos().y() + self.height() - self.label.height()),
@@ -1844,9 +1796,12 @@ class PetWidget(QWidget):
         if task == "range":
             if hs <= 0 and ms <= 0:
                 return
+
             self.workers["Scheduler"].add_focus(time_range=[hs, ms])
+
         elif task == "point":
             self.workers["Scheduler"].add_focus(time_point=[hs, ms])
+
         self.focusicon.show()
         self.focus_time.show()
         # else:
@@ -2064,7 +2019,6 @@ class PetWidget(QWidget):
         self.threads["Scheduler"].setTerminationEnabled()
 
     def _move_customized(self, plus_x, plus_y):
-
         # print(act_list)
         # direction, frame_move = str(act_list[0]), float(act_list[1])
         pos = self.pos()
@@ -2102,6 +2056,7 @@ class PetWidget(QWidget):
                     for screen in settings.screens:
                         if screen.geometry() == self.current_screen:
                             continue
+
                         intersected = screen.geometry().intersected(anim_area)
                         area_tmp = (
                             intersected.width()
@@ -2112,6 +2067,7 @@ class PetWidget(QWidget):
                         if area_tmp > 0.5:
                             self.switch_screen(screen)
                             switched = True
+
                     if not switched:
                         new_x, new_y = self.limit_in_screen(new_x, new_y)
 
@@ -2181,7 +2137,6 @@ class PetWidget(QWidget):
         self.workers["Interaction"].start_interact("anim_acc", acc_name)
 
     def _set_defaultAct(self, act_name):
-
         if act_name == settings.defaultAct[self.curr_pet_name]:
             settings.defaultAct[self.curr_pet_name] = None
             settings.save_settings()
@@ -2239,6 +2194,7 @@ def _build_act(name: str, parent: QObject, act_func, icon=None) -> Action:
         act = Action(icon, name, parent)
     else:
         act = Action(name, parent)
+
     act.triggered.connect(lambda: act_func(name))
     return act
 
