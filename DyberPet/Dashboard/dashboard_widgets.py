@@ -3127,6 +3127,7 @@ class ChatCard(SimpleCardWidget):
         self.askCard.interrupt_ask.connect(self._interrupting)
         self.chatbot.answer.connect(self._answered)
         self.chatbot.interrupted.connect(self._speaked)
+        self.chatbot.failure.connect(self._failed)
         self.timer.timeout.connect(self._speaked)
 
     # slot
@@ -3169,3 +3170,13 @@ class ChatCard(SimpleCardWidget):
         self.askCard.send_stop_btn.setIcon(FIF.SEND)
         self.askCard.send_stop_btn.setEnabled(True)
         self.askCard.recBtn.setEnabled(True)
+
+    # slot
+    def _failed(self, msg: str):
+        lastId = self.msgList.count() - 1
+        lastItem = self.msgList.item(lastId)
+        if lastItem:
+            lastItem.setText(f"系统：{msg}")
+            self.askCard.send_stop_btn.setIcon(FIF.SEND)
+            self.askCard.send_stop_btn.setEnabled(True)
+            self.askCard.recBtn.setEnabled(True)

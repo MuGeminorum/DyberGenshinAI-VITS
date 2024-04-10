@@ -9,6 +9,7 @@ from DyberPet import settings
 
 class Speaker(QThread):
     finished = Signal(name="speaker_finished")
+    failed = Signal(str, name="answer_failed")
 
     def __init__(
         self,
@@ -56,7 +57,12 @@ class Speaker(QThread):
             return
 
         # 获取大模型回复
-        result, session = self._test_answer()
+        try:
+            result, session = self._get_answer()
+        except Exception as e:
+            self.failed.emit(f"{e} 可能是 API Key 无效导致的。")
+            return
+
         if not self.speaking:
             self.finished.emit()
             return
@@ -89,6 +95,7 @@ class Speaker(QThread):
 class ChatBot(QWidget):
     answer = Signal(str, str, int, name="answer_sig")
     interrupted = Signal(name="interrupt_sig")
+    failure = Signal(str, name="failed_sig")
 
     def __init__(self, parent=None):
         super(ChatBot, self).__init__(parent)
@@ -120,6 +127,7 @@ class ChatBot(QWidget):
 
     def __connectSignalToSlot(self):
         self.speaker.finished.connect(self._interrupted)
+        self.speaker.failed.connect(self._failed)
 
     def chat(self, query):
         self.tts.stopping = False
@@ -136,3 +144,7 @@ class ChatBot(QWidget):
     # slot
     def _interrupted(self):
         self.interrupted.emit()
+
+    # slot
+    def _failed(self, msg: str):
+        self.failure.emit(msg)
