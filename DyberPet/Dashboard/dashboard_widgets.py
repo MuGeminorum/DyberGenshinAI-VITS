@@ -3112,11 +3112,11 @@ class ChatCard(SimpleCardWidget):
         self.msgList = QListWidget(self)
         self.msgList.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.msgList.setWordWrap(True)
-        
+
         self.chatbot = ChatBot(self)
         self.player = QSoundEffect(self)
         self.timer = QTimer(self)
-        
+
         # LineEdit
         self.askCard = EmptyAskCard()
         self.verticalLayout.addWidget(self.msgList)
@@ -3125,7 +3125,7 @@ class ChatCard(SimpleCardWidget):
     def __connectSignalToSlot(self):
         self.askCard.new_ask.connect(self.send_message)
         self.askCard.interrupt_ask.connect(self._interrupting)
-        self.chatbot.answer.connect(self.answered)
+        self.chatbot.answer.connect(self._answered)
         self.chatbot.interrupted.connect(self._speaked)
         self.timer.timeout.connect(self._speaked)
 
@@ -3138,7 +3138,7 @@ class ChatCard(SimpleCardWidget):
             self.chatbot.chat(message)
 
     # slot
-    def answered(self, response: str, speech_path: str, duration: int):
+    def _answered(self, response: str, speech_path: str, duration: int):
         lastId = self.msgList.count() - 1
         lastItem = self.msgList.item(lastId)
         if lastItem:
@@ -3149,7 +3149,6 @@ class ChatCard(SimpleCardWidget):
             self.player.setVolume(settings.volume)
             self.player.play()
             self.timer.start(duration)
-            self.askCard.setEnabled(True)
 
     # slot
     def _interrupting(self):

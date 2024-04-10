@@ -65,8 +65,8 @@ class Speaker(QThread):
 
         if self.speaking:
             self.answer.emit(result, audio_path, audio_duration)
-
-        self.finished.emit()
+        else:
+            self.finished.emit()
 
     def speak(
         self,
@@ -126,6 +126,9 @@ class ChatBot(QWidget):
         self.tts.stopping = True
         if self.speaker and self.speaker.isRunning():
             self.speaker.stop()
+        else:
+            self._interrupted()
 
+    # slot
     def _interrupted(self):
         self.interrupted.emit()
