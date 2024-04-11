@@ -13,7 +13,11 @@ from qfluentwidgets import FluentIcon as FIF
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QWidget, QLabel
-from .custom_utils import Dyber_RangeSettingCard, Dyber_ComboBoxSettingCard
+from .custom_utils import (
+    Dyber_EditSettingCard,
+    Dyber_RangeSettingCard,
+    Dyber_ComboBoxSettingCard,
+)
 
 
 basedir = settings.BASEDIR
@@ -185,6 +189,14 @@ class SettingInterface(ScrollArea):
         )
         self.languageCard.comboBox.currentTextChanged.connect(self._LanguageChanged)
 
+        self.apikeyCard = Dyber_EditSettingCard(
+            "res/icons/key.png",
+            self.tr("API 密钥"),
+            self.tr("输入你的 Moonshot API key"),
+            parent=self.PersonalGroup,
+        )
+        self.apikeyCard.linEdit.textChanged.connect(self._apikeyChanged)
+
         # About ==============================================================================
         self.aboutGroup = SettingCardGroup(self.tr("About"), self.scrollWidget)
         self.aboutCard = HyperlinkCard(
@@ -246,6 +258,7 @@ class SettingInterface(ScrollArea):
         self.PersonalGroup.addSettingCard(self.ScaleCard)
         self.PersonalGroup.addSettingCard(self.DefaultPetCard)
         self.PersonalGroup.addSettingCard(self.languageCard)
+        self.PersonalGroup.addSettingCard(self.apikeyCard)
 
         self.aboutGroup.addSettingCard(self.aboutCard)
         self.aboutGroup.addSettingCard(self.helpCard)
@@ -319,6 +332,10 @@ class SettingInterface(ScrollArea):
         # self.retranslateUi()
         self.__showRestartTooltip()
         self.lang_changed.emit()
+
+    def _apikeyChanged(self, value: str):
+        settings.api_key = value
+        settings.save_settings()
 
     def __showRestartTooltip(self):
         """show restart tooltip"""
