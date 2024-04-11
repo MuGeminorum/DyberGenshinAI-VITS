@@ -24,13 +24,13 @@ else:
 
 # THEME_COLOR = "#73c896"
 
-HELP_URL = "https://github.com/ChaozhongLiu/DyberPet/issues"
-PROJECT_URL = "https://github.com/ChaozhongLiu/DyberPet"
-DEVDOC_URL = "https://github.com/ChaozhongLiu/DyberPet/blob/main/docs/art_dev.md"
-VERSION = "v0.3.7"
-AUTHOR = "https://github.com/ChaozhongLiu"
-CHARCOLLECT_LINK = "https://github.com/ChaozhongLiu/DyberPet"
-ITEMCOLLECT_LINK = "https://github.com/ChaozhongLiu/DyberPet"
+HELP_URL = "https://github.com/MuGeminorum/DyberGenshinAI-VITS/issues"
+PROJECT_URL = "https://github.com/MuGeminorum/DyberGenshinAI-VITS"
+DEVDOC_URL = "https://github.com/MuGeminorum/DyberGenshinAI-VITS/blob/module/README.md"
+VERSION = "v0.0.1"
+AUTHOR = "https://github.com/MuGeminorum"
+CHARCOLLECT_LINK = "https://github.com/MuGeminorum/DyberGenshinAI-VITS/tree/module"
+ITEMCOLLECT_LINK = "https://github.com/MuGeminorum/DyberGenshinAI-VITS/tree/module"
 
 HP_TIERS = [0, 50, 80, 100]
 TIER_NAMES = ["Starving", "Hungry", "Normal", "Energetic"]
