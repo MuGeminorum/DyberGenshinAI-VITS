@@ -3138,7 +3138,7 @@ class ChatCard(SimpleCardWidget):
         if message:
             self.msgList.addItem(f"我：{message}")
             self.askCard.askEdit.clear()
-            self.msgList.addItem("......")
+            self.msgList.addItem("...... ......")
             self.chatbot.chat(message)
 
     # slot

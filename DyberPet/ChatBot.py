@@ -37,7 +37,7 @@ class Speaker(QThread):
         session = [{"role": "user", "content": self.query}]
         completion = self.client.chat.completions.create(
             model="moonshot-v1-8k",
-            messages=self.history,
+            messages=self.history + session,
             temperature=0.3,
         )
         result = completion.choices[0].message.content
