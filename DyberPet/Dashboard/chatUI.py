@@ -22,7 +22,7 @@ class chatInterface(ScrollArea):
         self.expandLayout = ExpandLayout(self.scrollWidget)
 
         # setting label
-        self.panelLabel = QLabel(self.tr("AI助手"), self)
+        self.panelLabel = QLabel(self.tr("AI 助手"), self)
         self.chatBot = ChatCard(sizeHintdb, self.scrollWidget)
         self.__initWidget()
         self.__connectSignalToSlot()

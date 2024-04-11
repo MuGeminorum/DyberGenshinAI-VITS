@@ -82,7 +82,7 @@ class DashboardMainWindow(FluentWindow):
         self.addSubInterface(
             self.chatInterface,
             QIcon(os.path.join(basedir, "res/icons/Dashboard/chat.svg")),
-            self.tr("AI Assistant"),
+            self.tr("AI 助手"),
         )
 
         self.navigationInterface.setExpandWidth(150)
