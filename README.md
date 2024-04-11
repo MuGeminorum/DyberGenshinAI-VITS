@@ -6,11 +6,8 @@ DyberPet_GenshinImpact + KimiChat + BertVITS2
 ## Usage
 ### Environment
 ```bash
-conda create -n pet python=3.9 --yes
+conda create -n pet --yes --file conda.txt
 conda activate pet
-conda install -c conda-forge apscheduler --yes
-conda install -c conda-forge pynput --yes
-conda install -c conda-forge pywin32 --yes
 pip install -r requirements.txt
 ```
 

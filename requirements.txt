@@ -13,3 +13,7 @@ pypinyin
 cn2an
 openai
 modelscope
+apscheduler
+pynput
+pyaudio
+openai-whisper
