@@ -69,6 +69,7 @@ class DyberPetApp(QApplication):
     def __connectSignalToSlot(self):
         # Main Widget - others
         self.p.setup_notification.connect(self.note.setup_notification)
+        self.p.reset_sounds.connect(self.note.reset_sounds)
         self.p.change_note.connect(self.note.change_pet)
         self.p.change_note.connect(self.conp.charCardInterface._finishStateTooltip)
         self.p.hptier_changed_main_note.connect(self.note.hpchange_note)
@@ -120,6 +121,13 @@ class DyberPetApp(QApplication):
         self.p.taskUI_task_end.connect(self.board.taskInterface.focusPanel.taskFinished)
         self.p.single_pomo_done.connect(
             self.board.taskInterface.focusPanel.single_pomo_done
+        )
+
+        self.board.chatInterface.chatBot.start_speaking.connect(
+            self.p.start_speaking_animation
+        )
+        self.board.chatInterface.chatBot.finish_speaking.connect(
+            self.p.finish_speaking_animation
         )
 
 

@@ -286,6 +286,7 @@ class DP_FvBar(QProgressBar):
 # Pet Object
 class PetWidget(QWidget):
     setup_notification = Signal(str, str, name="setup_notification")
+    reset_sounds = Signal(name="reset_sounds")
     addItem_toInven = Signal(int, list, name="addItem_toInven")
     fvlvl_changed_main_note = Signal(int, name="fvlvl_changed_main_note")
     fvlvl_changed_main_inve = Signal(int, name="fvlvl_changed_main_inve")
@@ -2157,6 +2158,18 @@ class PetWidget(QWidget):
 
     def resume_animation(self):
         self.workers["Animation"].resume()
+
+    # slot
+    def start_speaking_animation(self):
+        self.reset_sounds.emit()
+        self.workers["Animation"].pause()
+        self.current_animation = settings.defaultAct[self.curr_pet_name]
+        settings.defaultAct[self.curr_pet_name] = self.pet_conf.speak_act
+        self.workers["Interaction"].start_interact("animat", self.pet_conf.speak_act)
+
+    # slot
+    def finish_speaking_animation(self):
+        settings.defaultAct[self.curr_pet_name] = self.current_animation
 
 
 def _load_all_pic(pet_name: str) -> dict:

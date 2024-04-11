@@ -278,6 +278,14 @@ class DPNote(QWidget):
         self.item_favorite = pet_cof.get("item_favorite", [])
         self.item_dislike = pet_cof.get("item_dislike", [])
 
+    def reset_sounds(self):
+        for i in self.sound_dict.keys():
+            if not self.sound_dict[i]["sound"].isPlaying():
+                continue
+            else:
+                self.sound_dict[i]["sound"].stop()
+                break
+
     def setup_notification(self, note_type, message=""):
         # 排队 避免显示冲突
         while self.note_in_prepare:
