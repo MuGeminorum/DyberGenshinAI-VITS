@@ -205,6 +205,26 @@ class Dyber_RangeSettingCard(SettingCard):
         self.slider.setValue(value)
 
 
+class Dyber_EditSettingCard(SettingCard):
+    """Setting card with a combo box"""
+
+    txtChanged = Signal(str, name="txtChanged")
+
+    def __init__(
+        self,
+        icon: Union[str, QIcon, FluentIconBase],
+        title,
+        content=None,
+        parent=None,
+    ):
+        super().__init__(icon, title, content, parent)
+        self.linEdit = LineEdit(self)
+        self.linEdit.setMinimumWidth(270)
+        self.hBoxLayout.addWidget(self.linEdit, 0, Qt.AlignLeft)
+        self.hBoxLayout.addSpacing(16)
+        self.linEdit.setText(settings.api_key)
+
+
 # ===========================================================
 #    Customized ComboBox setting card
 # ===========================================================

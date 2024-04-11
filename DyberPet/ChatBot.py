@@ -58,7 +58,7 @@ class Speaker(QThread):
 
         # 获取大模型回复
         try:
-            result, session = self._test_answer()
+            result, session = self._get_answer()
         except Exception as e:
             self.failed.emit(f"{e} 可能是 API Key 无效导致的。")
             return
