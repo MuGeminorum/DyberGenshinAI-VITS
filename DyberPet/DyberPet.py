@@ -2163,13 +2163,12 @@ class PetWidget(QWidget):
     def start_speaking_animation(self):
         self.reset_sounds.emit()
         self.workers["Animation"].pause()
-        self.current_animation = settings.defaultAct[self.curr_pet_name]
         settings.defaultAct[self.curr_pet_name] = self.pet_conf.speak_act
         self.workers["Interaction"].start_interact("animat", self.pet_conf.speak_act)
 
     # slot
     def finish_speaking_animation(self):
-        settings.defaultAct[self.curr_pet_name] = self.current_animation
+        settings.init_settings()
 
 
 def _load_all_pic(pet_name: str) -> dict:
