@@ -3093,6 +3093,9 @@ class EmptyAskCard(QWidget):
 
 
 class ChatCard(SimpleCardWidget):
+    start_speaking = Signal(name="start_speaking")
+    finish_speaking = Signal(name="finish_speaking")
+
     def __init__(self, sizeHintDyber, parent=None):
         super().__init__(parent=parent)
         self.sizeHintDyber = sizeHintDyber
@@ -3143,6 +3146,7 @@ class ChatCard(SimpleCardWidget):
         lastId = self.msgList.count() - 1
         lastItem = self.msgList.item(lastId)
         if lastItem:
+            self.start_speaking.emit()
             lastItem.setText(f"{settings.petname}：{response}")
             settings.speaking = True
             url = QUrl.fromLocalFile(speech_path)
@@ -3170,6 +3174,7 @@ class ChatCard(SimpleCardWidget):
         self.askCard.send_stop_btn.setIcon(FIF.SEND)
         self.askCard.send_stop_btn.setEnabled(True)
         self.askCard.recBtn.setEnabled(True)
+        self.finish_speaking.emit()
 
     # slot
     def _failed(self, msg: str):
