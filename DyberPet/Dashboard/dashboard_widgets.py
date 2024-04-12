@@ -3088,6 +3088,7 @@ class EmptyAskCard(QWidget):
     # slot
     def toggle_recording(self):
         if not self.recBtn.recorder.recording:
+            self.send_stop_btn.setEnabled(False)
             self.recBtn.recorder.start_recording()
             self.recBtn.setIcon("res/icons/stop.png")
             self.askEdit.setEnabled(False)
@@ -3101,6 +3102,7 @@ class EmptyAskCard(QWidget):
         self.askEdit.setText(rec_txt)
         self.recBtn.setIcon(FIF.MICROPHONE)
         self.recBtn.setEnabled(True)
+        self.send_stop_btn.setEnabled(True)
 
     # slot
     def ask_stop(self):
