@@ -15,4 +15,5 @@ openai
 modelscope
 apscheduler
 pynput
+pyaudio
 openai-whisper
