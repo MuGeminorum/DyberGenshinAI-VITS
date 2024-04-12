@@ -4,7 +4,6 @@ import math
 import json
 import uuid
 import torch
-import whisper
 import datetime
 from typing import List
 from collections import defaultdict
@@ -65,7 +64,7 @@ from qfluentwidgets import (
     isDarkTheme,
 )
 from DyberPet.DyberSettings.custom_utils import SACECARD_H, SACECARD_W, AvatarImage
-from DyberPet.Notification import _load_item_sound
+from DyberPet.recording import AudioRecorder
 from DyberPet.utils import MaskPhrase, TimeConverter
 from DyberPet.ChatBot import ChatBot
 import DyberPet.settings as settings
@@ -368,9 +367,7 @@ class StatusCard(SimpleCardWidget):
 
 
 class HPWidget(QWidget):
-
     def __init__(self, parent=None):
-
         super().__init__(parent)
         self.setObjectName("HPWidget")
         self.hBoxLayout = QHBoxLayout(self)
@@ -383,7 +380,6 @@ class HPWidget(QWidget):
         self.setFixedWidth(300)
 
     def _init_widget(self):
-
         hpLable = CaptionLabel(self.tr("Satiety"))
         setFont(hpLable, 13, QFont.Normal)
         hpLable.adjustSize()
@@ -446,9 +442,7 @@ class HPWidget(QWidget):
 
 
 class FVWidget(QWidget):
-
     def __init__(self, parent=None):
-
         super().__init__(parent)
         self.setObjectName("FVWidget")
         self.hBoxLayout = QHBoxLayout(self)
@@ -460,7 +454,6 @@ class FVWidget(QWidget):
         self.setFixedWidth(300)
 
     def _init_widget(self):
-
         fvLable = CaptionLabel(self.tr("Favor"))
         setFont(fvLable, 13, QFont.Normal)
         fvLable.adjustSize()
@@ -534,9 +527,7 @@ class BuffCard(SimpleCardWidget):
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-
         self.buff_dict = {}
-
         HScroll = ScrollArea(self)
         HScroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         HScroll.setWidgetResizable(True)
@@ -2994,15 +2985,12 @@ class EmptyTaskCard(QWidget):
     new_task = Signal(str, name="new_task")
 
     def __init__(self, parent=None):
-
         super().__init__(parent)
 
         self.hBoxLayout = QHBoxLayout(self)
         self.hBoxLayout.setContentsMargins(10, 5, 5, 5)
         self.hBoxLayout.setSpacing(5)
-
         self.setFixedSize(TASKCARD_W, TASKCARD_H)
-
         self._init_Empty()
 
     def _init_Empty(self):
@@ -3034,6 +3022,8 @@ class EmptyTaskCard(QWidget):
 
 
 class RecButton(TransparentToolButton):
+    recorded = Signal(str, name="recorded")
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.__initBtn()
@@ -3043,22 +3033,16 @@ class RecButton(TransparentToolButton):
         self.setIcon(FIF.MICROPHONE)
         self.setFixedSize(20, 20)
         self.setIconSize(QSize(18, 18))
+        self.recorder = AudioRecorder(self)
 
     def __connectSignalToSlot(self):
-        self.clicked.connect(self.voice_record)
+        self.recorder.finished.connect(self.rec_finished)
 
-    def voice_record(self):
-        # 这里应该添加录制语音的逻辑
-        print("录制语音功能尚未实现")
-
-    def transcribe_audio(file_name):
-        model = whisper.load_model(
-            "base", device="cuda" if torch.cuda.is_available() else "cpu"
-        )
-        result = model.transcribe(
-            file_name, fp16=False, language="zh", initial_prompt="以下是普通话的句子"
-        )
-        return result["text"]
+    # 3 slot
+    def rec_finished(self, rec_result: str):
+        print(rec_result)
+        self.setEnabled(True)
+        self.recorded.emit(rec_result)
 
 
 class EmptyAskCard(QWidget):
@@ -3098,6 +3082,25 @@ class EmptyAskCard(QWidget):
 
     def __connectSignalToSlot(self):
         self.send_stop_btn.clicked.connect(self.ask_stop)
+        self.recBtn.clicked.connect(self.toggle_recording)
+        self.recBtn.recorded.connect(self.recorded)
+
+    # slot
+    def toggle_recording(self):
+        if not self.recBtn.recorder.recording:
+            self.recBtn.recorder.start_recording()
+            self.recBtn.setIcon("res/icons/stop.png")
+            self.askEdit.setEnabled(False)
+        else:
+            self.recBtn.setEnabled(False)
+            self.recBtn.recorder.stop_recording()
+            self.recBtn.setIcon(FIF.SYNC)
+
+    def recorded(self, rec_txt: str):
+        self.askEdit.setEnabled(True)
+        self.askEdit.setText(rec_txt)
+        self.recBtn.setIcon(FIF.MICROPHONE)
+        self.recBtn.setEnabled(True)
 
     # slot
     def ask_stop(self):
