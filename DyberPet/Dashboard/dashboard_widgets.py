@@ -3,6 +3,8 @@ import os
 import math
 import json
 import uuid
+import torch
+import whisper
 import datetime
 from typing import List
 from collections import defaultdict
@@ -3031,6 +3033,34 @@ class EmptyTaskCard(QWidget):
             self.taskEdit.setText("")
 
 
+class RecButton(TransparentToolButton):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.__initBtn()
+        self.__connectSignalToSlot()
+
+    def __initBtn(self):
+        self.setIcon(FIF.MICROPHONE)
+        self.setFixedSize(20, 20)
+        self.setIconSize(QSize(18, 18))
+
+    def __connectSignalToSlot(self):
+        self.clicked.connect(self.voice_record)
+
+    def voice_record(self):
+        # 这里应该添加录制语音的逻辑
+        print("录制语音功能尚未实现")
+
+    def transcribe_audio(file_name):
+        model = whisper.load_model(
+            "base", device="cuda" if torch.cuda.is_available() else "cpu"
+        )
+        result = model.transcribe(
+            file_name, fp16=False, language="zh", initial_prompt="以下是普通话的句子"
+        )
+        return result["text"]
+
+
 class EmptyAskCard(QWidget):
     new_ask = Signal(str, name="new_ask")
     interrupt_ask = Signal(name="interrupt_ask")
@@ -3046,10 +3076,7 @@ class EmptyAskCard(QWidget):
 
     def _init_Empty(self):
         # Rec Btn
-        self.recBtn = TransparentToolButton(self)
-        self.recBtn.setIcon(FIF.MICROPHONE)
-        self.recBtn.setFixedSize(20, 20)
-        self.recBtn.setIconSize(QSize(18, 18))
+        self.recBtn = RecButton(self)
 
         # LineEdit
         self.askEdit = LineEdit(self)
@@ -3070,12 +3097,7 @@ class EmptyAskCard(QWidget):
         )
 
     def __connectSignalToSlot(self):
-        self.recBtn.clicked.connect(self.voice_record)
         self.send_stop_btn.clicked.connect(self.ask_stop)
-
-    def voice_record(self):
-        # 这里应该添加录制语音的逻辑
-        print("录制语音功能尚未实现")
 
     # slot
     def ask_stop(self):
