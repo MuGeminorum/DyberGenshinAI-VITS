@@ -5,6 +5,7 @@ DyberPet_GenshinImpact + KimiChat + BertVITS2
 
 ## Usage
 ### Environment
+Windows 10 + NVIDIA
 ```bash
 conda create -n pet --yes --file conda.txt
 conda activate pet
