@@ -8,6 +8,7 @@ from PySide6.QtCore import Signal, QThread
 
 class AudioRecorder(QThread):
     finished = Signal(str, name="rec_finished")
+    failed = Signal(str, name="rec_failed")
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -61,7 +62,13 @@ class AudioRecorder(QThread):
     def start_recording(self):
         self.recording = True
         self.tempfile = tempfile.NamedTemporaryFile(delete=False)
-        self.p, self.stream = self._create_audio_stream()
+        try:
+            self.p, self.stream = self._create_audio_stream()
+        except OSError:
+            self.recording = False
+            self.failed.emit("请打开麦克风权限")
+            return
+
         self.start()
 
     # slot
