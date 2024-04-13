@@ -18,6 +18,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 import torch
+from tqdm import tqdm
 from .models import SynthesizerTrn
 from .text.symbols import symbols
 from .utils import (
@@ -29,7 +30,7 @@ from .utils import (
     load_checkpoint,
     save_audio,
 )
-from tqdm import tqdm
+from modelscope import snapshot_download
 
 
 class TTS:
@@ -46,6 +47,8 @@ class TTS:
                 else "cpu"
             )
         )
+        # 语言模型下载
+        self.model_dir = snapshot_download("dienstag/chinese-roberta-wwm-ext-large")
         self.net_g = SynthesizerTrn(
             len(symbols),
             self.hps.data.filter_length // 2 + 1,
@@ -58,7 +61,7 @@ class TTS:
         self.stopping = False
 
     def _infer(self, text, sdp_ratio, noise_scale, noise_scale_w, length_scale, sid):
-        bert, phones, tones, lang_ids = get_text(text, "ZH", self.hps)
+        bert, phones, tones, lang_ids = get_text(text, "ZH", self.hps, self.model_dir)
         with torch.no_grad():
             x_tst = phones.to(self.device).unsqueeze(0)
             tones = tones.to(self.device).unsqueeze(0)

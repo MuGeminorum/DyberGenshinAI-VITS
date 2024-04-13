@@ -1,7 +1,6 @@
 # coding:utf-8
 import sys
 import torch
-from modelscope import snapshot_download
 from transformers import AutoTokenizer, AutoModelForMaskedLM
 
 device = torch.device(
@@ -14,17 +13,15 @@ device = torch.device(
     )
 )
 
-# 模型下载
-model_dir = snapshot_download("dienstag/chinese-roberta-wwm-ext-large")
-tokenizer = AutoTokenizer.from_pretrained(model_dir)
-model = AutoModelForMaskedLM.from_pretrained(model_dir).to(device)
 
-
-def get_bert_feature(text, word2ph):
+def get_bert_feature(text, word2ph, model_dir: str):
+    tokenizer = AutoTokenizer.from_pretrained(model_dir)
+    model = AutoModelForMaskedLM.from_pretrained(model_dir).to(device)
     with torch.no_grad():
         inputs = tokenizer(text, return_tensors="pt")
         for i in inputs:
             inputs[i] = inputs[i].to(device)
+
         res = model(**inputs, output_hidden_states=True)
         res = torch.cat(res["hidden_states"][-3:-2], -1)[0].cpu()
 
