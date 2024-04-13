@@ -1,3 +1,4 @@
+# coding:utf-8
 import os
 import DyberPet.settings as settings
 from qfluentwidgets import (
