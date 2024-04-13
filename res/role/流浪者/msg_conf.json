@@ -1,8 +1,7 @@
 {
-  "对话1":{
+  "对话1": {
     "title": "流浪者的日常",
     "start": "聊聊天",
-
     "聊聊天": "想一起聊聊天吗？客随主便，请吧。",
     "text_2": "…怎么，在等我开启话题吗？那可能等不到了哦。倒不是无话可说，只是我的话…免不了要煞风景。",
     "text_3": "了解我并不是什么了不起的事情吧，我现在总是直言不讳。…虽然在很久以前并非如此。",
@@ -15,8 +14,6 @@
     "text_10": "不用刺激遮盖无趣，也不用甘甜粉饰太平，将生活最原本的味道展示在你面前。",
     "text_11": "我觉得拐弯抹角不好，人就该学着坦率。苦味就是苦味，不会因为之前或之后的甜而改变。",
     "text_12": "所以，没必要用什么[苦尽甘来]糊弄自己。",
-
-
     "option_1": "……",
     "option_2": "没关系，我是知道你的。",
     "option_3": "（继续）",
@@ -29,66 +26,113 @@
     "option_10": "（继续）",
     "option_11": "（继续）",
     "relationship": {
-      "聊聊天": ["option_1"],
-      "option_1": ["text_2"],
-      "option_2": ["text_3"],
-      "option_3": ["text_4"],
-      "option_4": ["text_5"],
-      "option_5": ["text_6"],
-      "option_6": ["text_7"],
-      "option_7": ["text_8"],
-      "option_8": ["text_9"],
-      "option_9": ["text_10"],
-      "option_10": ["text_11"],
-      "option_11": ["text_12"],
-      "text_2": ["option_2"],
-      "text_3": ["option_3"],
-      "text_4": ["option_4"],
-      "text_5": ["option_5"],
-      "text_6": ["option_6"],
-      "text_7": ["option_7"],
-      "text_8": ["option_8"],
-      "text_9": ["option_9"],
-      "text_10": ["option_10"],
-      "text_11": ["option_11"]
+      "聊聊天": [
+        "option_1"
+      ],
+      "option_1": [
+        "text_2"
+      ],
+      "option_2": [
+        "text_3"
+      ],
+      "option_3": [
+        "text_4"
+      ],
+      "option_4": [
+        "text_5"
+      ],
+      "option_5": [
+        "text_6"
+      ],
+      "option_6": [
+        "text_7"
+      ],
+      "option_7": [
+        "text_8"
+      ],
+      "option_8": [
+        "text_9"
+      ],
+      "option_9": [
+        "text_10"
+      ],
+      "option_10": [
+        "text_11"
+      ],
+      "option_11": [
+        "text_12"
+      ],
+      "text_2": [
+        "option_2"
+      ],
+      "text_3": [
+        "option_3"
+      ],
+      "text_4": [
+        "option_4"
+      ],
+      "text_5": [
+        "option_5"
+      ],
+      "text_6": [
+        "option_6"
+      ],
+      "text_7": [
+        "option_7"
+      ],
+      "text_8": [
+        "option_8"
+      ],
+      "text_9": [
+        "option_9"
+      ],
+      "text_10": [
+        "option_10"
+      ],
+      "text_11": [
+        "option_11"
+      ]
     }
   },
-
-  "对话2":{
+  "对话2": {
     "title": "早安",
     "start": "text_1",
     "text_1": "早上好。",
     "text_2": "崭新的一天，崭新的生活，呵。",
-
     "option_1": "早啊",
-
     "relationship": {
-      "text_1": ["option_1"],
-      "option_1": ["text_2"]
-
+      "text_1": [
+        "option_1"
+      ],
+      "option_1": [
+        "text_2"
+      ]
     }
   },
-
-   "对话3":{
+  "对话3": {
     "title": "晚安",
     "start": "text_1",
     "text_1": "看样子又是平淡无奇的一天？也好。",
     "text_2": "劳你费心关照，早些睡吧。",
     "text_3": "我还不想休息。",
-
     "option_1": "晚安",
     "option_2": "（继续）",
-
     "relationship": {
-      "text_1": ["option_1"],
-      "text_2": ["option_2"],
-      "option_1": ["text_2"],
-      "option_2": ["text_3"]
-
+      "text_1": [
+        "option_1"
+      ],
+      "text_2": [
+        "option_2"
+      ],
+      "option_1": [
+        "text_2"
+      ],
+      "option_2": [
+        "text_3"
+      ]
     }
   },
-
-  "对话4":{
+  "对话4": {
     "title": "有什么想做的吗",
     "start": "text_1",
     "text_1": "这样发问，是准备满足我提出的任何需求吗?",
@@ -121,38 +165,88 @@
     "option_11": "欸？怎么突然道歉…",
     "option_12": "（继续）",
     "relationship": {
-      "text_1": ["option_1"],
-      "text_112": ["option_112"],
-      "text_2": ["option_2"],
-      "text_3": ["option_3"],
-      "text_4": ["option_4"],
-      "text_5": ["option_5"],
-      "text_6": ["option_6"],
-      "text_7": ["option_7"],
-      "text_71": ["option_71"],
-      "text_8": ["option_8","option_9"],
-      "text_9": ["option_10"],
-      "text_11": ["option_11"],
-      "text_12": ["option_12"],
-      "option_1": ["text_112"],
-      "option_112": ["text_2"],
-      "option_2": ["text_3"],
-      "option_3": ["text_4"],
-      "option_4": ["text_5"],
-      "option_5": ["text_6"],
-      "option_6": ["text_7"],
-      "option_7": ["text_71"],
-      "option_71": ["text_8"],
-      "option_8": ["text_9"],
-      "option_9": ["text_11"],
-      "option_10": ["text_10"],
-      "option_11": ["text_12"],
-      "option_12": ["text_13"]
+      "text_1": [
+        "option_1"
+      ],
+      "text_112": [
+        "option_112"
+      ],
+      "text_2": [
+        "option_2"
+      ],
+      "text_3": [
+        "option_3"
+      ],
+      "text_4": [
+        "option_4"
+      ],
+      "text_5": [
+        "option_5"
+      ],
+      "text_6": [
+        "option_6"
+      ],
+      "text_7": [
+        "option_7"
+      ],
+      "text_71": [
+        "option_71"
+      ],
+      "text_8": [
+        "option_8",
+        "option_9"
+      ],
+      "text_9": [
+        "option_10"
+      ],
+      "text_11": [
+        "option_11"
+      ],
+      "text_12": [
+        "option_12"
+      ],
+      "option_1": [
+        "text_112"
+      ],
+      "option_112": [
+        "text_2"
+      ],
+      "option_2": [
+        "text_3"
+      ],
+      "option_3": [
+        "text_4"
+      ],
+      "option_4": [
+        "text_5"
+      ],
+      "option_5": [
+        "text_6"
+      ],
+      "option_6": [
+        "text_7"
+      ],
+      "option_7": [
+        "text_71"
+      ],
+      "option_71": [
+        "text_8"
+      ],
+      "option_8": [
+        "text_9"
+      ],
+      "option_9": [
+        "text_11"
+      ],
+      "option_10": [
+        "text_10"
+      ],
+      "option_11": [
+        "text_12"
+      ],
+      "option_12": [
+        "text_13"
+      ]
     }
   }
 }
-
-
-
-
-

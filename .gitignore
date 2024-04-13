@@ -9,3 +9,4 @@ run_DyberPet.spec
 rename.sh
 test.py
 *.pth
+.vscode/*

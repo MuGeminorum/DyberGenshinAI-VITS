@@ -4,12 +4,12 @@
     "act_num": 1,
     "frame_refresh": 0.04
   },
-  "up" : {
+  "up": {
     "images": "stand",
     "act_num": 1,
     "frame_refresh": 0.04
   },
-  "down" : {
+  "down": {
     "images": "stand",
     "act_num": 1,
     "frame_refresh": 0.04
@@ -28,7 +28,10 @@
     "images": "lay",
     "act_num": 5,
     "frame_refresh": 0.04,
-    "anchor": [0, 36]
+    "anchor": [
+      0,
+      36
+    ]
   },
   "left_walk": {
     "images": "walk",
@@ -86,20 +89,19 @@
     "act_num": 1,
     "frame_refresh": 0.04
   },
-  "feed_1":{
+  "feed_1": {
     "images": "happy",
     "act_num": 1,
     "frame_refresh": 0.04
   },
-  "feed_2":{
+  "feed_2": {
     "images": "ord",
     "act_num": 1,
     "frame_refresh": 0.04
   },
-  "feed_3":{
+  "feed_3": {
     "images": "sigh",
     "act_num": 1,
     "frame_refresh": 0.04
-
   }
 }

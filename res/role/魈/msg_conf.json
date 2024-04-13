@@ -1,37 +1,35 @@
 {
-  "对话1":{
+  "对话1": {
     "title": "早安",
     "start": "早安",
-
     "早安": "…早",
     "text_2": "若遇上棘手之事，不必拘泥，直呼我名便好。",
-
-
-
     "option_1": "早啊，魈。",
-
     "relationship": {
-      "早安": ["option_1"],
-      "option_1": ["text_2"]
+      "早安": [
+        "option_1"
+      ],
+      "option_1": [
+        "text_2"
+      ]
     }
   },
-
-  "对话2":{
+  "对话2": {
     "title": "晚安",
     "start": "text_1",
     "text_1": "今日…",
     "text_2": "算了，无事。晚安。",
-
     "option_1": "晚安，魈。",
-
     "relationship": {
-      "text_1": ["option_1"],
-      "option_1": ["text_2"]
-
+      "text_1": [
+        "option_1"
+      ],
+      "option_1": [
+        "text_2"
+      ]
     }
   },
-
-   "对话3":{
+  "对话3": {
     "title": "聊聊天",
     "start": "text_1",
     "text_1": "…闲聊吗？…既然你想，我陪你便是。",
@@ -59,33 +57,79 @@
     "option_11": "（继续）",
     "option_12": "（继续）",
     "relationship": {
-      "text_1": ["option_1","option_2"],
-      "text_2": ["option_3"],
-      "text_3": ["option_4"],
-      "text_4": ["option_5"],
-      "text_5": ["option_6"],
-      "text_6": ["option_7"],
-      "text_7": ["option_8"],
-      "text_8": ["option_9"],
-      "text_9": ["option_10"],
-      "text_11": ["option_11"],
-      "text_12": ["option_12"],
-      "option_1": ["text_2"],
-      "option_3": ["text_3"],
-      "option_4": ["text_4"],
-      "option_5": ["text_5"],
-      "option_6": ["text_6"],
-      "option_7": ["text_7"],
-      "option_8": ["text_8"],
-      "option_9": ["text_9"],
-      "option_10": ["text_10"],
-      "option_2": ["text_11"],
-      "option_11": ["text_12"],
-      "option_12": ["text_5"]
+      "text_1": [
+        "option_1",
+        "option_2"
+      ],
+      "text_2": [
+        "option_3"
+      ],
+      "text_3": [
+        "option_4"
+      ],
+      "text_4": [
+        "option_5"
+      ],
+      "text_5": [
+        "option_6"
+      ],
+      "text_6": [
+        "option_7"
+      ],
+      "text_7": [
+        "option_8"
+      ],
+      "text_8": [
+        "option_9"
+      ],
+      "text_9": [
+        "option_10"
+      ],
+      "text_11": [
+        "option_11"
+      ],
+      "text_12": [
+        "option_12"
+      ],
+      "option_1": [
+        "text_2"
+      ],
+      "option_3": [
+        "text_3"
+      ],
+      "option_4": [
+        "text_4"
+      ],
+      "option_5": [
+        "text_5"
+      ],
+      "option_6": [
+        "text_6"
+      ],
+      "option_7": [
+        "text_7"
+      ],
+      "option_8": [
+        "text_8"
+      ],
+      "option_9": [
+        "text_9"
+      ],
+      "option_10": [
+        "text_10"
+      ],
+      "option_2": [
+        "text_11"
+      ],
+      "option_11": [
+        "text_12"
+      ],
+      "option_12": [
+        "text_5"
+      ]
     }
   },
-
-  "对话4":{
+  "对话4": {
     "title": "有什么想做的吗",
     "start": "text_1",
     "text_1": "若你有空，可否一同前往璃月港内…",
@@ -114,35 +158,80 @@
     "option_12": "（继续）",
     "option_13": "（继续）",
     "relationship": {
-      "text_1": ["option_1"],
-      "text_2": ["option_2","option_3"],
-      "text_3": ["option_4"],
-      "text_4": ["option_5"],
-      "text_5": ["option_6"],
-      "text_6": ["option_7"],
-      "text_7": ["option_8"],
-      "text_8": ["option_9"],
-      "text_9": ["option_10","option_11"],
-      "text_10": ["option_12"],
-      "text_12": ["option_13"],
-      "option_1": ["text_2"],
-      "option_2": ["text_3"],
-      "option_4": ["text_4"],
-      "option_5": ["text_5"],
-      "option_6": ["text_6"],
-      "option_7": ["text_7"],
-      "option_8": ["text_8"],
-      "option_9": ["text_9"],
-      "option_10": ["text_10"],
-      "option_12": ["text_11"],
-      "option_3": ["text_12"],
-      "option_13": ["text_4"],
-      "option_11": ["text_10"]
+      "text_1": [
+        "option_1"
+      ],
+      "text_2": [
+        "option_2",
+        "option_3"
+      ],
+      "text_3": [
+        "option_4"
+      ],
+      "text_4": [
+        "option_5"
+      ],
+      "text_5": [
+        "option_6"
+      ],
+      "text_6": [
+        "option_7"
+      ],
+      "text_7": [
+        "option_8"
+      ],
+      "text_8": [
+        "option_9"
+      ],
+      "text_9": [
+        "option_10",
+        "option_11"
+      ],
+      "text_10": [
+        "option_12"
+      ],
+      "text_12": [
+        "option_13"
+      ],
+      "option_1": [
+        "text_2"
+      ],
+      "option_2": [
+        "text_3"
+      ],
+      "option_4": [
+        "text_4"
+      ],
+      "option_5": [
+        "text_5"
+      ],
+      "option_6": [
+        "text_6"
+      ],
+      "option_7": [
+        "text_7"
+      ],
+      "option_8": [
+        "text_8"
+      ],
+      "option_9": [
+        "text_9"
+      ],
+      "option_10": [
+        "text_10"
+      ],
+      "option_12": [
+        "text_11"
+      ],
+      "option_3": [
+        "text_12"
+      ],
+      "option_13": [
+        "text_4"
+      ],
+      "option_11": [
+        "text_10"
+      ]
     }
   }
 }
-
-
-
-
-

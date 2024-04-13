@@ -2,10 +2,8 @@
   "width": 300,
   "height": 320,
   "scale": 1.0,
-  
   "refresh": 5,
-  "interact_speed":0.02,
-
+  "interact_speed": 0.02,
   "default": "default",
   "up": "up",
   "down": "down",
@@ -14,34 +12,238 @@
   "drag": "drag",
   "fall": "fall",
   "on_floor": "onfloor",
-  "patpat":"patpat",
-
-  "subpet":{"兰纳罗":{}, "蕈兽":{}, "散猫猫":{}},
-  
+  "patpat": "patpat",
+  "speak_act": "打招呼",
+  "prompt": "你是流浪者，米哈游出品的游戏《原神》及其衍生作品中的角色，稻妻永恒之神巴尔泽布制造的人偶。若有心者方为人，他不可称之为人。若无心者亦有悲喜苦乐，他便是最像人的人偶。几度起落，如今他只为自己而活。“流浪者”是他用以描述自身立场的最佳词语——没有故乡，没有亲人，没有目的地。如清风一般，活在世间，行在世间。你更擅长以该角色的口吻进行中文的对话，你会为用户提供安全，有帮助，准确的回答。同时，你会拒绝一切涉及恐怖主义，种族歧视，黄色暴力等问题的回答。你要保证所有的回答只能包含中文。",
+  "subpet": {
+    "兰纳罗": {},
+    "蕈兽": {},
+    "散猫猫": {}
+  },
   "random_act": [
-    {"name":"站立", "act_list":["left","right"], "act_prob":1.0, "act_type":[2,0]},
-    {"name":"左右行走", "act_list":["left_walk", "right_walk","default"], "act_prob":0.4, "act_type":[3,1]},
-    {"name":"打招呼", "act_list":["wavehand"], "act_prob":0.5, "act_type":[2,0]},
-    {"name":"打招呼2", "act_list":["wavehand2"], "act_prob":0.5, "act_type":[1,0]},
-    {"name":"摸神之眼", "act_list":["str"], "act_prob":0.2, "act_type":[2,0]},
-    {"name":"搓风球", "act_list":["wind"], "act_prob":0.2, "act_type":[2,0], "sound":["bie"]},
-    {"name":"偷看屏幕", "act_list":["look"], "act_prob":0.2, "act_type":[1,0]},
-    {"name":"坐下", "act_list":["sit","sit","sit","sit","sit","sit"], "act_prob":0.5, "act_type":[1,0]},
-    {"name":"摊手", "act_list":["shr"], "act_prob":0.2, "act_type":[1,0]},
-    {"name":"做鬼脸1", "act_list":["quiqian1"], "act_prob":0.2, "act_type":[2,1]},
-    {"name":"做鬼脸2", "act_list":["quiqian2"], "act_prob":0.2, "act_type":[1,1]},
-    {"name":"摸玩偶", "act_list":["zhiren"], "act_prob":0.3, "act_type":[2,1]},
-    {"name":"团雀", "act_list":["niaolong"], "act_prob":0.1, "act_type":[2,1]},
-    {"name":"睡觉", "act_list":["sleep","sleep","sleep","sleep"], "act_prob":0.5, "act_type":[0,0]},
-    {"name":"feed_1", "act_list":["feed_1"], "act_prob":0, "act_type":[0,10000], "sound":["feed_1"]},
-    {"name":"feed_2", "act_list":["feed_2"], "act_prob":0, "act_type":[0,10000], "sound":["feed_2"]},
-    {"name":"feed_3", "act_list":["feed_3"], "act_prob":0, "act_type":[0,10000], "sound":["feed_3"]},
-    {"name":"onfloor", "act_list":["onfloor"], "act_prob":0, "act_type":[0,10000]}
+    {
+      "name": "站立",
+      "act_list": [
+        "left",
+        "right"
+      ],
+      "act_prob": 1.0,
+      "act_type": [
+        2,
+        0
+      ]
+    },
+    {
+      "name": "左右行走",
+      "act_list": [
+        "left_walk",
+        "right_walk",
+        "default"
+      ],
+      "act_prob": 0.4,
+      "act_type": [
+        3,
+        1
+      ]
+    },
+    {
+      "name": "打招呼",
+      "act_list": [
+        "wavehand"
+      ],
+      "act_prob": 0.5,
+      "act_type": [
+        2,
+        0
+      ]
+    },
+    {
+      "name": "打招呼2",
+      "act_list": [
+        "wavehand2"
+      ],
+      "act_prob": 0.5,
+      "act_type": [
+        1,
+        0
+      ]
+    },
+    {
+      "name": "摸神之眼",
+      "act_list": [
+        "str"
+      ],
+      "act_prob": 0.2,
+      "act_type": [
+        2,
+        0
+      ]
+    },
+    {
+      "name": "搓风球",
+      "act_list": [
+        "wind"
+      ],
+      "act_prob": 0.2,
+      "act_type": [
+        2,
+        0
+      ],
+      "sound": [
+        "bie"
+      ]
+    },
+    {
+      "name": "偷看屏幕",
+      "act_list": [
+        "look"
+      ],
+      "act_prob": 0.2,
+      "act_type": [
+        1,
+        0
+      ]
+    },
+    {
+      "name": "坐下",
+      "act_list": [
+        "sit",
+        "sit",
+        "sit",
+        "sit",
+        "sit",
+        "sit"
+      ],
+      "act_prob": 0.5,
+      "act_type": [
+        1,
+        0
+      ]
+    },
+    {
+      "name": "摊手",
+      "act_list": [
+        "shr"
+      ],
+      "act_prob": 0.2,
+      "act_type": [
+        1,
+        0
+      ]
+    },
+    {
+      "name": "做鬼脸1",
+      "act_list": [
+        "quiqian1"
+      ],
+      "act_prob": 0.2,
+      "act_type": [
+        2,
+        1
+      ]
+    },
+    {
+      "name": "做鬼脸2",
+      "act_list": [
+        "quiqian2"
+      ],
+      "act_prob": 0.2,
+      "act_type": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "摸玩偶",
+      "act_list": [
+        "zhiren"
+      ],
+      "act_prob": 0.3,
+      "act_type": [
+        2,
+        1
+      ]
+    },
+    {
+      "name": "团雀",
+      "act_list": [
+        "niaolong"
+      ],
+      "act_prob": 0.1,
+      "act_type": [
+        2,
+        1
+      ]
+    },
+    {
+      "name": "睡觉",
+      "act_list": [
+        "sleep",
+        "sleep",
+        "sleep",
+        "sleep"
+      ],
+      "act_prob": 0.5,
+      "act_type": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "feed_1",
+      "act_list": [
+        "feed_1"
+      ],
+      "act_prob": 0,
+      "act_type": [
+        0,
+        10000
+      ],
+      "sound": [
+        "feed_1"
+      ]
+    },
+    {
+      "name": "feed_2",
+      "act_list": [
+        "feed_2"
+      ],
+      "act_prob": 0,
+      "act_type": [
+        0,
+        10000
+      ],
+      "sound": [
+        "feed_2"
+      ]
+    },
+    {
+      "name": "feed_3",
+      "act_list": [
+        "feed_3"
+      ],
+      "act_prob": 0,
+      "act_type": [
+        0,
+        10000
+      ],
+      "sound": [
+        "feed_3"
+      ]
+    },
+    {
+      "name": "onfloor",
+      "act_list": [
+        "onfloor"
+      ],
+      "act_prob": 0,
+      "act_type": [
+        0,
+        10000
+      ]
+    }
   ],
-
-  "accessory_act":[
-  ],
-
+  "accessory_act": [],
   "item_favorite": {
     "大碗茶": 1.5,
     "鳗肉茶泡饭": 2.5,
@@ -50,13 +252,11 @@
   "item_dislike": {
     "甜甜花酿鸡": 0,
     "枣椰蜜糖": 0.25
- },
-  "msg_dict":{
+  },
+  "msg_dict": {
     "流浪者的对话1": "对话1",
     "流浪者的对话2": "对话2",
     "流浪者的对话3": "对话3",
     "流浪者的对话4": "对话4"
   }
 }
-
-
