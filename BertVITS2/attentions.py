@@ -1,3 +1,4 @@
+# coding:utf-8
 import math
 import BertVITS2.commons as commons
 import logging
