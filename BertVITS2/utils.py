@@ -11,11 +11,11 @@ import requests
 import subprocess
 import numpy as np
 import BertVITS2.commons as commons
-from tqdm import tqdm
-from datetime import datetime
-from scipy.io.wavfile import read
 from BertVITS2.text import cleaned_text_to_sequence, get_bert
 from BertVITS2.text.cleaner import clean_text
+from scipy.io.wavfile import read
+from datetime import datetime
+from tqdm import tqdm
 
 MATPLOTLIB_FLAG = False
 
@@ -385,7 +385,7 @@ class HParams:
         return self.__dict__.__repr__()
 
 
-def get_text(text, language_str, hps):
+def get_text(text, language_str, hps, model_dir: str):
     norm_text, phone, tone, word2ph = clean_text(text, language_str)
     phone, tone, language = cleaned_text_to_sequence(phone, tone, language_str)
 
@@ -395,12 +395,12 @@ def get_text(text, language_str, hps):
         language = commons.intersperse(language, 0)
         for i in range(len(word2ph)):
             word2ph[i] = word2ph[i] * 2
+
         word2ph[0] += 1
-    bert = get_bert(norm_text, word2ph, language_str)
+
+    bert = get_bert(norm_text, word2ph, language_str, model_dir)
     del word2ph
-
     assert bert.shape[-1] == len(phone)
-
     phone = torch.LongTensor(phone)
     tone = torch.LongTensor(tone)
     language = torch.LongTensor(language)

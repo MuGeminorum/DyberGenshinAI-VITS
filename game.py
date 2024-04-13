@@ -2,16 +2,16 @@
 import os
 import sys
 import DyberPet.settings as settings
-from sys import platform
-from tendo import singleton
 from DyberPet.DyberPet import PetWidget
 from DyberPet.Notification import DPNote
 from DyberPet.Accessory import DPAccessory
-from PySide6.QtWidgets import QApplication
-from PySide6.QtCore import Qt, QLocale
-from qfluentwidgets import FluentTranslator
 from DyberPet.Dashboard.DashboardUI import DashboardMainWindow
 from DyberPet.DyberSettings.DyberControlPanel import ControlMainWindow
+from qfluentwidgets import FluentTranslator
+from PySide6.QtWidgets import QApplication
+from PySide6.QtCore import Qt, QLocale
+from tendo import singleton
+from sys import platform
 
 
 StyleSheet = f"""

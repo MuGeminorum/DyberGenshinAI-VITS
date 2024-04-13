@@ -1,17 +1,17 @@
 # coding:utf-8
 import os
 import sys
+import DyberPet.settings as settings
+from DyberPet.DyberSettings.DyberControlPanel import ControlMainWindow
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
 from qfluentwidgets import FluentWindow, FluentTranslator
-from DyberPet.DyberSettings.DyberControlPanel import ControlMainWindow
-from .statusUI import statusInterface
 from .inventoryUI import backpackInterface
+from .statusUI import statusInterface
 from .shopUI import shopInterface
 from .taskUI import taskInterface
 from .chatUI import chatInterface
-import DyberPet.settings as settings
 
 basedir = settings.BASEDIR
 module_path = os.path.join(basedir, "DyberPet/Dashboard/")
