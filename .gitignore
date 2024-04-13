@@ -11,3 +11,4 @@ res/role/*
 rename.sh
 test.py
 *.pth
+.vscode/*

@@ -6,7 +6,6 @@ matplotlib
 numpy
 numba
 scipy
-torch
 jieba
 transformers
 pypinyin

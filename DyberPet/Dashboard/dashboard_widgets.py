@@ -3023,6 +3023,7 @@ class EmptyTaskCard(QWidget):
 
 class RecButton(TransparentToolButton):
     recorded = Signal(str, name="recorded")
+    failed = Signal(str, name="rec_failed")
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -3037,17 +3038,23 @@ class RecButton(TransparentToolButton):
 
     def __connectSignalToSlot(self):
         self.recorder.finished.connect(self.rec_finished)
+        self.recorder.failed.connect(self.rec_failed)
 
-    # 3 slot
+    # slot
     def rec_finished(self, rec_result: str):
         print(rec_result)
         self.setEnabled(True)
         self.recorded.emit(rec_result)
 
+    def rec_failed(self, fail_msg: str):
+        self.setEnabled(True)
+        self.failed.emit(fail_msg)
+
 
 class EmptyAskCard(QWidget):
     new_ask = Signal(str, name="new_ask")
     interrupt_ask = Signal(name="interrupt_ask")
+    failed_ask = Signal(str, name="failed_ask")
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -3084,22 +3091,32 @@ class EmptyAskCard(QWidget):
         self.send_stop_btn.clicked.connect(self.ask_stop)
         self.recBtn.clicked.connect(self.toggle_recording)
         self.recBtn.recorded.connect(self.recorded)
+        self.recBtn.failed.connect(self.failed)
 
     # slot
     def toggle_recording(self):
         if not self.recBtn.recorder.recording:
             self.send_stop_btn.setEnabled(False)
-            self.recBtn.recorder.start_recording()
             self.recBtn.setIcon("res/icons/stop.png")
             self.askEdit.setEnabled(False)
+            self.recBtn.recorder.start_recording()
         else:
             self.recBtn.setEnabled(False)
             self.recBtn.recorder.stop_recording()
             self.recBtn.setIcon(FIF.SYNC)
 
+    # slot
     def recorded(self, rec_txt: str):
         self.askEdit.setEnabled(True)
         self.askEdit.setText(rec_txt)
+        self.recBtn.setIcon(FIF.MICROPHONE)
+        self.recBtn.setEnabled(True)
+        self.send_stop_btn.setEnabled(True)
+
+    # slot
+    def failed(self, fail_msg: str):
+        self.failed_ask.emit(fail_msg)
+        self.askEdit.setEnabled(True)
         self.recBtn.setIcon(FIF.MICROPHONE)
         self.recBtn.setEnabled(True)
         self.send_stop_btn.setEnabled(True)
@@ -3155,6 +3172,7 @@ class ChatCard(SimpleCardWidget):
     def __connectSignalToSlot(self):
         self.askCard.new_ask.connect(self.send_message)
         self.askCard.interrupt_ask.connect(self._interrupting)
+        self.askCard.failed_ask.connect(self._rec_failed)
         self.chatbot.answer.connect(self._answered)
         self.chatbot.interrupted.connect(self._speaked)
         self.chatbot.failure.connect(self._failed)
@@ -3212,3 +3230,10 @@ class ChatCard(SimpleCardWidget):
             self.askCard.send_stop_btn.setIcon(FIF.SEND)
             self.askCard.send_stop_btn.setEnabled(True)
             self.askCard.recBtn.setEnabled(True)
+
+    # slot
+    def _rec_failed(self, msg: str):
+        self.msgList.addItem(f"系统：{msg}")
+        self.askCard.send_stop_btn.setIcon(FIF.SEND)
+        self.askCard.send_stop_btn.setEnabled(True)
+        self.askCard.recBtn.setEnabled(True)
