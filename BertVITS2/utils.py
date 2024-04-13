@@ -282,7 +282,7 @@ def download_file(file_url: str):
         # 获取文件总大小
         file_size = int(response.headers.get("Content-Length", 0))
         # 打开文件以写入二进制数据
-        with open(filename, "wb") as file:
+        with open(filename, "wb", encoding="utf-8") as file:
             # 创建进度条
             progress_bar = tqdm(
                 total=file_size,
