@@ -282,7 +282,7 @@ def download_file(file_url: str):
         # 获取文件总大小
         file_size = int(response.headers.get("Content-Length", 0))
         # 打开文件以写入二进制数据
-        with open(filename, "wb", encoding="utf-8") as file:
+        with open(filename, "wb") as file:
             # 创建进度条
             progress_bar = tqdm(
                 total=file_size,
@@ -298,10 +298,10 @@ def download_file(file_url: str):
 
             progress_bar.close()  # 关闭进度条
 
-        print(f"模型文件 '{file_url}' 下载成功。")
+        print(f"Download '{file_url}' successfully.")
 
     else:
-        print(f"下载失败，状态码：{response.status_code}")
+        print(f"Failed to download: {response.status_code}")
 
     return filename
 
