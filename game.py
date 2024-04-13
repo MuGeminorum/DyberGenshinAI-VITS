@@ -132,7 +132,7 @@ class DyberPetApp(QApplication):
         )
 
 
-def game():
+if __name__ == "__main__":
     if platform == "win32":
         basedir = ""
     else:
@@ -148,9 +148,4 @@ def game():
     )
     app = DyberPetApp(sys.argv)
     app.setAttribute(Qt.AA_DontCreateNativeWidgetSiblings)
-    return app
-
-
-if __name__ == "__main__":
-    app = game()
     sys.exit(app.exec())
