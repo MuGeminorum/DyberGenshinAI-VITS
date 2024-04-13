@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 jobs:
-  build-linux:
+  build-windows:
     runs-on: windows-latest
     strategy:
       max-parallel: 5
@@ -26,14 +26,14 @@ jobs:
         with:
           python-version: "3.9"
 
-      - name: Add conda to system path
-        run: |
-          # $CONDA is an environment variable pointing to the root of the miniconda directory
-          echo $CONDA/bin >> $GITHUB_PATH
+      - name: Setup Miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-activate-base: "true"
+          mamba-version: "*"
 
       - name: Install dependencies
         run: |
-          conda init
           conda create -n pet --yes --file conda.txt
           conda activate pet
           pip install -r requirements.txt
