@@ -23,6 +23,13 @@ cd DyberGenshinAI-VITS
 python game.py
 ```
 
+### Modules
+```bash
+git checkout module
+```
+Copy role module directories from `module` branch into `.\DyberGenshinAI-VITS\res\role` at `main` branch;
+Copy item module directories into `module` branch into `.\DyberGenshinAI-VITS\res\items` at `main` branch;
+
 ## Thanks
 - [DyberPet](https://github.com/ChaozhongLiu/DyberPet)
 - [DyberPet_GenshinImpact](https://github.com/ChaozhongLiu/DyberPet_GenshinImpact)
