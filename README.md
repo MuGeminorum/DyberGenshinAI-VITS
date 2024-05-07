@@ -27,8 +27,8 @@ python game.py
 ```bash
 git checkout module
 ```
-Copy role module directories from `module` branch into `.\DyberGenshinAI-VITS\res\role` at `main` branch;
-Copy item module directories into `module` branch into `.\DyberGenshinAI-VITS\res\items` at `main` branch;
+Copy role module directories in `.\DyberGenshinAI-VITS\res\role` from `module` to `main` branch;<br>
+Copy item module directories in `.\DyberGenshinAI-VITS\res\item` from `module` to `main` branch;
 
 ## Thanks
 - [DyberPet](https://github.com/ChaozhongLiu/DyberPet)
