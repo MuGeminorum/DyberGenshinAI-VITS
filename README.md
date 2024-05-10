@@ -9,7 +9,7 @@ DyberPet_GenshinImpact + KimiChat + BertVITS2
 
 ## Usage
 ### Environment
-Windows 10 + NVIDIA
+Windows 10 + NVIDIA + conda
 ```bash
 conda create -n pet --yes --file conda.txt
 conda activate pet
@@ -18,7 +18,7 @@ pip install -r requirements.txt
 
 ### Download
 ```bash
-git clone git@gitee.com:MuGeminorum/DyberGenshinAI-VITS.git
+git clone git@github.com:MuGeminorum/DyberGenshinAI-VITS.git
 cd DyberGenshinAI-VITS
 ```
 
