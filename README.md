@@ -3,6 +3,8 @@
 
 DyberPet_GenshinImpact + KimiChat + BertVITS2
 
+![bg](https://github.com/MuGeminorum/DyberGenshinAI-VITS/assets/20459298/e03c7bf4-bb49-434d-9145-dab1622ee215)
+
 ## Usage
 ### Environment
 Windows 10 + NVIDIA
