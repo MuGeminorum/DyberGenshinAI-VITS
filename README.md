@@ -1,5 +1,7 @@
 # DyberGenshinAI-VITS
 [![Python application](https://github.com/MuGeminorum/DyberGenshinAI-VITS/actions/workflows/python-app.yml/badge.svg?branch=main)](https://github.com/MuGeminorum/DyberGenshinAI-VITS/actions/workflows/python-app.yml)
+[![license](https://img.shields.io/github/license/MuGeminorum/DyberGenshinAI-VITS.svg)](https://github.com/MuGeminorum/DyberGenshinAI-VITS/blob/main/LICENSE)
+[![](https://img.shields.io/badge/bilibili-BV1dD421P7LZ-fc8bab.svg)](https://www.bilibili.com/video/BV1dD421P7LZ)
 
 DyberPet_GenshinImpact + KimiChat + BertVITS2
 
