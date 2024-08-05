@@ -1,11 +1,12 @@
 # DyberGenshinAI-VITS
-[![Python application](https://github.com/MuGeminorum/DyberGenshinAI-VITS/actions/workflows/python-app.yml/badge.svg?branch=main)](https://github.com/MuGeminorum/DyberGenshinAI-VITS/actions/workflows/python-app.yml)
 [![license](https://img.shields.io/github/license/MuGeminorum/DyberGenshinAI-VITS.svg)](https://github.com/MuGeminorum/DyberGenshinAI-VITS/blob/main/LICENSE)
-[![](https://img.shields.io/badge/bilibili-BV1dD421P7LZ-fc8bab.svg)](https://www.bilibili.com/video/BV1dD421P7LZ)
+[![Python application](https://github.com/MuGeminorum/DyberGenshinAI-VITS/actions/workflows/python-app.yml/badge.svg?branch=main)](https://github.com/MuGeminorum/DyberGenshinAI-VITS/actions/workflows/python-app.yml)
+[![bilibili](https://img.shields.io/badge/bilibili-BV1dD421P7LZ-fc8bab.svg)](https://www.bilibili.com/video/BV1dD421P7LZ)
+[![modelscope](https://img.shields.io/badge/ModelScope-hoyoVoice-624aff.svg)](https://www.modelscope.cn/studios/MuGeminorum/hoyoVoice-V1)
 
 DyberPet_GenshinImpact + KimiChat + BertVITS2
 
-![bg](https://github.com/MuGeminorum/DyberGenshinAI-VITS/assets/20459298/e03c7bf4-bb49-434d-9145-dab1622ee215)
+![](https://github.com/MuGeminorum/DyberGenshinAI-VITS/assets/20459298/e03c7bf4-bb49-434d-9145-dab1622ee215)
 
 ## Usage
 ### Environment
