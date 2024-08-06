@@ -2,7 +2,7 @@
 [![license](https://img.shields.io/github/license/MuGeminorum/DyberGenshinAI-VITS.svg)](https://github.com/MuGeminorum/DyberGenshinAI-VITS/blob/main/LICENSE)
 [![Python application](https://github.com/MuGeminorum/DyberGenshinAI-VITS/actions/workflows/python-app.yml/badge.svg?branch=main)](https://github.com/MuGeminorum/DyberGenshinAI-VITS/actions/workflows/python-app.yml)
 [![bilibili](https://img.shields.io/badge/bilibili-BV1dD421P7LZ-fc8bab.svg)](https://www.bilibili.com/video/BV1dD421P7LZ)
-[![modelscope](https://img.shields.io/badge/ModelScope-hoyoVoice-624aff.svg)](https://www.modelscope.cn/studios/MuGeminorum/hoyoVoice-V1)
+[![modelscope](https://img.shields.io/badge/ModelScope-hoyoTTS-624aff.svg)](https://www.modelscope.cn/studios/MuGeminorum/hoyoTTS)
 
 DyberPet_GenshinImpact + KimiChat + BertVITS2
 
