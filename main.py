@@ -14,7 +14,6 @@ from PySide6.QtCore import Qt, QLocale
 from tendo import singleton
 from sys import platform
 
-
 StyleSheet = f"""
 #PetTM {{
     font-family: "Segoe UI";
